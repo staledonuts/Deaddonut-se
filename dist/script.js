@@ -22,17 +22,13 @@ $(document).ready(function(e) {
    ];
    var previouscommands = [];
    var currentcommand = 0;
-   var pages = [ /*Can be populated with various methods*/
+   var pages = [
       ["index", "Welcome to Koya.io", "Simply, this is just a sandbox in which to add to; no real point - a couple of features that I plan to add though:", "URL shortner and open tracker, just enter a URL into the command line and press enter and you will get 2 links - 1 which looks like [http://koya.io/XXXXXX](http://koya.io/XXXXXX) and another [http://koya.io/u/XXXXXX](http://koya.io/u/XXXXXX) : they will both forward but the second will show a preview of the full url so they know where you are going.", "You can also save small messages with `/msg <string <160 chars>` and you will get a url like [http://koya.io/XXXXXX](http://koya.io/XXXXXX)","Pressing Ctrl+v will paste the short text or image and you will get a link.", "There will be accounts but likely given out rather than being able to register them whenever, this is a personal site so idk."],
-      ["about", "About Koya.io", "Personal power website for Finn 'Koya' Shackleton.", "Will include some features which too are mainly for personal use: Link shortner, image host, pastebin and any sandbox testing", "The colours have been taken from [https://github.com/Poorchop/darktooth-theme-ports/tree/8c852e8edde8df57d831dc8631493b0565fadbbc/hexchat-darktooth](Poorchop's Darktooth HexChat theme)", "In the process of turning the website into a server sided thing, currently what you can read is in the [http://koya.io/scripts.js](JavaScript file)!"],
-	  ["connect", "Connect with Koya",
-	  "[mailto:_@koya.io](Email _@koya.io)",
-	  "[skype:finn.shackleton](Skype)",
-	  "[^http://steamcommunity.com/id/bananabutterscotchmaplepancakes](Steam) < Always available",
-	  "[^https://codepen.io/OfficialAntarctica](Codepen)",
-	  "[^http://everybodyedits.com/profiles/bbmp](Everybody Edits)"]
-   ];
-   var pageindex = ["index", "about", "connect", "games", "artstation"];
+      ["about", "About Me", "", ""],
+      ["contact", "Contact Me", "[mailto:goblinburrow@gmail.com](Email goblinburrow@gmail.com)", "[Discord:staledonut](Discord)", "[^https://twitter.com/goblinburrow/](Twitter)"],
+      ["links", "Here you find links to different places where i upload projects and media.", "[^https://github.com/staledonuts/](Github)", "[^https://staledonut.itch.io/](Itch.io)", "[^https://www.youtube.com/channel/UCbhHPo4NTKxDHLCyixRHEcA/](Youtube)"],
+      ];
+   var pageindex = ["index", "about", "contact", "links"];
    var currentpage = "landing";
    var url = "http://www.DeadDonut.se/"
       /*
@@ -59,17 +55,17 @@ $(document).ready(function(e) {
       setInterval(time);
       console.clear();
       console.log(new Date().getTime());
-      log("Website", "A!______               _______                  _   ");
-      log("Website", "A!|  _  \             | |  _  \                | |  ");
-      log("Website", "A!| | | |___  __ _  __| | | | |___  _ __  _   _| |_ ");
-      log("Website", "A!| | | / _ \/ _` |/ _` | | | / _ \| '_ \| | | | __|");
-      log("Website", "A!| |/ /  __/ (_| | (_| | |/ / (_) | | | | |_| | |_ ");
-      log("Website", "A!|___/ \___|\__,_|\__,_|___/ \___/|_| |_|\__,_|\__|");
+      log("Website", "A!██████╗ ███████╗ █████╗ ██████╗ ██████╗  ██████╗ ███╗   ██╗██╗   ██╗████████╗");
+      log("Website", "A!██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔═══██╗████╗  ██║██║   ██║╚══██╔══╝");
+      log("Website", "A!██║  ██║█████╗  ███████║██║  ██║██║  ██║██║   ██║██╔██╗ ██║██║   ██║   ██║   ");
+      log("Website", "A!██║  ██║██╔══╝  ██╔══██║██║  ██║██║  ██║██║   ██║██║╚██╗██║██║   ██║   ██║   ");
+      log("Website", "A!██████╔╝███████╗██║  ██║██████╔╝██████╔╝╚██████╔╝██║ ╚████║╚██████╔╝   ██║   ");
+      log("Website", "A!╚═════╝ ╚══════╝╚═╝  ╚═╝╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝    ╚═╝   ");
       log("Website", '[^http://www.DeadDonut.se/](*DeadDonut.se*)');
       log("Website", "");
       log("Website", "");
 	  urlvars();
-      log("Client", "For help say '/help'");
+      log("Client", "For help input '/help'");
 	  setInterval(favicon,500);
    }
 

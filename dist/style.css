@@ -1,7 +1,9 @@
 body {
-  background-color: #040c06;
-  color: #bedc7f;
-  font-family: 'IBM Plex Mono', monospace;
+  background-color: #000000;
+  color: #AAAAAA;
+  font-family: 'Verite 8x16', 'IBM VGA 8x16', monospace;
+  font-size: 16px;
+  line-height: 16px;
   margin: 0;
   overflow-x: hidden;
 }
@@ -9,8 +11,8 @@ body a {
   color: inherit;
 }
 body a:hover {
-  color: #eeffcc;
-  background-color: #112318;
+  color: #d4d4d4;
+  background-color: #000000;
 }
 body .stream {
   margin-top: 8px;
@@ -52,19 +54,19 @@ body .editline .time {
 }
 
 .whitet {
-  color: #FFFFAE;
+  color: #AAAAAA;
 }
 
 .redt {
-  color: #eeffcc;
+  color: #a74e4e;
 }
 
 .important {
-  color: #E3A786;
+  color: #AAAAAA;
 }
 
 .bluet {
-  color: #89a257;
+  color: #41419b;;
 }
 
 .greent {
@@ -72,12 +74,12 @@ body .editline .time {
 }
 
 .selft {
-  color: #bedc7f;
+  color: #AAAAAA;
 }
 
 ::selection {
-  color: #bedc7f;
-  background: #1e3a29;
+  color: #000000;
+  background: #AAAAAA;
 }
 
 ::-webkit-scrollbar {
