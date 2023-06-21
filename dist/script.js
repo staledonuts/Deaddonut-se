@@ -1,36 +1,31 @@
-// JavaScript Document
 $(document).ready(function(e) {
-   /* Todo:
- • Merge this with Node.js, almost done
- • Webpages in a database/more editable version
- • Add cookies to track previous commands? (You can press up and down to browse previous commands this session)
-*/
    var faviconnumber = 1;
 	function favicon() {
 		favicon = favicon == 1 ? 2 : 1;
 		$('.favicon').attr('href','favicon' + favicon + ".png");
 	}
    console.clear();
-   var commandlist = [ /*Can be populated with various methods*/
+   var commandlist = [
       ["/help", "Show commands"],
       ["/list", "List all pages on the website"],
       ["/nav &lt;location&gt;", "Navigate to location"],
-	   ["/gl", "Generate a url for the current page - [^http://koya.io/](This doesn't work in an iframe, try it at *Koya.io*) outputs something like [^http://koya.io/connect](*koya.io/connect*)"],
+	   ["/gl", "Generate a url for the current page - [^http://www.Deaddonut.se/] [^http://koya.io/connect](*koya.io/connect*)"],
       ["/clear", "Clear the console"],
       ["/login &lt;username&gt; &lt;password&gt;", "Login to your account - This is not set up and when implemeneted it'll be '/login username' then request password without printing into the cmd prompt"],
-      ["/upload", "Upload file, must be logged in."]
+      ["/upload", "Upload file, must be logged in."],
+      ["/font", "Font Credits"]
    ];
    var previouscommands = [];
    var currentcommand = 0;
    var pages = [
-      ["index", "Welcome to Koya.io", "Simply, this is just a sandbox in which to add to; no real point - a couple of features that I plan to add though:", "URL shortner and open tracker, just enter a URL into the command line and press enter and you will get 2 links - 1 which looks like [http://koya.io/XXXXXX](http://koya.io/XXXXXX) and another [http://koya.io/u/XXXXXX](http://koya.io/u/XXXXXX) : they will both forward but the second will show a preview of the full url so they know where you are going.", "You can also save small messages with `/msg <string <160 chars>` and you will get a url like [http://koya.io/XXXXXX](http://koya.io/XXXXXX)","Pressing Ctrl+v will paste the short text or image and you will get a link.", "There will be accounts but likely given out rather than being able to register them whenever, this is a personal site so idk."],
+      ["index", "Welcome to Deaddonut.se", "This is an Portfolio page for me Erik Lindahl."],
       ["about", "About Me", "", ""],
       ["contact", "Contact Me", "[mailto:goblinburrow@gmail.com](Email goblinburrow@gmail.com)", "[Discord:staledonut](Discord)", "[^https://twitter.com/goblinburrow/](Twitter)"],
       ["links", "Here you find links to different places where i upload projects and media.", "[^https://github.com/staledonuts/](Github)", "[^https://staledonut.itch.io/](Itch.io)", "[^https://www.youtube.com/channel/UCbhHPo4NTKxDHLCyixRHEcA/](Youtube)"],
       ];
    var pageindex = ["index", "about", "contact", "links"];
    var currentpage = "landing";
-   var url = "http://www.DeadDonut.se/"
+   var url = "http://www.Deaddonut.se/"
       /*
          Custom Text Syntax
          Links:      
@@ -42,15 +37,7 @@ $(document).ready(function(e) {
             E! - Text is an error/notification
             A! - spaces are converted to non-breaking spaces (it's for ascii art - after all, this is a text based website)
       */
-
-            
-            
-            
-            
-            
-            
-                                                              
-                                                              
+                                                       
    function init() {
       setInterval(time);
       console.clear();
@@ -61,7 +48,7 @@ $(document).ready(function(e) {
       log("Website", "A!██║  ██║██╔══╝  ██╔══██║██║  ██║██║  ██║██║   ██║██║╚██╗██║██║   ██║   ██║   ");
       log("Website", "A!██████╔╝███████╗██║  ██║██████╔╝██████╔╝╚██████╔╝██║ ╚████║╚██████╔╝   ██║   ");
       log("Website", "A!╚═════╝ ╚══════╝╚═╝  ╚═╝╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝    ╚═╝   ");
-      log("Website", '[^http://www.DeadDonut.se/](*DeadDonut.se*)');
+      log("Website", '[^http://www.Deaddonut.se/](*Deaddonut.se*)');
       log("Website", "");
       log("Website", "");
 	  urlvars();
@@ -305,6 +292,10 @@ $(document).ready(function(e) {
             $.each(pageindex, function(id, content) {
                log("Client", "> " + content);
             });
+            break;
+         case "/font":
+               log("Client", "> " + "The Font i am currently using on this webpage is " + '[^https://int10h.org/oldschool-pc-fonts/fontlist/font?ibm_vga_8x16](*WebPlus_IBM_VGA_8x16*)'+".");
+               log("Client", "> " + "Found at [^https://int10h.org/](*int10h.org*), created by some wonderful person for the 'IBM MCGA and VGA (PS/2) video BIOS'");
             break;
          case "/login":
             if (word.length >= 3) {
