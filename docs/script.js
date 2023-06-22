@@ -10,7 +10,7 @@ $(document).ready(function(e) {
       ["/help", "Show commands"],
       ["/list", "List all pages on the website"],
       ["/nav &lt;location&gt;", "Navigate to location"],
-	   ["/gl", "Generate a url for the current page - [^http://www.Deaddonut.se/] [^http://koya.io/connect](*koya.io/connect*)"],
+	   ["/gl", "Generate a url for the current page - [^http://www.Deaddonut.se/](*Deaddonut.se/about*)"],
       ["/clear", "Clear the console"],
       ["/login &lt;username&gt; &lt;password&gt;", "Login to your account - This is not set up and when implemeneted it'll be '/login username' then request password without printing into the cmd prompt"],
       ["/upload", "Upload file, must be logged in."],
