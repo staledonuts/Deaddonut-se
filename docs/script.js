@@ -53,7 +53,7 @@ $(document).ready(function(e) {
       log("Website", "Welcome to "+ '[^http://www.Deaddonut.se/](*Deaddonut.se*)');
       log("Website", "This is Erik Lindahls Portfolio page.");
       log("Website", "");
-      picture(deaddonut.png)
+      picture(deaddonut)
 	  urlvars();
       log("Client", "For help input '/help'");
 	  setInterval(favicon,500);
