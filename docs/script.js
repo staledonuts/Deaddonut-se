@@ -53,6 +53,14 @@ $(document).ready(function(e) {
       log("Website", "Welcome to "+ '[^http://www.Deaddonut.se/](*Deaddonut.se*)');
       log("Website", "This is Erik Lindahls Portfolio page.");
       log("Website", "");
+      log("Website", "Below you will find logs for my different pages.");
+      log("Website", "[^https://github.com/staledonuts/](Github)");
+      log("Website", "[^https://staledonut.itch.io/](Itch.io)");
+      log("Website", "[^https://www.youtube.com/channel/UCbhHPo4NTKxDHLCyixRHEcA/](Youtube)");
+      log("Website", "[^https://www.artstation.com/staledonutcrumbs7](ArtStation)");
+      log("Website", "[^https://www.linkedin.com/in/erik-lindahl-14b154239/](LinkedIn)");
+      log("Website", "");
+      log("Website", "");
 	  urlvars();
       log("Client", "For help input '/help'");
 	  setInterval(favicon,500);
