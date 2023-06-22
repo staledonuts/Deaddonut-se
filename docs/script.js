@@ -53,16 +53,11 @@ $(document).ready(function(e) {
       log("Website", "Welcome to "+ '[^http://www.Deaddonut.se/](*Deaddonut.se*)');
       log("Website", "This is Erik Lindahls Portfolio page.");
       log("Website", "");
-      picture(deaddonut)
 	  urlvars();
       log("Client", "For help input '/help'");
 	  setInterval(favicon,500);
    }
 
-   function picture(imagename)
-   {
-      var img = $('<img />', {src : 'https://www.deaddonut.se/images/' + $(imagename).val() +'.png'});
-   }
 
    function urlvars() 
    {
