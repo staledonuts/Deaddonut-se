@@ -48,8 +48,8 @@ $(document).ready(function(e) {
       log("Website", "A!██║  ██║██╔══╝  ██╔══██║██║  ██║██║  ██║██║   ██║██║╚██╗██║██║   ██║   ██║   ");
       log("Website", "A!██████╔╝███████╗██║  ██║██████╔╝██████╔╝╚██████╔╝██║ ╚████║╚██████╔╝   ██║   ");
       log("Website", "A!╚═════╝ ╚══════╝╚═╝  ╚═╝╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝    ╚═╝   ");
-      log("Website", '[^http://www.Deaddonut.se/](*Deaddonut.se*)');
-      log("Website", "");
+      log("Website", "Welcome to "+ '[^http://www.Deaddonut.se/](*Deaddonut.se*)');
+      log("Website", "This is Erik Lindahls Portfolio page.");
       log("Website", "");
 	  urlvars();
       log("Client", "For help input '/help'");
