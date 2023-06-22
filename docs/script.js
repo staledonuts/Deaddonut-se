@@ -53,7 +53,7 @@ $(document).ready(function(e) {
       log("Website", "Welcome to "+ '[^http://www.Deaddonut.se/](*Deaddonut.se*)');
       log("Website", "This is Erik Lindahls Portfolio page.");
       log("Website", "");
-      log("Website", "Below you will find logs for my different pages.");
+      log("Website", "Below you will find links for my different pages.");
       log("Website", "[^https://github.com/staledonuts/](Github)");
       log("Website", "[^https://staledonut.itch.io/](Itch.io)");
       log("Website", "[^https://www.youtube.com/channel/UCbhHPo4NTKxDHLCyixRHEcA/](Youtube)");
