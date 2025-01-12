@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": 
+	{
+		"glsl-canvas.uniforms": 
+		{
+			
+		},
+		"glsl-canvas.textures": 
+		{
+			"0": "./color.tga",
+			"1": "https://rawgit.com/actarian/plausible-brdf-shader/master/textures/noise/cloud-1.png",
+			"2": "https://rawgit.com/actarian/plausible-brdf-shader/master/textures/noise/cloud-2.jpg",        
+		}
+	}
+}
