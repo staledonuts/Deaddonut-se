@@ -40,8 +40,8 @@
         // Initialize shaders with external files
         async function initShaders(gl) 
         {
-            const vertexShaderSource = await loadShaderSource('shader.vs');
-            const fragmentShaderSource = await loadShaderSource('shader.fs');
+            const vertexShaderSource = await loadShaderSource('./shader.vs');
+            const fragmentShaderSource = await loadShaderSource('./shader.fs');
 
             const vertexShader = createShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
             const fragmentShader = createShader(gl, fragmentShaderSource, gl.FRAGMENT_SHADER);
@@ -84,25 +84,6 @@
             }
 
             return shader;
-        }
-
-        function initShaders(gl) 
-        {
-            const vertexShader = createShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
-            const fragmentShader = createShader(gl, fragmentShaderSource, gl.FRAGMENT_SHADER);
-
-            const shaderProgram = gl.createProgram();
-            gl.attachShader(shaderProgram, vertexShader);
-            gl.attachShader(shaderProgram, fragmentShader);
-            gl.linkProgram(shaderProgram);
-
-            if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) 
-            {
-                alert("Unable to initialize the shader program: " + gl.getProgramInfoLog(shaderProgram));
-                return null;
-            }
-
-            return shaderProgram;
         }
 
         function initBuffers(canvas, gl) 
