@@ -41,7 +41,7 @@ canvas {
     max-width: max-content; /* Limit maximum width */
     background: rgba(0, 0, 0, 0.6); /* Semi-transparent black overlay */
     padding: 20px; /* Add some padding around the carousel */
-    border-radius: 15px; /* Rounded corners for the container */
+    border-radius: 30px; /* Rounded corners for the container */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
     backdrop-filter: blur(6px); /* Blur effect */
     background: rgba(0, 0, 0, 0.4); /* Lighter overlay for better contrast */
