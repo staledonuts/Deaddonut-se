@@ -1,16 +1,27 @@
-const numPoints = Math.floor(1000000 / devicePixelRatio ** 3);
+const numPoints = Math.floor(100000 / devicePixelRatio ** 3);
+
+let mouseX = 0;
+let mouseY = 0;
+
+function updateMousePosition(event) 
+{
+    // Normalize mouse coordinates to [-1, 1] range (WebGL clip space)
+    mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+    mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+}
+
 
 async function loadShaderSource(url) 
 {
     const response = await fetch(url);
     if (!response.ok) 
-    {
-        throw new Error(`Failed to load shader: ${url}`);
-    }
+        {
+            throw new Error(`Failed to load shader: ${url}`);
+        }
     return await response.text();
 }
 
-async function initShaders(gl) 
+async function initShaders(gl)
 {
     const vertexShaderSource = await loadShaderSource('./shader.vs');
     const fragmentShaderSource = await loadShaderSource('./shader.fs');
@@ -22,17 +33,17 @@ async function initShaders(gl)
     gl.attachShader(shaderProgram, vertexShader);
     gl.attachShader(shaderProgram, fragmentShader);
     gl.linkProgram(shaderProgram);
-
+    
     if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) 
-    {
-        throw new Error(`Unable to initialize the shader program: ${gl.getProgramInfoLog(shaderProgram)}`);
+        {
+            throw new Error(`Unable to initialize the shader program: ${gl.getProgramInfoLog(shaderProgram)}`);
+        }
+
+        return shaderProgram;
     }
-
-    return shaderProgram;
-}
-
-function initWebGL(canvas) 
-{
+    
+    function initWebGL(canvas) 
+    {
     const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
     if (!gl) 
     {
@@ -47,7 +58,7 @@ function createShader(gl, sourceCode, type)
     const shader = gl.createShader(type);
     gl.shaderSource(shader, sourceCode);
     gl.compileShader(shader);
-
+    
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) 
     {
         alert("An error occurred compiling the shaders: " + gl.getShaderInfoLog(shader));
@@ -92,18 +103,22 @@ function initBuffers(canvas, gl)
     const colorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-
+    
     return {params: paramsBuffer, color: colorBuffer, };
 }
 
 function drawScene(canvas, gl, programInfo, buffers, time) 
 {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
+    
     const uTime = gl.getUniformLocation(programInfo.program, 'uTime');
     gl.uniform1f(uTime, time * 0.001);
     const uAspectRatio = gl.getUniformLocation(programInfo.program, 'uAspectRatio');
     gl.uniform1f(uAspectRatio, canvas.width / canvas.height);
+    const uMousePos = gl.getUniformLocation(programInfo.program, 'uMousePos');
+    gl.uniform2f(uMousePos, mouseX, mouseY);
+    const uResolution = gl.getUniformLocation(programInfo.program, 'uResolution');
+    gl.uniform2f(uResolution, canvas.width, canvas.height);
     {
         const numComponents = 3;
         const type = gl.FLOAT;
@@ -126,7 +141,7 @@ function drawScene(canvas, gl, programInfo, buffers, time)
         gl.enableVertexAttribArray(
         programInfo.attribLocations.vertexColor);
     }
-
+    
     gl.useProgram(programInfo.program);
     {
         const offset = 0;
@@ -142,7 +157,7 @@ async function main()
     canvas.height = window.innerHeight;
     const gl = initWebGL(canvas);
     if (!gl) return;
-
+    
     try 
     {
         const shaderProgram = await initShaders(gl);
@@ -155,10 +170,10 @@ async function main()
                 vertexColor: gl.getAttribLocation(shaderProgram, 'aVertexColor'),
             },
         };
-
+        
         const buffers = initBuffers(canvas, gl);
 
-
+        
         function render(time) 
         {
             drawScene(canvas, gl, programInfo, buffers, time);
@@ -172,3 +187,4 @@ async function main()
     }
 }
 window.onload = main;
+window.addEventListener('mousemove', updateMousePosition);
