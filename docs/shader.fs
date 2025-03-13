@@ -5,7 +5,7 @@ uniform vec2 uResolution;
 
 vec3 overlay(vec3 base, vec3 overlay)
 { 
-    return overlay.rgb * (overlay.x + base.rgb) * (1.0 - overlay.x);
+    return overlay.rgb * (overlay.xxx + base.rgb) * (1.0 - overlay.x);
 }
 
 void main(void) 
@@ -31,7 +31,7 @@ void main(void)
     vec3 glowOverlay = glowColor * (glow * glowIntensity);
 
     // Mix the base color with the glow color based on the glow strength
-    vec3 finalColor = overlay(baseColor, glowOverlay);
+    vec3 finalColor = baseColor + glowOverlay;
 
     // Output the final color
     gl_FragColor = vec4(finalColor, 1.0);
