@@ -1,24 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>DeadDonut - Command Line Portfolio</title>
-  <link rel="stylesheet" href="./style.css">
-  <link rel="stylesheet" href="./fontstylesheet.css" type="text/css" charset="utf-8">
-<script src="./prefixfree.min.js"></script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Carousel</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<!-- partial:index.partial.html -->
-<div class="stream"></div>
-<div class="line editline">
-   <p class="time"></p>
-   <p class="name">&gt;</p>
-   <p contenteditable="true" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="information edit"></p>
-</div>
-<!-- partial -->
-  <script src='./jquery.min.js'></script>
-<script  src="./script.js"></script>
+    <div class="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item">
+                <img src="./images/deaddonut.png" alt="Image 1">
+            </div>
+            <div class="carousel-item">
+                <img src="./images/deaddonut.png" alt="Image 2">
+            </div>
+            <div class="carousel-item">
+                <img src="./images/deaddonut.png" alt="Image 3">
+            </div>
+            <!-- Add more images as needed -->
+        </div>
+        <button class="carousel-control-prev" onclick="prevSlide()">&#10094;</button>
+        <button class="carousel-control-next" onclick="nextSlide()">&#10095;</button>
+    </div>
 
+    <script src="script.js"></script>
 </body>
 </html>

@@ -54,7 +54,6 @@ function createShader(gl, sourceCode, type)
         gl.deleteShader(shader);
         return null;
     }
-
     return shader;
 }
 
@@ -135,37 +134,6 @@ function drawScene(canvas, gl, programInfo, buffers, time)
     }
 }
 
-async function setupAudioTexture(gl)
-{
-    const audio = document.getElementById('audio');
-    audio.crossOrigin = "anonymous"; // Allow audio cross-origin if hosted externally.
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const analyser = audioContext.createAnalyser();
-    analyser.fftSize = 256;
-
-    const source = audioContext.createMediaElementSource(audio);
-    source.connect(analyser);
-    analyser.connect(audioContext.destination);
-
-    const dataArray = new Uint8Array(analyser.frequencyBinCount);
-    const texture = gl.createTexture();
-
-    function updateTexture() 
-    {
-        analyser.getByteFrequencyData(dataArray);
-
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, dataArray.length, 1, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, dataArray);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.bindTexture(gl.TEXTURE_2D, null);
-
-        requestAnimationFrame(updateTexture);
-    }
-    updateTexture();
-
-    return texture;
-}
 // Main function
 async function main() 
 {
@@ -178,7 +146,8 @@ async function main()
     try 
     {
         const shaderProgram = await initShaders(gl);
-        const programInfo = {
+        const programInfo = 
+        {
             program: shaderProgram,
             attribLocations: 
             {
@@ -188,13 +157,6 @@ async function main()
         };
 
         const buffers = initBuffers(canvas, gl);
-
-        const audioTexture = await setupAudioTexture(gl);
-        // Pass `audioTexture` as a uniform in your shader program:
-        const uAudio = gl.getUniformLocation(programInfo.program, 'uAudioTexture');
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, audioTexture);
-        gl.uniform1i(uAudio, 0);
 
 
         function render(time) 
