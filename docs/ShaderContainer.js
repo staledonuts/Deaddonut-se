@@ -1,4 +1,4 @@
-const numPoints = Math.floor(100000 / devicePixelRatio ** 3);
+const numPoints = Math.floor(100000 / devicePixelRatio ** 4);
 
 let mouseX = 0;
 let mouseY = 0;
