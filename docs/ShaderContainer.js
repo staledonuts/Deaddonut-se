@@ -84,9 +84,9 @@ function initBuffers(canvas, gl)
 
         if (phase > 3.14 + Math.random() && radius > Math.random()*.1 || Math.random() > .9) 
         {
-            colors.push(.2 + Math.random()*.5);
-            colors.push(.9);
-            colors.push(.6 + Math.random()*.4);
+            colors.push(.2 + Math.random()*.8);
+            colors.push(.2 + Math.random()*.8);
+            colors.push(.2 + Math.random()*.8);
         } 
         else 
         {

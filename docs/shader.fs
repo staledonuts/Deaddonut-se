@@ -66,11 +66,11 @@ void main(void)
     vec2 fragCoord = SnapUV(gl_FragCoord.xy / uResolution.xy);
 
     // Calculate the distance from the fragment to the mouse position
-    float dist = distance(fragCoord, (uMousePos + 1.0) * 0.5); // Convert uMouse to [0, 1] range
+    float dist = distance(fragCoord, (uMousePos + 1.0) * 0.5); // Convert uMousePos to [0, 1] range
 
     // Glow parameters
     float glowRadius = 0.1; // Radius of the glow effect
-    float glowIntensity = 2.0; // Intensity of the glow
+    float glowIntensity = 1.5; // Intensity of the glow
 
     // Calculate the glow strength using a smoothstep function
     float glow = smoothstep(glowRadius, 0.0, dist);
