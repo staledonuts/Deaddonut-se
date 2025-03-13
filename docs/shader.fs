@@ -18,7 +18,7 @@ void main(void)
 
     // Glow parameters
     float glowRadius = 0.1; // Radius of the glow effect
-    float glowIntensity = 1.0; // Intensity of the glow
+    float glowIntensity = 2.0; // Intensity of the glow
 
     // Calculate the glow strength using a smoothstep function
     float glow = smoothstep(glowRadius, 0.0, dist);
