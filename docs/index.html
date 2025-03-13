@@ -11,25 +11,26 @@
 <body>
     <div class="glcontainer"> 
       <canvas id="glcanvas"></canvas>
-      <script src='./ShaderContainer.js'></script>
-      <div class="carousel">
-          <div class="carousel-inner">
-              <div class="carousel-item">
-                  <img src="./images/deaddonut.png" alt="Image 1">
-              </div>
-              <div class="carousel-item">
-                  <img src="./images/deaddonut.png" alt="Image 2">
-              </div>
-              <div class="carousel-item">
-                  <img src="./images/deaddonut.png" alt="Image 3">
-              </div>
-              <!-- Add more images as needed -->
-          </div>
-          <button class="carousel-control-prev" onclick="prevSlide()">&#10094;</button>
-          <button class="carousel-control-next" onclick="nextSlide()">&#10095;</button>
-      </div>
+      <div class="carousel-container">
+        <div class="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item">
+                    <img src="image1.jpg" alt="Image 1">
+                </div>
+                <div class="carousel-item">
+                    <img src="image2.jpg" alt="Image 2">
+                </div>
+                <div class="carousel-item">
+                    <img src="image3.jpg" alt="Image 3">
+                </div>
+                <!-- Add more images as needed -->
+            </div>
+            <button class="carousel-control-prev" onclick="prevSlide()">&#10094;</button>
+            <button class="carousel-control-next" onclick="nextSlide()">&#10095;</button>
+        </div>
     </div>
     <script src="./carousel.js"></script>
+    <script src='./ShaderContainer.js'></script>
     
 </body>
 </html>
