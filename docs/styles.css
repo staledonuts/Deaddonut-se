@@ -28,8 +28,7 @@ canvas {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 2; /* Place the carousel above the canvas */
-    width: 80%; /* Adjust width as needed */
-    max-width: 600px; /* Limit maximum width */
+    max-width: 900px; /* Limit maximum width */
     background: rgba(0, 0, 0, 0.6); /* Semi-transparent black overlay */
     padding: 20px; /* Add some padding around the carousel */
     border-radius: 15px; /* Rounded corners for the container */
