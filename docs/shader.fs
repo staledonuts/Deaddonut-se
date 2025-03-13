@@ -5,7 +5,7 @@ uniform vec2 uResolution;
 
 vec3 overlay(vec3 base, vec3 overlay)
 { 
-    return overlay.rgb * overlay.x + base.rgb * (1.0 - overlay.x);
+    return overlay.rgb * (overlay.x + base.rgb) * (1.0 - overlay.x);
 }
 
 void main(void) 
@@ -27,7 +27,7 @@ void main(void)
     vec3 baseColor = vColor.rgb; // Black background
 
     // Glow color
-    vec3 glowColor = vec3(1.0, 0.5, 0.2); // Orange glow (you can change this)
+    vec3 glowColor = vec3(0.88, 1.0, 0.47); // Orange glow (you can change this)
     vec3 glowOverlay = glowColor * (glow * glowIntensity);
 
     // Mix the base color with the glow color based on the glow strength
