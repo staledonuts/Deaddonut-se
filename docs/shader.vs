@@ -21,7 +21,7 @@ void main(void)
     gl_Position.y *= uAspectRatio;
 
     // don't set the size too large because you get rectngles
-    gl_PointSize = aVertexParams.y + 1.0;
+    gl_PointSize = aVertexParams.y + 0.5;
 
     // pass the color to fragment shader
     vColor = vec4(aVertexColor*(1.2-aVertexParams.x), 1);
