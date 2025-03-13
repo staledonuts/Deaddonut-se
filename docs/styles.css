@@ -43,8 +43,8 @@ canvas {
     padding: 20px; /* Add some padding around the carousel */
     border-radius: 30px; /* Rounded corners for the container */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
-    backdrop-filter: blur(6px); /* Blur effect */
-    background: rgba(0, 0, 0, 0.4); /* Lighter overlay for better contrast */
+    backdrop-filter: blur(3px); /* Blur effect */
+    background: rgba(0, 0, 0, 0.3); /* Lighter overlay for better contrast */
     overflow: hidden;
 }
 
