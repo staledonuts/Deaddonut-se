@@ -31,7 +31,7 @@ void main(void)
     vec4 baseColor = vColor; // Black background
 
     // Glow color
-    vec4 glowOverlay = vec4(0.88, 1.0, 0.47,glow * glowIntensity);
+    vec4 glowOverlay = vec4(0.88 * glow, 1.0 * glow, 0.47 * glow ,glow) * glowIntensity;
 
     // Mix the base color with the glow color based on the glow strength
 
