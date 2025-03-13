@@ -1,3 +1,5 @@
+
+
 precision highp float;
 varying highp vec4 vColor;
 uniform vec2 uMousePos;
@@ -12,10 +14,16 @@ vec4 overlay(vec4 base, vec4 overlay, float overlayAlpha)
     return overlayBlend;
 }
 
+vec2 SnapUV(vec2 uv)
+{
+    const float gridSize = 0.001;
+    return floor(uv / gridSize) * gridSize;
+}
+
 void main(void) 
 {
     // Normalize fragment coordinates to [0, 1] range
-    vec2 fragCoord = gl_FragCoord.xy / uResolution.xy;
+    vec2 fragCoord = SnapUV(gl_FragCoord.xy / uResolution.xy);
 
     // Calculate the distance from the fragment to the mouse position
     float dist = distance(fragCoord, (uMousePos + 1.0) * 0.5); // Convert uMouse to [0, 1] range
@@ -28,7 +36,7 @@ void main(void)
     float glow = smoothstep(glowRadius, 0.0, dist);
 
     // Base color (background)
-    vec4 baseColor = 1.0 - vColor; // Black background
+    vec4 baseColor = vColor; // Black background
 
     // Glow color
     vec4 glowOverlay = vec4(1.0, 1.0, 1.0 ,glow) * glowIntensity;
