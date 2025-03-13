@@ -18,7 +18,7 @@ void main(void)
     gl_Position = vec4(x * cos(a) - y * sin(a), x * sin(a) + y * cos(a), 0, 1.0);
 
     // slightly squeeze by Y to see galaxy in 'perspective'
-    gl_Position.y *= uAspectRatio * 0.8;
+    gl_Position.y *= uAspectRatio;
 
     // don't set the size too large because you get rectngles
     gl_PointSize = aVertexParams.y + 1.0;
