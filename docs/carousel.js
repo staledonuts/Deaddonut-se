@@ -4,11 +4,16 @@ function showSlide(index) {
     const carouselInner = document.querySelector('.carousel-inner');
     const totalItems = document.querySelectorAll('.carousel-item').length;
     
-    if (index >= totalItems) {
+    if (index >= totalItems) 
+    {
         currentIndex = 0;
-    } else if (index < 0) {
+    } 
+    else if (index < 0) 
+    {
         currentIndex = totalItems - 1;
-    } else {
+    } 
+    else 
+    {
         currentIndex = index;
     }
 
@@ -25,4 +30,25 @@ function prevSlide() {
 }
 
 // Optional: Auto-play the carousel
-setInterval(nextSlide, 3000);
+setInterval(nextSlide, 15000);
+
+function getOffSet()
+{
+    var _offset = 450;
+    var windowHeight = window.innerHeight;
+
+    if(windowHeight > 500) 
+    {
+        _offset = 400;
+    } 
+    if(windowHeight > 680) 
+    {
+        _offset = 300
+    }
+    if(windowHeight > 830) 
+    {
+        _offset = 210;
+    }
+
+    return _offset;
+}
