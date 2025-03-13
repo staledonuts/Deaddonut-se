@@ -18,7 +18,7 @@ void main(void)
     vec2 fragCoord = gl_FragCoord.xy / uResolution;
 
     // Calculate the distance from the fragment to the mouse position
-    float dist = distance(fragCoord, (uMousePos + 1.0) * 0.5); // Convert uMouse to [0, 1] range
+    float dist = distance(fragCoord, (uMousePos + 1.0)); // Convert uMouse to [0, 1] range
 
     // Glow parameters
     float glowRadius = 0.1; // Radius of the glow effect
