@@ -2,6 +2,12 @@ precision highp float;
 varying highp vec4 vColor;
 uniform vec2 uMousePos;
 uniform vec2 uResolution;
+
+vec3 overlay(vec3 base, vec3 overlay)
+{ 
+    return overlay.rgb * overlay.x + base.rgb * (1.0 - overlay.x);
+}
+
 void main(void) 
 {
     // Normalize fragment coordinates to [0, 1] range
@@ -22,10 +28,12 @@ void main(void)
 
     // Glow color
     vec3 glowColor = vec3(1.0, 0.5, 0.2); // Orange glow (you can change this)
+    vec3 glowOverlay = glowColor * (glow * glowIntensity);
 
     // Mix the base color with the glow color based on the glow strength
-    vec3 finalColor = mix(baseColor, glowColor, glow * glowIntensity);
+    vec3 finalColor = overlay(baseColor, glowOverlay);
 
     // Output the final color
     gl_FragColor = vec4(finalColor, 1.0);
 }
+

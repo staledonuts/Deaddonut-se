@@ -35,15 +35,15 @@ async function initShaders(gl)
     gl.linkProgram(shaderProgram);
     
     if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) 
-        {
-            throw new Error(`Unable to initialize the shader program: ${gl.getProgramInfoLog(shaderProgram)}`);
-        }
-
-        return shaderProgram;
-    }
-    
-    function initWebGL(canvas) 
     {
+        throw new Error(`Unable to initialize the shader program: ${gl.getProgramInfoLog(shaderProgram)}`);
+    }
+
+    return shaderProgram;
+}
+    
+function initWebGL(canvas) 
+{
     const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
     if (!gl) 
     {
@@ -115,10 +115,6 @@ function drawScene(canvas, gl, programInfo, buffers, time)
     gl.uniform1f(uTime, time * 0.001);
     const uAspectRatio = gl.getUniformLocation(programInfo.program, 'uAspectRatio');
     gl.uniform1f(uAspectRatio, canvas.width / canvas.height);
-    const uMousePos = gl.getUniformLocation(programInfo.program, 'uMousePos');
-    gl.uniform2f(uMousePos, mouseX, mouseY);
-    const uResolution = gl.getUniformLocation(programInfo.program, 'uResolution');
-    gl.uniform2f(uResolution, canvas.width, canvas.height);
     {
         const numComponents = 3;
         const type = gl.FLOAT;
@@ -129,7 +125,11 @@ function drawScene(canvas, gl, programInfo, buffers, time)
         gl.vertexAttribPointer(programInfo.attribLocations.vertexParams, numComponents, type, normalize, stride, offset);
         gl.enableVertexAttribArray(programInfo.attribLocations.vertexParams);
     }
-
+    
+    const uMousePos = gl.getUniformLocation(programInfo.program, 'uMousePos');
+    gl.uniform2f(uMousePos, mouseX, mouseY);
+    const uResolution = gl.getUniformLocation(programInfo.program, 'uResolution');
+    gl.uniform2f(uResolution, canvas.width, canvas.height);
     {
         const numComponents = 3;
         const type = gl.FLOAT;
