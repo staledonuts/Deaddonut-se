@@ -22,7 +22,7 @@ void main(void)
 
     // Glow parameters
     float glowRadius = 0.1; // Radius of the glow effect
-    float glowIntensity = 1.0; // Intensity of the glow
+    float glowIntensity = 2.0; // Intensity of the glow
 
     // Calculate the glow strength using a smoothstep function
     float glow = smoothstep(glowRadius, 0.0, dist);
@@ -36,6 +36,6 @@ void main(void)
     // Mix the base color with the glow color based on the glow strength
 
     // Output the final color
-    gl_FragColor = overlay(glowOverlay, baseColor, baseColor.a);
+    gl_FragColor = overlay(baseColor, glowOverlay, glowOverlay.a);
 }
 
