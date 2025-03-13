@@ -29,7 +29,12 @@ canvas {
 }
 
 .carousel {
-    position: relative;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
     width: 80%;
     max-width: 600px;
     overflow: hidden;
