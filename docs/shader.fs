@@ -36,6 +36,6 @@ void main(void)
     // Mix the base color with the glow color based on the glow strength
 
     // Output the final color
-    gl_FragColor = overlay(baseColor, glowOverlay, glowOverlay.a);
+    gl_FragColor = overlay(glowOverlay, baseColor, baseColor.a);
 }
 
