@@ -39,10 +39,9 @@ canvas {
     transform: translate(-50%, -50%);
     z-index: 2; /* Place the carousel above the canvas */
     max-width: max-content; /* Limit maximum width */
-    background: rgba(0, 0, 0, 0.6); /* Semi-transparent black overlay */
-    padding: 20px; /* Add some padding around the carousel */
+    padding: 10px; /* Add some padding around the carousel */
     border-radius: 30px; /* Rounded corners for the container */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+    border: 2px solid #2c2c2c;
     backdrop-filter: blur(3px); /* Blur effect */
     background: rgba(0, 0, 0, 0.3); /* Lighter overlay for better contrast */
     overflow: hidden;
