@@ -28,12 +28,10 @@ void main(void)
     float glow = smoothstep(glowRadius, 0.0, dist);
 
     // Base color (background)
-    vec4 baseColor = vColor; // Black background
+    vec4 baseColor = 1.0 - vColor; // Black background
 
     // Glow color
     vec4 glowOverlay = vec4(1.0 * glow, 1.0 * glow, 1.0 * glow ,glow) * glowIntensity;
-
-    // Mix the base color with the glow color based on the glow strength
 
     // Output the final color
     gl_FragColor = overlay(baseColor, glowOverlay, glowOverlay.a);
