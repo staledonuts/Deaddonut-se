@@ -38,19 +38,20 @@ canvas {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 2; /* Place the carousel above the canvas */
-    max-width: 1000px; /* Limit maximum width */
+    max-width: max-content; /* Limit maximum width */
     background: rgba(0, 0, 0, 0.6); /* Semi-transparent black overlay */
     padding: 20px; /* Add some padding around the carousel */
     border-radius: 15px; /* Rounded corners for the container */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
-    backdrop-filter: blur(10px); /* Blur effect */
+    backdrop-filter: blur(6px); /* Blur effect */
     background: rgba(0, 0, 0, 0.4); /* Lighter overlay for better contrast */
+    overflow: hidden;
 }
 
 .carousel {
     position: relative;
     width: 80%;
-    max-width: 1000px;
+    max-width: max-content;
     margin-left: auto;
     margin-right: auto;
     overflow: hidden;
