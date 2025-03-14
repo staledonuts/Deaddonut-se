@@ -79,7 +79,7 @@ void main(void)
     vec4 baseColor = vColor; // Black background
 
     // Glow color
-    vec4 glowOverlay = vec4(1.0, 1.0, 1.0 ,glow) * glowIntensity;
+    vec4 glowOverlay = vec4(0.6, 0.6, 1.0 ,glow) * glowIntensity;
 
     // Output the final color
     gl_FragColor = overlay(baseColor, glowOverlay, glowOverlay.a);

@@ -7,6 +7,7 @@ varying highp vec4 vColor;
 
 void main(void) 
 {
+    /*
     // move in ellipse
     float x = sin(uTime*.2 + aVertexParams.z) * aVertexParams.x*(0.6 + .2*sin(uTime*.1));
     float y = cos(uTime*.2 + aVertexParams.z) * aVertexParams.x*(1.0 + .3*cos(uTime*.4));
@@ -24,6 +25,7 @@ void main(void)
     gl_PointSize = aVertexParams.y + 0.5;
 
     // pass the color to fragment shader
-    vColor = vec4(aVertexColor*(1.2-aVertexParams.x), 1);
+    vColor = vec4(aVertexColor*(1.2-aVertexParams.x), 1);*/
+    vColor = vec4(1.0, 1.0, 1.0, 1.0);
 }
 
