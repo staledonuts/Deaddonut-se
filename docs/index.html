@@ -57,7 +57,7 @@
         let mixer;
 
         const clock = new THREE.Clock();
-        const container = document.getElementById( 'container' );
+        const container = document.getElementById( 'glcanvas' );
 
         const stats = new Stats();
         container.appendChild( stats.dom );
@@ -83,7 +83,7 @@
         controls.enableDamping = true;
 
         const dracoLoader = new DRACOLoader();
-        dracoLoader.setDecoderPath( 'jsm/libs/draco/gltf/' );
+        dracoLoader.setDecoderPath( 'three/jsm/libs/draco/gltf/' );
 
         const loader = new GLTFLoader();
         loader.setDRACOLoader( dracoLoader );
