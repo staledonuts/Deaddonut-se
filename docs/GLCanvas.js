@@ -14,7 +14,6 @@ function init()
     // Vertex Shader
     const vertexShader = `
         varying vec2 vMainUv;
-        varying vec2 vDistortUv;
         varying vec3 vNormal;
         varying vec3 vPosition;
 
@@ -63,7 +62,6 @@ function init()
         void main() 
         {
             vMainUv = uv;
-            vDistortUv = uv;
             vNormal = normal;
             vPosition = position;
             gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
@@ -72,7 +70,6 @@ function init()
     // Fragment Shader
     const fragmentShader = `
         varying vec2 vMainUv;
-        varying vec2 vDistortUv;
         varying vec3 vNormal;
         varying vec3 vPosition;
         uniform sampler2D uMainTexture;
@@ -81,7 +78,6 @@ function init()
 
         void main() 
         {
-            vec4 distortColor = texture2D(uDistortTexture, vDistortUv);
             vec4 textureColor = texture2D(uMainTexture, vMainUv);
             vec3 normalColor = vNormal * 0.5 + 0.5;
             vec3 finalColor = textureColor.rgb;
@@ -90,15 +86,12 @@ function init()
     scene = new THREE.Scene();
 
     const mainTexture = new THREE.TextureLoader().load( 'textures/box.png' );
-    const distortTexture = new THREE.TextureLoader().load( 'textures/box.png' );
     mainTexture.colorSpace = THREE.SRGBColorSpace;
-    distortTexture.colorSpace = THREE.SRGBColorSpace;
 
     const geometry = new THREE.BoxGeometry();
     uniforms =
     {
         uMainTexture: { value: mainTexture },
-        uDistortTexture: { value: distortTexture },
         uTime: { value: 0.0 }
     };
 
