@@ -74,17 +74,16 @@ function init()
         varying vec3 vPosition;
         uniform sampler2D uMainTexture;
 
-
         void main() 
         {
             vec4 textureColor = texture2D(uMainTexture, vMainUv);
             vec3 normalColor = vNormal * 0.5 + 0.5;
-            vec3 finalColor = normalColor.rgb;
+            vec3 finalColor = normalColor.rgb * textureColor.rgb;
             gl_FragColor = vec4(finalColor, 1.0);
         }`;
     scene = new THREE.Scene();
-
-    const mainTexture = new THREE.TextureLoader().load( 'textures/box.png' );
+    const textureLoader = new THREE.TextureLoader();
+    const mainTexture = textureLoader.load( 'textures/box.png' );
     mainTexture.colorSpace = THREE.SRGBColorSpace;
 
     const geometry = new THREE.BoxGeometry();
