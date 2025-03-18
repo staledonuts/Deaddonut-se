@@ -63,7 +63,7 @@ function init()
         void main() 
         {
             vMainUv = uv;
-            vDistortUv = uv + InOutBounce(uTime);
+            vDistortUv = uv;
             vNormal = normal;
             vPosition = position;
             gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
@@ -95,12 +95,11 @@ function init()
     distortTexture.colorSpace = THREE.SRGBColorSpace;
 
     const geometry = new THREE.BoxGeometry();
-    //const material = new THREE.MeshBasicMaterial( { map: texture } );
     uniforms =
     {
-        uMainTexture: { value: mainTexture }, // Texture uniform
-        uDistortTexture: { value: distortTexture }, // Texture uniform
-        uTime: { value: 0.0 }        // Time uniform (initialize to 0)
+        uMainTexture: { value: mainTexture },
+        uDistortTexture: { value: distortTexture },
+        uTime: { value: 0.0 }
     };
 
     const material = new THREE.ShaderMaterial({
@@ -108,6 +107,7 @@ function init()
         fragmentShader: fragmentShader,
         uniforms: uniforms
     });
+
     mesh = new THREE.Mesh( geometry, material );
     scene.add( mesh );
 
