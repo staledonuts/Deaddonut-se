@@ -78,7 +78,7 @@ function init()
         {
             vec4 textureColor = texture2D(uMainTexture, vMainUv);
             vec3 normalColor = vNormal * 0.5 + 0.5;
-            vec3 finalColor = normalColor.rgb * textureColor.rgb;
+            vec3 finalColor = normalColor.rgb;
             gl_FragColor = vec4(finalColor, 1.0);
         }`;
     scene = new THREE.Scene();
