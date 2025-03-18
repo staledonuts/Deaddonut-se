@@ -1,119 +1,115 @@
 @import url("https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700&display=swap");
 
-p {
-    text-align: center;
-    color: #d1d0ce;
-}
-
-canvas {
+#glcanvas
+{
     display: block;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #1b2026;
+    background-color: var(--base-backgroundcolor);
     z-index: 1; /* Place the canvas behind the content */
 }
 
 :root {
-  --light-blue: #d7e3fc;
-  --light-pink: #ffc8dd;
-  --pink: #ffafcc;
-  --active-link-border-radius: 15px;
-  --active-link-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.2);
+    --light-blue: #87d1ef;
+    --light-pink: #64a1c2;
+    --menu-backgroundcolor: #466480;
+    --base-backgroundcolor: #3c3d3b;
+    --base-fontcolor: #1b2026;
+    --active-link-border-radius: 15px;
+    --active-link-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.2);
 }
 
 * {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 a {
-  text-decoration: none;
-  color: inherit;
+    text-decoration: none;
+    color: inherit;
 }
 
 body {
-  font-family: "Fira Sans", sans-serif;
-  margin: 50px 0;
-  background: var(--light-blue);
-}
-
-.notification {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 10px;
-  background: var(--light-pink);
-}
-
-.notification a {
-  text-decoration: underline;
+    font-family: "Fira Sans", sans-serif;
+    margin: 50px 0;
+    color: var(--base-fontcolor);
+    background: var(--base-backgroundcolor);
 }
 
 .container {
-  max-width: 1000px;
-  text-align: center;
-  padding: 0 10px;
-  margin: 0 auto;
-  z-index: 2;
+    max-width: 1000px;
+    text-align: center;
+    padding: 0 10px;
+    margin: 0 auto;
+    z-index: 2;
+}
+
+.datacontainer
+{
+    max-width: 1000px;
+    text-align: center;
+    padding: 0 10px;
+    margin: 0 auto;
+    z-index: 2;
 }
 
 h1 {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 /* MENU STYLES
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .menu {
-  list-style: none;
-  position: relative;
-  display: inline-flex;
-  background: var(--pink);
-  padding: 10px;
-  border-radius: 15px;
-  box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    list-style: none;
+    position: relative;
+    display: inline-flex;
+    background: var(--menu-backgroundcolor);
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    z-index: 3;
 }
 
 .menu::before {
-  content: "";
-  position: absolute;
-  top: 10px;
-  left: 0;
-  transform: translateX(var(--transformJS));
-  width: var(--widthJS);
-  height: calc(100% - 20px);
-  border-radius: var(--active-link-border-radius);
-  background: var(--light-pink);
-  box-shadow: var(--active-link-box-shadow);
-  transition: all 0.3s linear;
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 0;
+    transform: translateX(var(--transformJS));
+    width: var(--widthJS);
+    height: calc(100% - 20px);
+    border-radius: var(--active-link-border-radius);
+    background: var(--light-pink);
+    box-shadow: var(--active-link-box-shadow);
+    transition: all 0.3s linear;
 }
 
 .menu li a {
-  display: inline-block;
-  position: relative;
-  padding: 10px 20px;
-  font-size: 20px;
-  font-weight: 500;
-  z-index: 3;
+    display: inline-block;
+    position: relative;
+    padding: 10px 20px;
+    font-size: 20px;
+    font-weight: 500;
 }
 
 .menu li:not(:last-child) {
-  margin-right: 20px;
+    margin-right: 20px;
 }
 
 @media (max-width: 800px) {
-  .menu,
-  .menu li {
-    display: inline-block;
+    .menu,
+    .menu li {
+        display: inline-block;
   }
 
   .menu li.active a {
-    background: var(--light-pink);
-    border-radius: var(--active-link-border-radius);
-    box-shadow: var(--active-link-box-shadow);
+        background: var(--light-pink);
+        border-radius: var(--active-link-border-radius);
+        box-shadow: var(--active-link-box-shadow);
   }
 
   .menu::before {
@@ -121,19 +117,17 @@ h1 {
   }
 }
 
-/* FOOTER STYLES
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
 .page-footer {
-  position: fixed;
-  right: 0;
-  bottom: 50px;
-  display: flex;
-  align-items: center;
-  padding: 5px;
-  z-index: 2;
+    position: fixed;
+    right: 0;
+    bottom: 50px;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    z-index: 2;
 }
 
 .page-footer a {
-  display: flex;
-  margin-left: 4px;
+    display: flex;
+    margin-left: 4px;
 }
