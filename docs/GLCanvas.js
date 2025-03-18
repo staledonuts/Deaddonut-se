@@ -82,7 +82,7 @@ function init()
         void main() 
         {
             vec4 distortColor = texture2D(uDistortTexture, vDistortUv);
-            vec4 textureColor = texture2D(uMainTexture, vMainUv * distortColor.xy);
+            vec4 textureColor = texture2D(uMainTexture, vMainUv);
             vec3 normalColor = vNormal * 0.5 + 0.5;
             vec3 finalColor = textureColor.rgb * normalColor;
             gl_FragColor = vec4(finalColor, 1.0);
