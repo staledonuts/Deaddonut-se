@@ -1,9 +1,11 @@
-
-
 precision highp float;
-varying highp vec4 vColor;
-uniform vec2 uMousePos;
-uniform vec2 uResolution;
+
+varying vec2 vUv; // UV coordinates from the vertex shader
+varying vec3 vNormal; // Normals from the vertex shader
+varying vec3 vPosition; // Vertex position from the vertex shader
+
+uniform float time; // Example uniform (can be updated from JavaScript)
+
 
 vec4 overlay(vec4 base, vec4 overlay, float overlayAlpha)
 {
@@ -60,28 +62,11 @@ float InOutBounce(float t)
     return 1.0 - InBounce((1.0 - t) * 2.0) / 2.0;
 }
 
-void main(void) 
+void main() 
 {
-    // Normalize fragment coordinates to [0, 1] range
-    vec2 fragCoord = SnapUV(gl_FragCoord.xy / uResolution.xy);
+  // Example: Create a color based on UV coordinates and time
+  vec3 color = vec3(vUv.x, vUv.y, abs(sin(time)));
 
-    // Calculate the distance from the fragment to the mouse position
-    float dist = distance(fragCoord, (uMousePos + 1.0) * 0.5); // Convert uMousePos to [0, 1] range
-
-    // Glow parameters
-    float glowRadius = 0.1; // Radius of the glow effect
-    float glowIntensity = 1.5; // Intensity of the glow
-
-    // Calculate the glow strength using a smoothstep function
-    float glow = smoothstep(glowRadius, 0.0, dist);
-
-    // Base color (background)
-    vec4 baseColor = vColor; // Black background
-
-    // Glow color
-    vec4 glowOverlay = vec4(0.6, 0.6, 1.0 ,glow) * glowIntensity;
-
-    // Output the final color
-    gl_FragColor = overlay(baseColor, glowOverlay, glowOverlay.a);
+  // Output the final color
+  gl_FragColor = vec4(color, 1.0); // RGBA color
 }
-

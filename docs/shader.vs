@@ -1,31 +1,23 @@
 precision highp float;
-attribute vec3 aVertexParams;
-attribute vec3 aVertexColor;
-uniform float uTime;
-uniform float uAspectRatio;
-varying highp vec4 vColor;
+attribute vec2 uv;
+attribute vec3 position; // Declare position attribute
+attribute vec3 normal;
 
-void main(void) 
+uniform mat4 projectionMatrix;
+uniform mat4 modelViewMatrix;
+
+varying vec2 vUv; // Pass UV coordinates to the fragment shader
+varying vec3 vNormal; // Pass normals to the fragment shader
+varying vec3 vPosition; // Pass vertex position to the fragment shader
+
+void main() 
 {
-    
-    // move in ellipse
-    float x = sin(uTime*.2 + aVertexParams.z) * aVertexParams.x*(0.6 + .2*sin(uTime*.1));
-    float y = cos(uTime*.2 + aVertexParams.z) * aVertexParams.x*(1.0 + .3*cos(uTime*.4));
+    // Pass data to the fragment shader
+    vUv = uv; // UV coordinates
+    vNormal = normal; // Normals
+    vPosition = position; // Vertex position
 
-    // rotate each orbit depending on its radius
-    float a = log(aVertexParams.x)*(3.2+.7*sin(uTime*.3)) - uTime*0.1;
-
-    // define position for each point
-    gl_Position = vec4(x * cos(a) - y * sin(a), x * sin(a) + y * cos(a), 0, 1.0);
-
-    // slightly squeeze by Y to see galaxy in 'perspective'
-    gl_Position.y *= uAspectRatio;
-
-    // don't set the size too large because you get rectngles
-    gl_PointSize = aVertexParams.y + 0.5;
-
-    // pass the color to fragment shader
-    vColor = vec4(aVertexColor*(1.2-aVertexParams.x), 1);
-    //vColor = vec4(1.0, 1.0, 1.0, 1.0);
+    // Transform the vertex position to clip space
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }
 
