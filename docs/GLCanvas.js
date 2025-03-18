@@ -73,7 +73,6 @@ function init()
         varying vec3 vNormal;
         varying vec3 vPosition;
         uniform sampler2D uMainTexture;
-        uniform sampler2D uDistortTexture;
 
 
         void main() 
