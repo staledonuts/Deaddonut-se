@@ -91,7 +91,8 @@ function init()
 
     const mainTexture = new THREE.TextureLoader().load( 'textures/box.png' );
     const distortTexture = new THREE.TextureLoader().load( 'textures/box.png' );
-    texture.colorSpace = THREE.SRGBColorSpace;
+    mainTexture.colorSpace = THREE.SRGBColorSpace;
+    distortTexture.colorSpace = THREE.SRGBColorSpace;
 
     const geometry = new THREE.BoxGeometry();
     //const material = new THREE.MeshBasicMaterial( { map: texture } );
