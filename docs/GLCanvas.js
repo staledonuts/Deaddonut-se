@@ -5,7 +5,8 @@ let mesh;
 
 init();
 
-function init() {
+function init() 
+{
 
     camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 100 );
     camera.position.z = 2;
@@ -16,8 +17,11 @@ function init() {
     texture.colorSpace = THREE.SRGBColorSpace;
 
     const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial( { map: texture } );
-
+    //const material = new THREE.MeshBasicMaterial( { map: texture } );
+    const material = new THREE.ShaderMaterial({
+        vertexShader: document.getElementById( 'vertexShader' ).textContent,
+        fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+    });
     mesh = new THREE.Mesh( geometry, material );
     scene.add( mesh );
 
@@ -33,7 +37,8 @@ function init() {
 
 }
 
-function onWindowResize() {
+function onWindowResize() 
+{
 
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -42,7 +47,8 @@ function onWindowResize() {
 
 }
 
-function animate() {
+function animate() 
+{
 
     mesh.rotation.x += 0.005;
     mesh.rotation.y += 0.01;
