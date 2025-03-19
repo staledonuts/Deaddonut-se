@@ -60,6 +60,7 @@ body
 .content-container.active 
 {
     display: block;
+    z-index: 3;
 }
 
 h1 
