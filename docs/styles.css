@@ -42,10 +42,11 @@ body
 {
     display: none;
     position: relative;
-    text-align: center;
+    text-align: left;
     padding: 20px;
     background: var(--menu-backgroundcolor);
     border-radius: var(--active-content-border-radius);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     max-width: 800px;
     margin: 20px auto;
 }
@@ -54,6 +55,75 @@ body
 {
     display: block;
     z-index: var(--page-z-index);
+}
+
+/* Layout for the content container */
+.content-layout 
+{
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Left section - List of links */
+.link-list 
+{
+    flex: 1;
+    min-width: 200px;
+}
+
+.link-list h2 
+{
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.link-list ul 
+{
+    list-style-type: none;
+    padding: 0;
+}
+
+.link-list ul li 
+{
+    margin: 5px 0;
+}
+
+.link-list ul li a 
+{
+    text-decoration: none;
+    color: #466480;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.link-list ul li a:hover 
+{
+    color: #87d1ef;
+}
+
+/* Right section - Image gallery (Vertical) */
+.image-gallery 
+{
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.image-gallery img 
+{
+    width: 100%;
+    max-width: 300px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.image-gallery img:hover 
+{
+    transform: scale(1.05);
 }
 
 h1 
