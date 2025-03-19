@@ -20,6 +20,7 @@ canvas
     --active-link-border-radius: 25px;
     --active-content-border-radius: 25px;
     --active-link-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.2);
+    --page-z-index: 2;
 }
 
 a 
@@ -53,7 +54,7 @@ body
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     max-width: 800px;
     margin: 20px auto;
-    z-index: 2;
+    z-index: var(--page-z-index);
 }
 
 .content-container.active 
@@ -76,7 +77,7 @@ h1
     background: var(--menu-backgroundcolor);
     padding: 10px;
     border-radius: var(--active-link-border-radius);
-    z-index: 2;
+    z-index: var(--page-z-index);
 }
 
 .menu::before 
@@ -135,7 +136,7 @@ h1
     display: flex;
     align-items: center;
     padding: 5px;
-    z-index: 2;
+    z-index: var(--page-z-index);
 }
 
 .page-footer a 
