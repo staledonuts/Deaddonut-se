@@ -36,6 +36,11 @@ body
     background: var(--base-backgroundcolor);
 }
 
+.zbuffer
+{
+    z-index: var(--page-z-index);
+}
+
 
 .content-container 
 {
