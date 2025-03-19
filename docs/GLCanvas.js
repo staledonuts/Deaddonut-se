@@ -110,6 +110,7 @@ function init()
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.setAnimationLoop( animate );
     renderer.setClearAlpha(0.0);
+    document.body.appendChild( renderer.domElement );
 
     //
 
