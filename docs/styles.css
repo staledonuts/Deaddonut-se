@@ -20,6 +20,12 @@
     --active-link-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.2);
 }
 
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
 a {
     text-decoration: none;
     color: inherit;
