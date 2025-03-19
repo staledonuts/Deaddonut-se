@@ -61,7 +61,6 @@ h1 {
     background: var(--menu-backgroundcolor);
     padding: 10px;
     border-radius: var(--active-link-border-radius);
-    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
     z-index: 3;
 }
 
@@ -75,7 +74,6 @@ h1 {
     height: calc(100% - 20px);
     border-radius: var(--active-link-border-radius);
     background: var(--light-pink);
-    box-shadow: var(--active-link-box-shadow);
     transition: all 0.3s linear;
 }
 
@@ -100,7 +98,6 @@ h1 {
   .menu li.active a {
         background: var(--light-pink);
         border-radius: var(--active-link-border-radius);
-        box-shadow: var(--active-link-box-shadow);
   }
 
   .menu::before {
