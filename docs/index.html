@@ -1,70 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to my Portfolio</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <nav>
-            <ul class="menu">
-                <li class="active">
-                    <a href="">Home</a>
-                </li>
-                <li>
-                    <a href="">Information About Us</a>
-                </li>
-                <li>
-                    <a href="">Clients</a>
-                </li>
-                <li>
-                    <a href="">Contact</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-    <footer class="page-footer">
-        <span>made by </span>
-        <a href="https://www.deaddonut.se" target="_blank">
-            <img width="32" height="32" src="images/csharp.svg" alt="CSharp">
-        </a>
-    </footer>  
-    <div class="glcontainer">
-        <canvas id="glcanvas"></canvas>
-    </div>
-</body>
-    <script>
-    {
-
-        const menu = document.querySelector(".menu");
-        const menuLinks = menu.querySelectorAll("a");
-        const menuLinkActive = menu.querySelector("li.active");
-        const activeClass = "active";
-
-        doCalculations(menuLinkActive);
-
-        for (const menuLink of menuLinks) {
-        menuLink.addEventListener("click", function (e) {
-            e.preventDefault();
-            menu.querySelector("li.active").classList.remove(activeClass);
-            menuLink.parentElement.classList.add(activeClass);
-            doCalculations(menuLink);
-        });
-        }
-
-        function doCalculations(link) {
-        menu.style.setProperty("--transformJS", `${link.offsetLeft}px`);
-        menu.style.setProperty("--widthJS", `${link.offsetWidth}px`);
-        }
-
-        window.addEventListener("resize", function () {
-        const menuLinkActive = menu.querySelector("li.active");
-        doCalculations(menuLinkActive);
-        });
-    }
-    </script>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Welcome to my Portfolio</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="container">
+            <nav>
+                <ul class="menu">
+                    <li class="active">
+                        <a href="">Home</a>
+                    </li>
+                    <li>
+                        <a href="">Information About Us</a>
+                    </li>
+                    <li>
+                        <a href="">Clients</a>
+                    </li>
+                    <li>
+                        <a href="">Contact</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="glcontainer">
+            <canvas id="glcanvas"></canvas>
+        </div>
+        <footer class="page-footer">
+            <span>made by </span>
+            <a href="https://www.deaddonut.se" target="_blank">
+                <img width="32" height="32" src="images/csharp.svg" alt="CSharp">
+            </a>
+        </footer> 
+    </body>
     <script type="importmap">
     {
         "imports": {
@@ -73,5 +43,6 @@
         }
     }
     </script>
+    <script src="./Menu.js"></script>
     <script type="module" src="./GLCanvas.js"></script>
 </html>
