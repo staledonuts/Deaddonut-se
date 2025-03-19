@@ -101,12 +101,15 @@ function init()
     mesh = new THREE.Mesh( geometry, material );
     scene.add( mesh );
 
-    renderer = new THREE.WebGLRenderer( { antialias: true } );
+    renderer = new THREE.WebGLRenderer
+    ({ 
+        antialias: true,
+        domElement: document.getElementById('glcanvas')
+    });
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.setAnimationLoop( animate );
     renderer.setClearAlpha(0.0);
-    document.body.appendChild( renderer.domElement );
 
     //
 
