@@ -2,7 +2,7 @@
 
 #glcanvas
 {
-    position: absolute; /* Stays fixed to the viewport */
+    position: fixed; /* Stays fixed to the viewport */
     top: 0;
     left: 0;
     width: 100vw; /* Full width of the viewport */
