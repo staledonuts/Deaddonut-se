@@ -8,8 +8,7 @@ init();
 
 function init() 
 {
-
-    camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 100 );
+    camera = new THREE.PerspectiveCamera( 70, window.outerWidth / window.outerHeight, 0.1, 100 );
     camera.position.z = 2;
     // Vertex Shader
     const vertexShader = `
@@ -118,7 +117,7 @@ function init()
 function onWindowResize() 
 {
 
-    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = window.outerWidth / window.outerHeight;
     camera.updateProjectionMatrix();
 
     renderer.setSize( window.innerWidth, window.innerHeight );
