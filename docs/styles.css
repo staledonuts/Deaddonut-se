@@ -8,6 +8,7 @@ canvas
     width: 100vw; /* Full width of the viewport */
     height: 100vh; /* Full height of the viewport */
     z-index: 0; /* Place the canvas behind the content */
+    filter: blur(8px);
 }
 
 :root 
@@ -34,11 +35,6 @@ body
     font-family: "Fira Sans", sans-serif;
     color: var(--base-fontcolor);
     background: var(--base-backgroundcolor);
-}
-
-.zbuffer
-{
-    z-index: var(--page-z-index);
 }
 
 
