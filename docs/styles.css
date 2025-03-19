@@ -19,6 +19,7 @@ canvas
     --content-backgroundcolor: #4664807e;
     --base-backgroundcolor: #3c3d3b;
     --base-fontcolor: #1b2026;
+    --base-highlight-fontcolor: #87d1ef;
     --active-link-border-radius: 25px;
     --active-content-border-radius: 25px;
     --active-link-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.2);
@@ -62,7 +63,7 @@ body
 .content-layout 
 {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     gap: 20px;
 }
 
@@ -93,38 +94,43 @@ body
 .link-list ul li a 
 {
     text-decoration: none;
-    color: #466480;
+    color: var(--base-fontcolor);
     font-weight: bold;
     transition: color 0.3s ease;
 }
 
 .link-list ul li a:hover 
 {
-    color: #87d1ef;
+    color: var(--base-highlight-fontcolor);
 }
 
 /* Right section - Image gallery (Vertical) */
 .image-gallery 
 {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+
+    justify-content: center;
     align-items: center;
     gap: 15px;
 }
 
 .image-gallery img 
 {
-    width: 100%;
-    max-width: 300px;
+    min-width: 10%;
+    max-width: 100%;
+    background: var(--menu-backgroundcolor);
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.418);
     transition: transform 0.3s ease;
 }
 
 .image-gallery img:hover 
 {
-    transform: scale(1.05);
+    transform: scale(1.2);
 }
 
 h1 
@@ -150,6 +156,7 @@ h1
     background: var(--menu-backgroundcolor);
     padding: 10px;
     border-radius: var(--active-link-border-radius);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.418);
     z-index: var(--page-z-index);
 }
 
@@ -174,6 +181,13 @@ h1
     padding: 10px 20px;
     font-size: 20px;
     font-weight: 500;
+    color: var(--base-fontcolor);
+    transition: all 0.3s linear;
+}
+
+.menu li a:hover
+{
+    color: var(--base-highlight-fontcolor);
 }
 
 .menu li:not(:last-child) 
