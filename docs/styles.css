@@ -45,18 +45,19 @@ body
 .content-container 
 {
     display: none;
+    position: relative;
     text-align: center;
     padding: 20px;
     background: var(--menu-backgroundcolor);
     border-radius: var(--active-content-border-radius);
     max-width: 800px;
     margin: 20px auto;
-    z-index: var(--page-z-index);
 }
 
 .content-container.active 
 {
     display: block;
+    z-index: var(--page-z-index);
 }
 
 h1 

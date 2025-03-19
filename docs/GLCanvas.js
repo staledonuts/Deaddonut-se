@@ -104,7 +104,6 @@ function init()
     renderer = new THREE.WebGLRenderer
     ({ 
         antialias: true,
-        domElement: document.getElementById('glcanvas')
     });
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
