@@ -10,9 +10,15 @@ canvas
     z-index: 1; /* Place the canvas behind the content */
 }
 
+.glcontainer
+{
+
+}
 
 
-:root {
+
+:root 
+{
     --light-blue: #87d1ef;
     --light-pink: #64a1c2;
     --menu-backgroundcolor: #466480;
@@ -23,18 +29,21 @@ canvas
     --active-link-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.2);
 }
 
-a {
+a 
+{
     text-decoration: none;
     color: inherit;
 }
 
-body {
+body 
+{
     font-family: "Fira Sans", sans-serif;
     color: var(--base-fontcolor);
     background: var(--base-backgroundcolor);
 }
 
-.container {
+.container 
+{
     max-width: 1000px;
     text-align: center;
     padding: 10px 10px;
@@ -42,7 +51,8 @@ body {
     z-index: 2;
 }
 
-.content-container {
+.content-container 
+{
     display: none;
     text-align: center;
     padding: 20px;
@@ -51,20 +61,23 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     max-width: 800px;
     margin: 20px auto;
-    z-index: 2;
+    z-index: 3;
 }
 
-.content-container.active {
+.content-container.active 
+{
     display: block;
 }
 
-h1 {
+h1 
+{
     margin-bottom: 20px;
 }
 
 /* MENU STYLES
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-.menu {
+.menu 
+{
     list-style: none;
     position: relative;
     display: inline-flex;
@@ -74,7 +87,8 @@ h1 {
     z-index: 3;
 }
 
-.menu::before {
+.menu::before 
+{
     content: "";
     position: absolute;
     top: 10px;
@@ -87,7 +101,8 @@ h1 {
     transition: all 0.3s linear;
 }
 
-.menu li a {
+.menu li a 
+{
     display: inline-block;
     position: relative;
     padding: 10px 20px;
@@ -95,27 +110,33 @@ h1 {
     font-weight: 500;
 }
 
-.menu li:not(:last-child) {
+.menu li:not(:last-child) 
+{
     margin-right: 20px;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 800px) 
+{
     .menu,
-    .menu li {
+    .menu li 
+    {
         display: inline-block;
-  }
+    }
 
-  .menu li.active a {
+    .menu li.active a 
+    {
         background: var(--light-pink);
         border-radius: var(--active-link-border-radius);
-  }
+    }
 
-  .menu::before {
-    display: none;
-  }
+    .menu::before 
+    {
+        display: none;
+    }
 }
 
-.page-footer {
+.page-footer 
+{
     position: fixed;
     right: 0;
     bottom: 50px;
@@ -125,7 +146,8 @@ h1 {
     z-index: 2;
 }
 
-.page-footer a {
+.page-footer a 
+{
     display: flex;
     margin-left: 4px;
 }
