@@ -16,6 +16,7 @@ canvas
     --light-blue: #87d1ef;
     --light-pink: #64a1c2;
     --menu-backgroundcolor: #466480;
+    --content-backgroundcolor: #4664807e;
     --base-backgroundcolor: #3c3d3b;
     --base-fontcolor: #1b2026;
     --active-link-border-radius: 25px;
@@ -44,7 +45,7 @@ body
     position: relative;
     text-align: left;
     padding: 20px;
-    background: var(--menu-backgroundcolor);
+    background: var(--content-backgroundcolor);
     border-radius: var(--active-content-border-radius);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     max-width: 800px;
