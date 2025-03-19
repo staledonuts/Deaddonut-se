@@ -10,24 +10,48 @@
         <div class="container">
             <nav>
                 <ul class="menu">
-                    <li class="active">
-                        <a href="">Home</a>
+                    <li class="active" data-container="home">
+                        <a href="#">Home</a>
                     </li>
-                    <li>
-                        <a href="">Information About Us</a>
+                    <li data-container="about">
+                        <a href="#">Information About Us</a>
                     </li>
-                    <li>
-                        <a href="">Clients</a>
+                    <li data-container="clients">
+                        <a href="#">Clients</a>
                     </li>
-                    <li>
-                        <a href="">Contact</a>
+                    <li data-container="contact">
+                        <a href="#">Contact</a>
                     </li>
                 </ul>
             </nav>
         </div>
+        <!-- Content Containers -->
+        <div class="content-container" id="home"> 
+            <h1>Welcome to Home</h1>
+            <p>This is the home section.</p>
+        </div>
+
+        <div class="content-container" id="about"> 
+            <h1>About Us</h1>
+            <p>Information about us goes here.</p>
+        </div>
+
+        <div class="content-container" id="clients"> 
+            <h1>Our Clients</h1>
+            <p>Client details are displayed here.</p>
+        </div>
+
+        <div class="content-container" id="contact"> 
+            <h1>Contact Us</h1>
+            <p>Contact information is listed here.</p>
+        </div>
+
+
         <div class="glcontainer">
             <canvas id="glcanvas"></canvas>
         </div>
+        
+        
         <footer class="page-footer">
             <span>made by </span>
             <a href="https://www.deaddonut.se" target="_blank">

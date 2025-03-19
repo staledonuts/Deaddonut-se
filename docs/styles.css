@@ -50,6 +50,21 @@ body {
     z-index: 2;
 }
 
+.content-container {
+    display: none; /* Hide all sections by default */
+    text-align: center;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.content-container.active {
+    display: block; /* Show the active section */
+}
+
 h1 {
     margin-bottom: 20px;
 }
