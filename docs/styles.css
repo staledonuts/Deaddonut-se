@@ -2,10 +2,9 @@
 
 #glcanvas
 {
-    display: block;
     position: fixed; /* Stays fixed to the viewport */
-    top: 0;
-    left: 0;
+    top: 0vh;
+    left: 0vw;
     width: 100vw; /* Full width of the viewport */
     height: 100vh; /* Full height of the viewport */
     z-index: 1; /* Place the canvas behind the content */
@@ -21,12 +20,6 @@
     --active-link-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.2);
 }
 
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
-
 a {
     text-decoration: none;
     color: inherit;
@@ -34,7 +27,6 @@ a {
 
 body {
     font-family: "Fira Sans", sans-serif;
-    margin: 50px 0;
     color: var(--base-fontcolor);
     background: var(--base-backgroundcolor);
 }
@@ -43,7 +35,7 @@ body {
     max-width: 1000px;
     text-align: center;
     padding: 0 10px;
-    margin: 0 auto;
+    margin: 50 auto;
     z-index: 2;
 }
 
