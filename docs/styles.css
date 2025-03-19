@@ -2,6 +2,11 @@
 
 #glcanvas
 {
+    z-index: 1; /* Place the canvas behind the content */
+}
+
+.glcontainer
+{
     position: fixed; /* Stays fixed to the viewport */
     top: 0;
     left: 0;
@@ -9,6 +14,8 @@
     height: 100vh; /* Full height of the viewport */
     z-index: 1; /* Place the canvas behind the content */
 }
+
+
 
 :root {
     --light-blue: #87d1ef;
