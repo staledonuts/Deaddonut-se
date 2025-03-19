@@ -7,25 +7,22 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="glcontainer">
-        <canvas id="glcanvas"></canvas>
-    </div>
     <div class="container">
         <h1>Eriks Portfolio</h1>
         <nav>
             <ul class="menu">
-            <li class="active">
-                <a href="">Home</a>
-            </li>
-            <li>
-                <a href="">Information About Us</a>
-            </li>
-            <li>
-                <a href="">Clients</a>
-            </li>
-            <li>
-                <a href="">Contact</a>
-            </li>
+                <li class="active">
+                    <a href="">Home</a>
+                </li>
+                <li>
+                    <a href="">Information About Us</a>
+                </li>
+                <li>
+                    <a href="">Clients</a>
+                </li>
+                <li>
+                    <a href="">Contact</a>
+                </li>
             </ul>
         </nav>
     </div>
@@ -34,11 +31,14 @@
         <a href="https://www.deaddonut.se" target="_blank">
             <img width="32" height="32" src="images/csharp.svg" alt="CSharp">
         </a>
-    </footer>
-
-
-
+    </footer>  
+    <div class="glcontainer">
+        <canvas id="glcanvas"></canvas>
+    </div>
+</body>
     <script>
+    {
+
         const menu = document.querySelector(".menu");
         const menuLinks = menu.querySelectorAll("a");
         const menuLinkActive = menu.querySelector("li.active");
@@ -64,6 +64,7 @@
         const menuLinkActive = menu.querySelector("li.active");
         doCalculations(menuLinkActive);
         });
+    }
     </script>
     <script type="importmap">
     {
@@ -74,6 +75,4 @@
     }
     </script>
     <script type="module" src="./GLCanvas.js"></script>
-    
-</body>
 </html>
