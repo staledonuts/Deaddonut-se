@@ -36,13 +36,6 @@ body
     background: var(--base-backgroundcolor);
 }
 
-.container 
-{
-    max-width: 1000px;
-    text-align: center;
-    padding: 10px 10px;
-    margin: 0 auto;
-}
 
 .content-container 
 {
@@ -51,7 +44,6 @@ body
     padding: 20px;
     background: var(--menu-backgroundcolor);
     border-radius: var(--active-content-border-radius);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     max-width: 800px;
     margin: 20px auto;
     z-index: var(--page-z-index);
@@ -69,6 +61,14 @@ h1
 
 /* MENU STYLES
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
+.menu-container 
+{
+    max-width: 1000px;
+    text-align: center;
+    padding: 10px 10px;
+    margin: 0 auto;
+}
+
 .menu 
 {
     list-style: none;
