@@ -7,7 +7,7 @@ canvas
     left: 0;
     width: 100vw; /* Full width of the viewport */
     height: 100vh; /* Full height of the viewport */
-    z-index: 1; /* Place the canvas behind the content */
+    z-index: 0; /* Place the canvas behind the content */
 }
 
 :root 
@@ -41,7 +41,6 @@ body
     text-align: center;
     padding: 10px 10px;
     margin: 0 auto;
-    z-index: 2;
 }
 
 .content-container 
@@ -54,13 +53,12 @@ body
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     max-width: 800px;
     margin: 20px auto;
-    z-index: 3;
+    z-index: 2;
 }
 
 .content-container.active 
 {
     display: block;
-    z-index: 3;
 }
 
 h1 
@@ -78,7 +76,7 @@ h1
     background: var(--menu-backgroundcolor);
     padding: 10px;
     border-radius: var(--active-link-border-radius);
-    z-index: 3;
+    z-index: 2;
 }
 
 .menu::before 
