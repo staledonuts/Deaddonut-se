@@ -92,7 +92,7 @@ body
 
 .image-gallery img:hover 
 {
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 
 h1 
@@ -192,4 +192,41 @@ h1
 {
     display: flex;
     margin-left: 4px;
+}
+
+
+/*
+* Custom Animation:
+* -----------------
+*/
+/* custom scene transition (slide effect) */
+.only-this-gallery.show .spl-scene
+{
+    transition: transform 0.2s ease;
+}
+/* custom animation "visible state" (css context by custom classname "only-this-gallery" to apply these animation just on a specific gallery) */
+.only-this-gallery.show .spl-pane > *
+{
+    clip-path: circle(100% at center);
+    transition: transform 0.35s ease,
+                opacity 0.65s ease,
+                clip-path 0.8s ease;
+}
+/* custom animation "hidden state" ("custom" is the name of the animation you pass as gallery option) */
+.only-this-gallery .spl-pane .custom 
+{
+    clip-path: circle(0px at center) ;
+    transition: transform 0.65s ease,
+                opacity 0.65s ease;
+}
+/* animation state when gallery is hidden */
+#spotlight.only-this-gallery
+{
+    clip-path: circle(0px at center);
+}
+/* animation state when gallery will open */
+#spotlight.only-this-gallery.show
+{
+    clip-path: circle(100% at center);
+    transition: clip-path 0.65s ease 0.15s;
 }
