@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'https://unpkg.com/three@0.174.0/build/three.module.js';
 
 let camera, scene, renderer;
 let mesh;
