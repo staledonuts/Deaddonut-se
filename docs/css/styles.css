@@ -110,7 +110,7 @@ h1
     margin: 0 auto;
 }
 
-.menu 
+.topmenu 
 {
     list-style: none;
     position: relative;
@@ -122,7 +122,7 @@ h1
     z-index: var(--page-z-index);
 }
 
-.menu::before 
+.topmenu::before 
 {
     content: "";
     position: absolute;
@@ -136,7 +136,7 @@ h1
     transition: all 0.3s linear;
 }
 
-.menu li a 
+.topmenu li a 
 {
     display: inline-block;
     position: relative;
@@ -147,31 +147,31 @@ h1
     transition: all 0.3s linear;
 }
 
-.menu li a:hover
+.topmenu li a:hover
 {
     color: var(--base-highlight-fontcolor);
 }
 
-.menu li:not(:last-child) 
+.topmenu li:not(:last-child) 
 {
     margin-right: 20px;
 }
 
 @media (max-width: 800px) 
 {
-    .menu,
-    .menu li 
+    .topmenu,
+    .topmenu li 
     {
         display: inline-block;
     }
 
-    .menu li.active a 
+    .topmenu li.active a 
     {
         background: var(--light-pink);
         border-radius: var(--active-link-border-radius);
     }
 
-    .menu::before 
+    .topmenu::before 
     {
         display: none;
     }

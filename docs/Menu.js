@@ -1,4 +1,4 @@
-const menu = document.querySelector(".menu");
+const menu = document.querySelector(".topmenu");
 const menuLinks = menu.querySelectorAll("a");
 const menuLinkActive = menu.querySelector("li.active");
 const activeClass = "active";
@@ -30,7 +30,7 @@ doCalculations(menuLinkActive);
 
 document.addEventListener("DOMContentLoaded", function () 
 {
-    const menuItems = document.querySelectorAll(".menu li");
+    const menuItems = document.querySelectorAll(".topmenu li");
     const contentContainers = document.querySelectorAll(".content-container");
 
     function showContainer(containerId) {
