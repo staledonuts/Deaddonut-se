@@ -23,7 +23,7 @@
     },{
         title: "Minecraft Legends Myth: Ichorous Grove",
         description: "In hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim.",
-        src: "demo/gallery/newport-beach-2089906.jpg",
+        src: "images/mclegends-ich001.png",
         button: "Close Gallery",
         onclick: Spotlight.close,
         like: false
