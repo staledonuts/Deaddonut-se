@@ -13,9 +13,9 @@ canvas
 
 :root 
 {
-    --menu-selectedcolor: #6bc96c;
-    --menu-backgroundcolor: #5ba675;
-    --content-backgroundcolor: #5ba6759c;
+    --menu-selectedcolor: #6d80fa;
+    --menu-backgroundcolor: #8465ec;
+    --content-backgroundcolor: #8465ecb9;
     --base-backgroundcolor: #1f102a;
     --base-fontcolor: #1b2026;
     --base-highlight-fontcolor: #87d1ef;
