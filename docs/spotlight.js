@@ -24,18 +24,30 @@
         title: "Minecraft Legends Myth: Ichorous Grove",
         description: "In hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim.",
         src: "images/mclegends-ich001.png",
+        button: "Next Slide",
+        onclick: Spotlight.next,
+        like: false
+    },{
+        media: "node",
+        control: "next,prev,close",
+        src: (
+            function()
+            {
+                const iframe = document.createElement("iframe");
+                iframe.src = "https://www.youtube.com/embed/Q-aXSqCxKfU?si=zdNeK_TA4RTejf_4";
+                return iframe;
+            }
+            ()
+        )
+    },{
+        title: "Invincible: Doc Seismic Attacks",
+        description: "In hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim.",
+        src: "images/mclegends-ich001.png",
         button: "Close Gallery",
         onclick: Spotlight.close,
         like: false
-    }/*,{
-        media: "node",
-        control: "next,prev,close",
-        src: (function(){
-            const iframe = document.createElement("iframe");
-            iframe.src = "https://www.youtube.com/embed/tgbNymZ7vqY";
-            return iframe;
-        }())
-    }*/];
+    }
+    ];
 
     window.showGallery = function(index)
     {
