@@ -1,0 +1,165 @@
+:root {
+    --primary-color: #3b82f6; /* Blue 500 */
+    --background-color: #111827; /* Gray 900 */
+    --card-background: #1f2937;   /* Gray 800 */
+    --text-color: #f3f4f6;         /* Gray 100 */
+    --muted-text-color: #9ca3af;   /* Gray 400 */
+    --border-color: #374151;      /* Gray 700 */
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 0;
+}
+
+.portfolio-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.portfolio-header {
+    text-align: center;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+}
+
+.portfolio-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+}
+
+.portfolio-header p {
+    font-size: 1.125rem;
+    color: var(--muted-text-color);
+}
+
+.portfolio-section {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.portfolio-section h2 {
+    font-size: 2rem;
+    color: #ffffff;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+
+.portfolio-section p {
+    color: var(--muted-text-color);
+    line-height: 1.6;
+}
+
+/* Shader Showcase Styles */
+.webgl-canvas-container {
+    width: 100%;
+    height: 500px;
+    background-color: #000;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+    border: 1px solid var(--border-color);
+    overflow: hidden; /* Ensures canvas stays within borders */
+}
+
+.shader-controls {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.btn-shader {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+    margin: 0 0.5rem;
+}
+
+.btn-shader:hover {
+    background-color: #2563eb; /* Blue 600 */
+}
+
+.btn-shader:active {
+    transform: scale(0.98);
+}
+
+/* Gallery Styles */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.gallery-item {
+    background-color: #374151; /* Gray-700 */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.gallery-item img,
+.gallery-item video {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: block;
+}
+
+.gallery-item-info {
+    padding: 1rem 1.25rem;
+}
+
+.gallery-item-info h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-color);
+}
+
+.gallery-item-info p {
+    margin: 0;
+    color: var(--muted-text-color);
+    font-size: 0.9rem;
+}
+
+/* Footer Styles */
+.portfolio-footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--muted-text-color);
+}
+
+.portfolio-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.portfolio-footer a:hover {
+    color: #60a5fa; /* Blue 400 */
+}
+

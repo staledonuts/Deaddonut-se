@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Welcome to my Portfolio</title>
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="css/spotlight.min.css">
+    </head>
+    <body>
+        <div class="menu-container">
+            <nav>
+                <ul class="topmenu">
+                    <li class="active" data-container="home">
+                        <a href="#">Home</a>
+                    </li>
+                    <li data-container="about">
+                        <a href="#">About me</a>
+                    </li>
+                    <li data-container="portfolio">
+                        <a href="#">Portfolio</a>
+                    </li>
+                    <li data-container="contact">
+                        <a href="#">Contact</a>
+                    </li>
+                    <li data-container="settings">
+                        <a href="#">Gallery Settings</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <!-- Content Containers -->
+        <div class="content-container" id="home"> 
+            <div class="content-layout">
+                <div class="image-gallery">
+                    <a href="https://github.com/staledonuts" target="_blank"><img src="images/Button1.png" alt="Github Link"></a>
+                    <a href="https://staledonut.itch.io/" target="_blank"><img src="images/Button2.png" alt="Itch.io Link"></a>
+                    <a href="https://www.youtube.com/@DeadDonut" target="_blank"><img src="images/Button5.png" alt="Youtube Link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-container" id="about"> 
+            <h1>About Me.</h1>
+            <p>Information about us goes here.</p>
+        </div>
+
+        <div class="content-container" id="portfolio"> 
+            <h1>Portfolio</h1>
+            <h2>Minecraft Legends: Ichorous Grove.</h2>
+            <h3>Released: May, 2023</h3>
+            <h3>This was the first commercial project I worked on as a technical artist while doing my Internship at House of How</h3>
+            <div class="image-gallery" data-fit="cover" data-autohide="all">
+                <div class="image" style="height: auto; margin: 0 1vmin">
+                    <img onclick="showGallery(1)" src="images/mclegends-ich000.png" alt="Ichorous Grove picture">
+                </div>
+                <div class="image" style="height: auto; margin: 0 1vmin">
+                    <img onclick="showGallery(2)" src="images/mclegends-ich001.png" alt="Ichorous Grove picture">
+                </div>
+                <div class="image" style="height: auto; margin: 0 1vmin">
+                    <img onclick="showGallery(3)" src="images/mclegends-ich001.png" alt="Ichorous Grove picture">
+                </div>
+            </div>
+            <h2>Invincible: Doc Seismic Attacks.</h2>
+            <h3>Released: March 15, 2024</h3>
+            <h3>My second project at House of How, a a UEFN experience based on the Invincible IP.</h3>
+            <div class="image-gallery" data-fit="cover" data-autohide="all">
+                <div class="image" style="height: auto; margin: 0 1vmin">
+                    <img onclick="showGallery(4)" src="images/mclegends-ich000.png" alt="Invincible: Doc Seismic Attacks picture">
+                </div>
+                <div class="image" style="height: auto; margin: 0 1vmin">
+                    <img onclick="showGallery(5)" src="images/mclegends-ich001.png" alt="Invincible: Doc Seismic Attacks picture">
+                </div>
+            </div>
+            <h2>Unnamed Unreleased Project 1</h2>
+            <h3>End of development: first quarter of 2025.</h3>
+            <h3>Release date is currently unknown.</h3>
+            <h3>My Third project at House of How. NDA prevents me from talking about it yet.</h3>
+            <div class="image-gallery" data-fit="cover" data-autohide="all">
+                <div class="image" style="height: auto; margin: 0 1vmin">
+                    <img onclick="showGallery(6)" src="images/TempImages/secret-thumb.png" alt="Secret picture">
+                </div>
+            </div>
+        </div>
+
+        <div class="content-container" id="contact"> 
+            <h1>Contact Me.</h1>
+            <p>.</p>
+        </div>
+
+        <div class="content-container" id="settings"> 
+            <h1>Gallery Settings</h1>
+            <p>.</p>
+            <br>
+            <b>API Call</b><br>
+            Choose Controls (Toolbar):<br><br>
+            <div id="control">
+                <label><input type="checkbox" value="page" checked>Page</label>
+                <label><input type="checkbox" value="theme" checked>Theme</label>
+                <label><input type="checkbox" value="fullscreen" checked>Fullscreen</label>
+                <label><input type="checkbox" value="autofit" checked>Autofit</label>
+                <label><input type="checkbox" value="zoom-in" checked>Zoom +</label>
+                <label><input type="checkbox" value="zoom-out" checked>Zoom -</label><br>
+                <label><input type="checkbox" value="close" checked>Close</label>
+                <label><input type="checkbox" value="download">Download</label>
+                <label><input type="checkbox" value="play" checked>Play</label>
+                <label><input type="checkbox" value="prev" checked>Page Prev</label>
+                <label><input type="checkbox" value="next" checked>Page Next</label>
+            </div>
+            <br>
+            Choose Modifier:<br><br>
+            <div id="modifier">
+                <label><input type="checkbox" value="autoplay" checked>Autoplay</label>
+                <label><input type="checkbox" value="infinite" checked>Infinite Slide</label>
+                <label><input type="checkbox" value="spinner" checked>Spinner</label>
+                <label><input type="checkbox" value="preload" checked>Preload Next</label><br>
+                <label><input type="radio" name="autohide" value="false" checked>Autohide: Off</label>
+                <label><input type="radio" name="autohide" value="true" checked>Autohide: Controls</label>
+                <label><input type="radio" name="autohide" value="all">Autohide: All</label><br>
+                <label><input type="radio" name="fit" value="cover" checked>Autofit: Cover</label>
+                <label><input type="radio" name="fit" value="contain" checked>Autofit: Contain</label><br>
+                <label><input type="radio" name="theme" value="" checked>Theme: default</label>
+                <label><input type="radio" name="theme" value="white">Theme: white</label>
+            </div>
+            <br>
+            Choose Animation:<br><br>
+            <div id="animation">
+                <label><input type="checkbox" value="slide" checked>Slide</label>
+                <label><input type="checkbox" value="fade" checked>Fade</label>
+                <label><input type="checkbox" value="scale" checked>Scale</label>
+                <label><input type="checkbox" value="custom">Custom</label>
+            </div>
+            <br><br>
+        </div>
+
+        <footer class="page-footer">
+            <span>made by </span>
+            <a href="https://www.deaddonut.se" target="_blank">
+                <img width="32" height="32" src="images/csharp.svg" alt="CSharp">
+            </a>
+        </footer> 
+    </body>
+    <script src="./Menu.js"></script>
+    <script type="module" src="./GLCanvas.js"></script>
+    <script src="./js/spotlight.min.js"></script>
+    <script src="./spotlight.js"></script>
+</html>
