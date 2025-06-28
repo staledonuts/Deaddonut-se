@@ -10,13 +10,13 @@ Global
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{AE2E0E44-1075-4B13-AD9B-64CDC699E287}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AE2E0E44-1075-4B13-AD9B-64CDC699E287}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE2E0E44-1075-4B13-AD9B-64CDC699E287}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE2E0E44-1075-4B13-AD9B-64CDC699E287}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
