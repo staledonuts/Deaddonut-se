@@ -237,13 +237,17 @@
                 repoContainer.innerHTML = `<p class="text-center text-[#6d4d80] col-span-full">Loading repositories...</p>`;
                 const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&direction=desc`);
                 if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
-                const repos = await response.json();
+                let repos = await response.json();
+                
+                // Filter out forked repositories
+                const originalRepos = repos.filter(repo => !repo.fork);
+                
                 repoContainer.innerHTML = ''; 
-                if (repos.length === 0) {
-                    repoContainer.innerHTML = `<p class="text-center text-[#6d4d80] col-span-full">No public repositories found for ${username}.</p>`;
+                if (originalRepos.length === 0) {
+                    repoContainer.innerHTML = `<p class="text-center text-[#6d4d80] col-span-full">No original public repositories found for ${username}.</p>`;
                     return;
                 }
-                repos.forEach(repo => {
+                originalRepos.forEach(repo => {
                     repoContainer.innerHTML += `
                         <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="block bg-[#1f1123] p-6 rounded-lg hover:bg-[#311e3a] transition duration-300 ease-in-out shadow-lg transform hover:-translate-y-1 h-full flex flex-col">
                             <h3 class="font-bold text-xl text-[#b07fdc] mb-2">${repo.name}</h3>
