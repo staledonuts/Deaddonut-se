@@ -126,11 +126,8 @@
                  <p class="text-lg text-[#b07fdc]">Select a shader from the dropdown and apply it to the cube.</p>
             </div>
             <div id="shader-container" class="w-full h-[60vh] max-w-5xl rounded-lg shadow-2xl bg-[#08040c]"></div>
-            <!-- Shader Controls -->
             <div id="shader-controls" class="mt-6 flex items-center justify-center space-x-4 w-full max-w-5xl px-4">
-                <select id="shader-select" class="flex-grow bg-[#311e3a] text-[#efccff] border border-[#4d305d] rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8357a2] w-full max-w-xs">
-                    <!-- Options will be dynamically inserted here -->
-                </select>
+                <select id="shader-select" class="flex-grow bg-[#311e3a] text-[#efccff] border border-[#4d305d] rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8357a2] w-full max-w-xs"></select>
                 <button id="apply-shader-btn" class="bg-[#8357a2] text-[#efccff] font-semibold px-6 py-2 rounded-md hover:bg-[#b07fdc] transition-colors duration-200">Apply</button>
             </div>
         </section>
@@ -148,177 +145,222 @@
 
 
     <script>
-        // --- GALLERY DATA ---
-        const galleryData = [
-            {
-                title: "Project Alpha: Environment Design",
-                description: "This project focused on creating a series of moody, atmospheric environments using advanced lighting and procedural asset generation. The goal was to evoke a sense of mystery and exploration. Each scene was rendered in real-time.",
-                images: [ "https://placehold.co/600x400/4d305d/efccff?text=Scene+1", "https://placehold.co/600x400/6d4d80/efccff?text=Scene+2", "https://placehold.co/600x400/8357a2/efccff?text=Scene+3", "https://placehold.co/600x400/4d305d/efccff?text=Detail+1", "https://placehold.co/600x400/6d4d80/efccff?text=Detail+2", "https://placehold.co/600x400/8357a2/efccff?text=Asset+1", "https://placehold.co/600x400/4d305d/efccff?text=Asset+2", "https://placehold.co/600x400/6d4d80/efccff?text=Concept", "https://placehold.co/600x400/8357a2/efccff?text=Final+Shot" ]
-            }
-        ];
-
-        // --- DYNAMIC GALLERY & LIGHTBOX LOGIC ---
-        function createGallery() {
-            const projectsContainer = document.getElementById('gallery-projects-container');
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightbox-img');
-            const lightboxClose = document.getElementById('lightbox-close');
-            const lightboxBackdrop = document.getElementById('lightbox-backdrop');
-            if (!projectsContainer || !lightbox) return;
-            projectsContainer.innerHTML = galleryData.map(project => `<div class="bg-[#311e3a]/50 rounded-lg p-6 md:p-8"><div class="mb-6"><h3 class="text-2xl md:text-3xl font-bold text-[#efccff] mb-2">${project.title}</h3><p class="text-[#b07fdc]">${project.description}</p></div><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">${project.images.map(imgSrc => `<img src="${imgSrc}" alt="${project.title}" class="w-full h-full object-cover rounded-md cursor-pointer hover:opacity-80 transition-opacity duration-200 gallery-image">`).join('')}</div></div>`).join('');
-            document.querySelectorAll('.gallery-image').forEach(image => {
-                image.addEventListener('click', () => { lightbox.classList.remove('hidden'); setTimeout(() => lightbox.classList.add('flex'), 10); lightboxImg.src = image.src; lightboxImg.alt = image.alt; });
-            });
-            function closeLightbox() { lightbox.classList.remove('flex'); setTimeout(() => lightbox.classList.add('hidden'), 300); }
-            lightboxClose.addEventListener('click', closeLightbox);
-            lightboxBackdrop.addEventListener('click', closeLightbox);
-        }
+        // --- GALLERY DATA & LOGIC ---
+        const galleryData = [ { title: "Project Alpha: Environment Design", description: "This project focused on creating a series of moody, atmospheric environments using advanced lighting and procedural asset generation. The goal was to evoke a sense of mystery and exploration. Each scene was rendered in real-time.", images: [ "https://placehold.co/600x400/4d305d/efccff?text=Scene+1", "https://placehold.co/600x400/6d4d80/efccff?text=Scene+2", "https://placehold.co/600x400/8357a2/efccff?text=Scene+3", "https://placehold.co/600x400/4d305d/efccff?text=Detail+1", "https://placehold.co/600x400/6d4d80/efccff?text=Detail+2", "https://placehold.co/600x400/8357a2/efccff?text=Asset+1", "https://placehold.co/600x400/4d305d/efccff?text=Asset+2", "https://placehold.co/600x400/6d4d80/efccff?text=Concept", "https://placehold.co/600x400/8357a2/efccff?text=Final+Shot" ] } ];
+        function createGallery() { const projectsContainer = document.getElementById('gallery-projects-container'); const lightbox = document.getElementById('lightbox'); const lightboxImg = document.getElementById('lightbox-img'); const lightboxClose = document.getElementById('lightbox-close'); const lightboxBackdrop = document.getElementById('lightbox-backdrop'); if (!projectsContainer || !lightbox) return; projectsContainer.innerHTML = galleryData.map(project => `<div class="bg-[#311e3a]/50 rounded-lg p-6 md:p-8"><div class="mb-6"><h3 class="text-2xl md:text-3xl font-bold text-[#efccff] mb-2">${project.title}</h3><p class="text-[#b07fdc]">${project.description}</p></div><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">${project.images.map(imgSrc => `<img src="${imgSrc}" alt="${project.title}" class="w-full h-full object-cover rounded-md cursor-pointer hover:opacity-80 transition-opacity duration-200 gallery-image">`).join('')}</div></div>`).join(''); document.querySelectorAll('.gallery-image').forEach(image => { image.addEventListener('click', () => { lightbox.classList.remove('hidden'); setTimeout(() => lightbox.classList.add('flex'), 10); lightboxImg.src = image.src; lightboxImg.alt = image.alt; }); }); function closeLightbox() { lightbox.classList.remove('flex'); setTimeout(() => lightbox.classList.add('hidden'), 300); } lightboxClose.addEventListener('click', closeLightbox); lightboxBackdrop.addEventListener('click', closeLightbox); }
 
         // --- GLOBAL SETUP ---
         const clock = new THREE.Clock();
 
         // --- MOBILE MENU ---
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-        document.querySelectorAll('#mobile-menu a, nav a:not(#mobile-menu-button)').forEach(link => {
-            link.addEventListener('click', () => { if (!link.getAttribute('href').startsWith('#')) return; setTimeout(() => mobileMenu.classList.add('hidden'), 150); });
-        });
+        const mobileMenuButton = document.getElementById('mobile-menu-button'); const mobileMenu = document.getElementById('mobile-menu'); mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden')); document.querySelectorAll('#mobile-menu a, nav a:not(#mobile-menu-button)').forEach(link => { link.addEventListener('click', () => { if (!link.getAttribute('href').startsWith('#')) return; setTimeout(() => mobileMenu.classList.add('hidden'), 150); }); });
 
         // --- GITHUB API ---
-        async function fetchGitHubRepos() {
-            const repoContainer = document.getElementById('repo-container');
-            if (!repoContainer) return;
-            const username = 'staledonuts';
-            try {
-                repoContainer.innerHTML = `<p class="text-center text-[#6d4d80] col-span-full">Loading repositories...</p>`;
-                const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&direction=desc`);
-                if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
-                let repos = await response.json();
-                const originalRepos = repos.filter(repo => !repo.fork);
-                repoContainer.innerHTML = ''; 
-                if (originalRepos.length === 0) {
-                    repoContainer.innerHTML = `<p class="text-center text-[#6d4d80] col-span-full">No original public repositories found.</p>`;
-                    return;
-                }
-                originalRepos.forEach(repo => {
-                    repoContainer.innerHTML += `<a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="block bg-[#1f1123] p-6 rounded-lg hover:bg-[#311e3a] transition duration-300 ease-in-out shadow-lg transform hover:-translate-y-1 h-full flex flex-col"><h3 class="font-bold text-xl text-[#b07fdc] mb-2">${repo.name}</h3><p class="text-[#6d4d80] text-sm mb-4 flex-grow">${repo.description || 'No description available.'}</p><div class="flex justify-between items-center text-sm text-[#4d305d]"><span>${repo.language || 'N/A'}</span><div class="flex items-center"><svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg><span>${repo.stargazers_count}</span></div></div></a>`;
-                });
-            } catch (error) {
-                repoContainer.innerHTML = `<p class="text-center text-red-400 col-span-full">${error.message}. Could not load repositories.</p>`;
-                console.error("Failed to fetch GitHub repos:", error);
-            }
-        }
+        async function fetchGitHubRepos() { const repoContainer = document.getElementById('repo-container'); if (!repoContainer) return; const username = 'staledonuts'; try { repoContainer.innerHTML = `<p class="text-center text-[#6d4d80] col-span-full">Loading repositories...</p>`; const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&direction=desc`); if (!response.ok) throw new Error(`GitHub API error: ${response.status}`); let repos = await response.json(); const originalRepos = repos.filter(repo => !repo.fork); repoContainer.innerHTML = ''; if (originalRepos.length === 0) { repoContainer.innerHTML = `<p class="text-center text-[#6d4d80] col-span-full">No original public repositories found.</p>`; return; } originalRepos.forEach(repo => { repoContainer.innerHTML += `<a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="block bg-[#1f1123] p-6 rounded-lg hover:bg-[#311e3a] transition duration-300 ease-in-out shadow-lg transform hover:-translate-y-1 h-full flex flex-col"><h3 class="font-bold text-xl text-[#b07fdc] mb-2">${repo.name}</h3><p class="text-[#6d4d80] text-sm mb-4 flex-grow">${repo.description || 'No description available.'}</p><div class="flex justify-between items-center text-sm text-[#4d305d]"><span>${repo.language || 'N/A'}</span><div class="flex items-center"><svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg><span>${repo.stargazers_count}</span></div></div></a>`; }); } catch (error) { repoContainer.innerHTML = `<p class="text-center text-red-400 col-span-full">${error.message}. Could not load repositories.</p>`; console.error("Failed to fetch GitHub repos:", error); } }
 
         // --- ABOUT ME INTERACTIVE BACKGROUND ---
-        // (This section is unchanged and collapsed for readability)
-        let aboutScene, aboutCamera, aboutRenderer, aboutMaterial; const aboutContainer = document.getElementById('about-bg-canvas'); const aboutSection = document.getElementById('about'); const mouse = new THREE.Vector2(-10, -10); let pulseTime = -1.0;
+        let aboutScene, aboutCamera, aboutRenderer, aboutMaterial;
+        const aboutContainer = document.getElementById('about-bg-canvas');
+        const aboutSection = document.getElementById('about');
+        const mouse = new THREE.Vector2(-10, -10);
+        let lastWakeTime = 0;
+
+        const MAX_CLICK_RIPPLES = 10;
+        const clickRipples = [];
+        const clickRippleData = new Float32Array(MAX_CLICK_RIPPLES * 3);
+
+        const MAX_WAKE_RIPPLES = 40;
+        const wakeRipples = [];
+        const wakeRippleData = new Float32Array(MAX_WAKE_RIPPLES * 3);
+
+
         const aboutVertexShader = `void main() { gl_Position = vec4(position, 1.0); }`;
-        const aboutFragmentShader = `uniform vec2 u_resolution; uniform vec2 u_mouse; uniform float u_time; uniform float u_pulse; vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; } vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; } vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); } float snoise(vec2 v) { const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439); vec2 i  = floor(v + dot(v, C.yy) ); vec2 x0 = v -   i + dot(i, C.xx); vec2 i1; i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0); vec4 x12 = x0.xyxy + C.xxzz; x12.xy -= i1; i = mod289(i); vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 )) + i.x + vec3(0.0, i1.x, 1.0 )); vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0); m = m*m; m = m*m; vec3 x = 2.0 * fract(p * C.www) - 1.0; vec3 h = abs(x) - 0.5; vec3 ox = floor(x + 0.5); vec3 a0 = x - ox; m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h ); vec3 g; g.x  = a0.x  * x0.x  + h.x  * x0.y; g.yz = a0.yz * x12.xz + h.yz * x12.yw; return 130.0 * dot(m, g); } void main() { vec2 st = gl_FragCoord.xy / u_resolution.xy; float aspect = u_resolution.x / u_resolution.y; st.x *= aspect; vec2 mouse_st = u_mouse; mouse_st.x *= aspect; float dist = distance(st, mouse_st); float circle = 1.0 - smoothstep(0.0, 0.03, dist); float pulse_val = 0.0; if (u_pulse > 0.0) { float pulse_duration = 1.5; float pulse_progress = (u_time - u_pulse) / pulse_duration; if (pulse_progress < 1.0) { pulse_val = smoothstep(0.0, 0.2, dist) - smoothstep(0.15, 0.3, dist); pulse_val *= (1.0 - pulse_progress) * 0.7; } } float noise = (snoise(st * 4.0 + u_time * 0.1) + 1.0) * 0.5; noise = pow(noise, 2.0) * 0.1; vec3 base_color = vec3(0.031, 0.016, 0.047); vec3 circle_color = vec3(0.937, 0.800, 1.000); vec3 pulse_color = vec3(0.690, 0.498, 0.863); vec3 color = base_color; color += circle * circle_color * 0.5; color += pulse_val * pulse_color; color += noise * vec3(0.427, 0.302, 0.502); gl_FragColor = vec4(color, 1.0); }`;
-        function initAboutScene() {if (!aboutContainer) return;aboutScene = new THREE.Scene();aboutCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);aboutRenderer = new THREE.WebGLRenderer();aboutRenderer.setSize(aboutContainer.clientWidth, aboutContainer.clientHeight);aboutContainer.appendChild(aboutRenderer.domElement);aboutMaterial = new THREE.ShaderMaterial({uniforms: {u_time: { value: 0.0 },u_resolution: { value: new THREE.Vector2(aboutContainer.clientWidth, aboutContainer.clientHeight) },u_mouse: { value: mouse },u_pulse: { value: pulseTime }},vertexShader: aboutVertexShader,fragmentShader: aboutFragmentShader});const plane = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), aboutMaterial);aboutScene.add(plane);function updateMousePosition(x, y) {const rect = aboutContainer.getBoundingClientRect();mouse.x = (x - rect.left) / rect.width;mouse.y = 1.0 - (y - rect.top) / rect.height;}function triggerPulse() {pulseTime = clock.getElapsedTime();aboutMaterial.uniforms.u_pulse.value = pulseTime;}aboutSection.addEventListener('mousemove', (event) => updateMousePosition(event.clientX, event.clientY));aboutSection.addEventListener('mousedown', triggerPulse);aboutSection.addEventListener('mouseleave', () => mouse.set(-10, -10));aboutSection.addEventListener('touchmove', (event) => {event.preventDefault();if (event.touches.length > 0) updateMousePosition(event.touches[0].clientX, event.touches[0].clientY);}, { passive: false });aboutSection.addEventListener('touchstart', (event) => {if (event.touches.length > 0) updateMousePosition(event.touches[0].clientX, event.touches[0].clientY);triggerPulse();});aboutSection.addEventListener('touchend', () => mouse.set(-10, -10));window.addEventListener('resize', onAboutResize);}
-        function onAboutResize() {if (!aboutContainer || !aboutRenderer) return;aboutRenderer.setSize(aboutContainer.clientWidth, aboutContainer.clientHeight);aboutMaterial.uniforms.u_resolution.value.set(aboutContainer.clientWidth, aboutContainer.clientHeight);}
+        const aboutFragmentShader = `
+            #define MAX_CLICK_RIPPLES ${MAX_CLICK_RIPPLES}
+            #define MAX_WAKE_RIPPLES ${MAX_WAKE_RIPPLES}
 
-
-        // --- SHADER CUBE SCENE ---
-        let cubeScene, cubeCamera, cubeRenderer, cube;
-        const cubeContainer = document.getElementById('shader-container');
-        const cubeVertexShader = `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
-        
-        // --- Shader Library ---
-        const shaderLibrary = {
-            'Psychedelic Waves': `
-                varying vec2 vUv; uniform float u_time;
-                void main() {
-                    vec3 colorA = vec3(0.427, 0.302, 0.502); // #6d4d80
-                    vec3 colorB = vec3(0.937, 0.800, 1.000); // #efccff
-                    float pattern = 0.5 + 0.5 * sin(vUv.x * 5.0 + u_time) * cos(vUv.y * 5.0 + u_time * 0.5);
-                    vec3 final_color = mix(colorA, colorB, pattern);
-                    gl_FragColor = vec4(final_color, 1.0);
-                }`,
-            'Molten Metal': `
-                varying vec2 vUv; uniform float u_time;
-                vec3 mod289(vec3 x){return x-floor(x*(1./289.))*289.;}
-                vec4 mod289(vec4 x){return x-floor(x*(1./289.))*289.;}
-                vec4 permute(vec4 x){return mod289(((x*34.)+1.)*x);}
-                vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
-                float snoise(vec3 v){const vec2 C=vec2(1./6.,1./3.);const vec4 D=vec4(0.,.5,1.,2.);vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;i=mod289(i);vec4 p=permute(permute(permute(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));float n_=.142857142857;vec3 ns=n_*D.wyz-D.xzx;vec4 j=p-49.*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.*x_);vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.-abs(x)-abs(y);vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);vec4 s0=floor(b0)*2.+1.;vec4 s1=floor(b1)*2.+1.;vec4 sh=-step(h,vec4(0.));vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);m=m*m;return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));}
-                void main() {
-                    float noise = snoise(vec3(vUv * 3.0, u_time * 0.2));
-                    noise = (noise + 1.0) * 0.5;
-                    float color_val = pow(noise, 2.5);
-                    vec3 color = mix(vec3(0.031, 0.016, 0.047), vec3(0.937, 0.800, 1.000), color_val);
-                    gl_FragColor = vec4(color, 1.0);
-                }`,
-            'CRT Scanlines': `
-                varying vec2 vUv; uniform float u_time;
-                void main() {
-                    vec2 uv = vUv;
-                    // Add some distortion
-                    uv.y += sin(uv.x * 10.0 + u_time) * 0.01;
-                    // Scanline effect
-                    float scanline = sin(uv.y * 300.0) * 0.1;
-                    // Vignette
-                    float vignette = (1.0 - distance(uv, vec2(0.5)) * 1.2);
-                    vec3 color = vec3(0.690, 0.498, 0.863) * vignette; // #b07fdc
-                    color -= scanline;
-                    gl_FragColor = vec4(color, 1.0);
-                }`
-        };
-
-        function initCubeScene() {
-            if (!cubeContainer) return;
-            cubeScene = new THREE.Scene();
-            cubeCamera = new THREE.PerspectiveCamera(75, cubeContainer.clientWidth / cubeContainer.clientHeight, 0.1, 1000);
-            cubeCamera.position.z = 2;
-            cubeRenderer = new THREE.WebGLRenderer({ antialias: true });
-            cubeRenderer.setSize(cubeContainer.clientWidth, cubeContainer.clientHeight);
-            cubeRenderer.setPixelRatio(window.devicePixelRatio);
-            cubeContainer.appendChild(cubeRenderer.domElement);
+            uniform vec2 u_resolution;
+            uniform float u_time;
             
-            // Initial material setup
-            const geometry = new THREE.BoxGeometry(1, 1, 1);
-            const material = new THREE.ShaderMaterial({
-                uniforms: { u_time: { value: 0.0 } },
-                vertexShader: cubeVertexShader,
-                fragmentShader: shaderLibrary['Psychedelic Waves'] // Start with the first shader
-            });
-            cube = new THREE.Mesh(geometry, material);
-            cubeScene.add(cube);
+            uniform vec3 u_click_ripples[MAX_CLICK_RIPPLES];
+            uniform int u_click_ripple_count;
+            
+            uniform vec3 u_wake_ripples[MAX_WAKE_RIPPLES];
+            uniform int u_wake_ripple_count;
 
-            // --- Setup Shader Controls ---
-            const shaderSelect = document.getElementById('shader-select');
-            const applyBtn = document.getElementById('apply-shader-btn');
+            // Simplex Noise (unchanged)
+            vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; } vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; } vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+            float snoise(vec2 v) { const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439); vec2 i  = floor(v + dot(v, C.yy) ); vec2 x0 = v - i + dot(i, C.xx); vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0); vec4 x12 = x0.xyxy + C.xxzz; x12.xy -= i1; i = mod289(i); vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 )) + i.x + vec3(0.0, i1.x, 1.0 )); vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0); m = m*m; m = m*m; vec3 x = 2.0 * fract(p * C.www) - 1.0; vec3 h = abs(x) - 0.5; vec3 ox = floor(x + 0.5); vec3 a0 = x - ox; m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h ); vec3 g; g.x  = a0.x  * x0.x  + h.x  * x0.y; g.yz = a0.yz * x12.xz + h.yz * x12.yw; return 130.0 * dot(m, g); }
 
-            // Populate dropdown with shader names
-            for (const name in shaderLibrary) {
-                const option = document.createElement('option');
-                option.value = name;
-                option.textContent = name;
-                shaderSelect.appendChild(option);
+            float water_noise(vec2 uv) {
+                float noise = 0.0; float freq = 2.0; float amp = 0.5;
+                for (int i = 0; i < 4; i++) {
+                    noise += snoise(uv * freq + u_time * 0.2) * amp;
+                    freq *= 2.0; amp *= 0.5;
+                }
+                return noise;
             }
 
-            // Add event listener to apply button
-            applyBtn.addEventListener('click', () => {
-                const selectedShaderName = shaderSelect.value;
-                const newFragmentShader = shaderLibrary[selectedShaderName];
-
-                if (cube && newFragmentShader) {
-                    cube.material.fragmentShader = newFragmentShader;
-                    // This line is crucial! It tells three.js to recompile the shader.
-                    cube.material.needsUpdate = true;
+            void main() {
+                vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+                float aspect = u_resolution.x / u_resolution.y;
+                uv.x *= aspect;
+                
+                float noise = water_noise(uv);
+                
+                float total_click_ripple = 0.0;
+                for (int i = 0; i < MAX_CLICK_RIPPLES; i++) {
+                    if (i >= u_click_ripple_count) break;
+                    vec3 ripple = u_click_ripples[i];
+                    vec2 center = ripple.xy; center.x *= aspect; float startTime = ripple.z;
+                    float age = u_time - startTime;
+                    if (age > 0.0 && age < 3.0) {
+                        float radius = age * 0.5; float width = 0.1;
+                        float dist = distance(uv, center);
+                        if (dist < radius && dist > radius - width) {
+                            float falloff = 1.0 - smoothstep(radius - width, radius, dist);
+                            total_click_ripple += sin((dist - radius) * 20.0) * falloff * 0.5;
+                        }
+                    }
                 }
+                
+                float total_wake_ripple = 0.0;
+                for (int i = 0; i < MAX_WAKE_RIPPLES; i++) {
+                    if (i >= u_wake_ripple_count) break;
+                    vec3 ripple = u_wake_ripples[i];
+                    vec2 center = ripple.xy; center.x *= aspect; float startTime = ripple.z;
+                    float age = u_time - startTime;
+                    if (age > 0.0 && age < 2.0) {
+                        float dist = distance(uv, center);
+                        float falloff = 1.0 - smoothstep(0.0, 0.05, dist);
+                        falloff *= (1.0 - age / 2.0);
+                        total_wake_ripple += falloff * 0.1;
+                    }
+                }
+                
+                float final_height = noise + total_click_ripple + total_wake_ripple;
+                
+                vec3 color1 = vec3(0.031, 0.016, 0.047); vec3 color2 = vec3(0.184, 0.118, 0.227);
+                vec3 color3 = vec3(0.514, 0.341, 0.635); vec3 color4 = vec3(0.937, 0.800, 1.000);
+                vec3 color = mix(color1, color2, smoothstep(-0.5, 0.5, final_height));
+                color = mix(color, color3, smoothstep(0.0, 0.4, final_height));
+                color = mix(color, color4, smoothstep(0.2, 0.5, final_height));
+
+                gl_FragColor = vec4(color, 1.0);
+            }
+        `;
+        
+        function initAboutScene() {
+            if (!aboutContainer) return;
+            aboutScene = new THREE.Scene();
+            aboutCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+            aboutRenderer = new THREE.WebGLRenderer();
+            aboutRenderer.setSize(aboutContainer.clientWidth, aboutContainer.clientHeight);
+            aboutContainer.appendChild(aboutRenderer.domElement);
+            
+            aboutMaterial = new THREE.ShaderMaterial({
+                uniforms: {
+                    u_time: { value: 0.0 },
+                    u_resolution: { value: new THREE.Vector2(aboutContainer.clientWidth, aboutContainer.clientHeight) },
+                    u_click_ripples: { value: clickRippleData },
+                    u_click_ripple_count: { value: 0 },
+                    u_wake_ripples: { value: wakeRippleData },
+                    u_wake_ripple_count: { value: 0 },
+                },
+                vertexShader: aboutVertexShader,
+                fragmentShader: aboutFragmentShader
             });
 
-            window.addEventListener('resize', onCubeResize, false);
+            const plane = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), aboutMaterial);
+            aboutScene.add(plane);
+
+            function updateMousePosition(x, y) { const rect = aboutContainer.getBoundingClientRect(); mouse.x = (x - rect.left) / rect.width; mouse.y = 1.0 - (y - rect.top) / rect.height; }
+            
+            function triggerClickPulse() {
+                if (clickRipples.length >= MAX_CLICK_RIPPLES) { clickRipples.shift(); }
+                clickRipples.push({ position: new THREE.Vector2(mouse.x, mouse.y), startTime: clock.getElapsedTime(), maxAge: 3.0 });
+            }
+
+            function triggerWakePulse(time) {
+                if (time - lastWakeTime < 0.05) return; // Throttle wake creation
+                lastWakeTime = time;
+                if (wakeRipples.length >= MAX_WAKE_RIPPLES) { wakeRipples.shift(); }
+                wakeRipples.push({ position: new THREE.Vector2(mouse.x, mouse.y), startTime: time, maxAge: 2.0 });
+            }
+
+            aboutSection.addEventListener('mousemove', (event) => {
+                updateMousePosition(event.clientX, event.clientY);
+                triggerWakePulse(clock.getElapsedTime());
+            });
+            aboutSection.addEventListener('mousedown', triggerClickPulse);
+            aboutSection.addEventListener('mouseleave', () => mouse.set(-10, -10));
+            aboutSection.addEventListener('touchmove', (event) => { 
+                event.preventDefault(); 
+                if (event.touches.length > 0) {
+                    updateMousePosition(event.touches[0].clientX, event.touches[0].clientY);
+                    triggerWakePulse(clock.getElapsedTime());
+                }
+            }, { passive: false });
+            aboutSection.addEventListener('touchstart', (event) => { 
+                if (event.touches.length > 0) updateMousePosition(event.touches[0].clientX, event.touches[0].clientY); 
+                triggerClickPulse(); 
+            });
+            aboutSection.addEventListener('touchend', () => mouse.set(-10, -10));
+            window.addEventListener('resize', onAboutResize);
         }
+        function onAboutResize() { if (!aboutContainer || !aboutRenderer) return; aboutRenderer.setSize(aboutContainer.clientWidth, aboutContainer.clientHeight); aboutMaterial.uniforms.u_resolution.value.set(aboutContainer.clientWidth, aboutContainer.clientHeight); }
+
+        // --- SHADER CUBE SCENE ---
+        let cubeScene, cubeCamera, cubeRenderer, cube; const cubeContainer = document.getElementById('shader-container'); const cubeVertexShader = `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`; const shaderLibrary = { 'Psychedelic Waves': ` varying vec2 vUv; uniform float u_time; void main() { vec3 colorA = vec3(0.427, 0.302, 0.502); vec3 colorB = vec3(0.937, 0.800, 1.000); float pattern = 0.5 + 0.5 * sin(vUv.x * 5.0 + u_time) * cos(vUv.y * 5.0 + u_time * 0.5); vec3 final_color = mix(colorA, colorB, pattern); gl_FragColor = vec4(final_color, 1.0); }`, 'Molten Metal': ` varying vec2 vUv; uniform float u_time; vec3 mod289(vec3 x){return x-floor(x*(1./289.))*289.;} vec4 mod289(vec4 x){return x-floor(x*(1./289.))*289.;} vec4 permute(vec4 x){return mod289(((x*34.)+1.)*x);} vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;} float snoise(vec3 v){const vec2 C=vec2(1./6.,1./3.);const vec4 D=vec4(0.,.5,1.,2.);vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;i=mod289(i);vec4 p=permute(permute(permute(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));float n_=.142857142857;vec3 ns=n_*D.wyz-D.xzx;vec4 j=p-49.*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.*x_);vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.-abs(x)-abs(y);vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);vec4 s0=floor(b0)*2.+1.;vec4 s1=floor(b1)*2.+1.;vec4 sh=-step(h,vec4(0.));vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);m=m*m;return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));} void main() { float noise = snoise(vec3(vUv * 3.0, u_time * 0.2)); noise = (noise + 1.0) * 0.5; float color_val = pow(noise, 2.5); vec3 color = mix(vec3(0.031, 0.016, 0.047), vec3(0.937, 0.800, 1.000), color_val); gl_FragColor = vec4(color, 1.0); }`, 'CRT Scanlines': ` varying vec2 vUv; uniform float u_time; void main() { vec2 uv = vUv; uv.y += sin(uv.x * 10.0 + u_time) * 0.01; float scanline = sin(uv.y * 300.0) * 0.1; float vignette = (1.0 - distance(uv, vec2(0.5)) * 1.2); vec3 color = vec3(0.690, 0.498, 0.863) * vignette; color -= scanline; gl_FragColor = vec4(color, 1.0); }` };
+        function initCubeScene() { if (!cubeContainer) return; cubeScene = new THREE.Scene(); cubeCamera = new THREE.PerspectiveCamera(75, cubeContainer.clientWidth / cubeContainer.clientHeight, 0.1, 1000); cubeCamera.position.z = 2; cubeRenderer = new THREE.WebGLRenderer({ antialias: true }); cubeRenderer.setSize(cubeContainer.clientWidth, cubeContainer.clientHeight); cubeRenderer.setPixelRatio(window.devicePixelRatio); cubeContainer.appendChild(cubeRenderer.domElement); const geometry = new THREE.BoxGeometry(1, 1, 1); const material = new THREE.ShaderMaterial({ uniforms: { u_time: { value: 0.0 } }, vertexShader: cubeVertexShader, fragmentShader: shaderLibrary['Psychedelic Waves'] }); cube = new THREE.Mesh(geometry, material); cubeScene.add(cube); const shaderSelect = document.getElementById('shader-select'); const applyBtn = document.getElementById('apply-shader-btn'); for (const name in shaderLibrary) { const option = document.createElement('option'); option.value = name; option.textContent = name; shaderSelect.appendChild(option); } applyBtn.addEventListener('click', () => { const selectedShaderName = shaderSelect.value; const newFragmentShader = shaderLibrary[selectedShaderName]; if (cube && newFragmentShader) { cube.material.fragmentShader = newFragmentShader; cube.material.needsUpdate = true; } }); window.addEventListener('resize', onCubeResize, false); }
         function onCubeResize() {if (!cubeContainer || !cubeRenderer || !cubeCamera) return; cubeCamera.aspect = cubeContainer.clientWidth / cubeContainer.clientHeight; cubeCamera.updateProjectionMatrix(); cubeRenderer.setSize(cubeContainer.clientWidth, cubeContainer.clientHeight);}
 
         // --- MAIN ANIMATION LOOP ---
         function animate() {
             requestAnimationFrame(animate);
             const elapsedTime = clock.getElapsedTime();
-            if (aboutRenderer) { aboutMaterial.uniforms.u_time.value = elapsedTime; aboutRenderer.render(aboutScene, aboutCamera); }
-            if (cubeRenderer) { cube.material.uniforms.u_time.value = elapsedTime; cube.rotation.x += 0.005; cube.rotation.y += 0.005; cubeRenderer.render(cubeScene, cubeCamera); }
+
+            if (aboutRenderer) {
+                // Remove old click ripples
+                for (let i = clickRipples.length - 1; i >= 0; i--) { if (elapsedTime - clickRipples[i].startTime > clickRipples[i].maxAge) { clickRipples.splice(i, 1); } }
+                // Update click ripple uniform data
+                for (let i = 0; i < MAX_CLICK_RIPPLES; i++) {
+                    if (i < clickRipples.length) {
+                        clickRippleData[i * 3] = clickRipples[i].position.x;
+                        clickRippleData[i * 3 + 1] = clickRipples[i].position.y;
+                        clickRippleData[i * 3 + 2] = clickRipples[i].startTime;
+                    } else {
+                        clickRippleData[i * 3 + 2] = -1.0; // Mark as inactive
+                    }
+                }
+                aboutMaterial.uniforms.u_click_ripples.value = clickRippleData;
+                aboutMaterial.uniforms.u_click_ripple_count.value = clickRipples.length;
+
+                // Remove old wake ripples
+                for (let i = wakeRipples.length - 1; i >= 0; i--) { if (elapsedTime - wakeRipples[i].startTime > wakeRipples[i].maxAge) { wakeRipples.splice(i, 1); } }
+                // Update wake ripple uniform data
+                for (let i = 0; i < MAX_WAKE_RIPPLES; i++) {
+                    if (i < wakeRipples.length) {
+                        wakeRippleData[i * 3] = wakeRipples[i].position.x;
+                        wakeRippleData[i * 3 + 1] = wakeRipples[i].position.y;
+                        wakeRippleData[i * 3 + 2] = wakeRipples[i].startTime;
+                    } else {
+                        wakeRippleData[i * 3 + 2] = -1.0; // Mark as inactive
+                    }
+                }
+                aboutMaterial.uniforms.u_wake_ripples.value = wakeRippleData;
+                aboutMaterial.uniforms.u_wake_ripple_count.value = wakeRipples.length;
+                
+                aboutMaterial.uniforms.u_time.value = elapsedTime;
+                aboutRenderer.render(aboutScene, aboutCamera);
+            }
+            // Animate Cube Scene
+            if (cubeRenderer) {
+                cube.material.uniforms.u_time.value = elapsedTime;
+                cube.rotation.x += 0.005;
+                cube.rotation.y += 0.005;
+                cubeRenderer.render(cubeScene, cubeCamera);
+            }
         }
 
         // --- INITIALIZATION ---
