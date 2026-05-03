@@ -7,14 +7,15 @@ I worked on shaders and particle effects and optimization.
 House of How.
 Joint studio project where I worked on shaders and particle effects.
 
-## 2025 — Unnamed and unreleased major Unity project
+## 2025 — Unnamed and unreleased (Hopefully this changes.) major Unity project
 House of How.
-I worked on shaders and particle effects.
+Contributed with VFX and shaders mostly UI work.
 
 ## 2024-03 — Invincible: Doc Seismic Attacks
 A Fortnite Invincible experience made by House of How. I worked on shaders and particle effects.
 
 ## 2023-06 — Minecraft Legends: Ichorous Grove DLC
+My first Commercial project.
 Contributed VFX work to the Ichorous Grove downloadable content pack for Minecraft Legends at House of How. Responsible for particle effects.
 
 ## 2022-10 — Tribulation
