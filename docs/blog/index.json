@@ -1,7 +1,12 @@
 [
   {
-    "filename": "InitialBlogpost.md",
+    "filename": "00_InitialBlogpost.md",
     "title": "Initial Blogpost",
+    "date": "2026-05-03"
+  },
+  {
+    "filename": "01_AEOWorkflow.md",
+    "title": "My AEOD Channelpacked Workflow",
     "date": "2026-05-03"
   }
 ]

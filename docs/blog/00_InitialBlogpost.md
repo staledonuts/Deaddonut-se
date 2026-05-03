@@ -1,7 +1,7 @@
 # First true blogpost!
 
 Welcome to my blog! I'll be posting updates here about projects, game jams, technical art experiments, and whatever else I'm working on.
-![Alt text](images/logo.png)
+![DeadDonut logo](images/logo.png)
 
 ## What to expect
 
