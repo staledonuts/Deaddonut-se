@@ -98,6 +98,26 @@
         }
         .blog-content strong { color: #efccff; font-weight: 700; }
         .blog-chevron { transition: transform 0.25s ease; }
+        /* Timeline styles */
+        .timeline-line {
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #311e3a, #8357a2, #311e3a);
+        }
+        .timeline-dot {
+            position: absolute;
+            left: calc(1rem - 5px);
+            top: 0.35rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #8357a2;
+            border: 2px solid #efccff;
+            box-shadow: 0 0 8px #8357a2;
+        }
     </style>
 </head>
 <body class="bg-[#08040c] text-[#efccff]">
@@ -113,6 +133,7 @@
                     <div class="ml-10 flex items-baseline space-x-4">
                         <a href="#about" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] px-3 py-2 rounded-md text-sm font-medium">About Me</a>
                         <a href="#gallery" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] px-3 py-2 rounded-md text-sm font-medium">Gallery</a>
+                        <a href="#timeline" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] px-3 py-2 rounded-md text-sm font-medium">Timeline</a>
                         <a href="#github" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] px-3 py-2 rounded-md text-sm font-medium">GitHub</a>
                         <a href="#itchio" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] px-3 py-2 rounded-md text-sm font-medium">Itch.io</a>
                         <a href="#shaders" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] px-3 py-2 rounded-md text-sm font-medium">GLSL Shaders</a>
@@ -133,6 +154,7 @@
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#about" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] block px-3 py-2 rounded-md text-base font-medium">About Me</a>
                 <a href="#gallery" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] block px-3 py-2 rounded-md text-base font-medium">Gallery</a>
+                <a href="#timeline" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] block px-3 py-2 rounded-md text-base font-medium">Timeline</a>
                 <a href="#github" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] block px-3 py-2 rounded-md text-base font-medium">GitHub</a>
                 <a href="#itchio" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] block px-3 py-2 rounded-md text-base font-medium">Itch.io</a>
                 <a href="#shaders" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] block px-3 py-2 rounded-md text-base font-medium">GLSL Shaders</a>
@@ -163,6 +185,19 @@
                     <p class="text-lg text-[#b07fdc]">A selection of my projects.</p>
                 </div>
                 <div id="gallery-projects-container" class="space-y-20"></div>
+            </div>
+        </section>
+
+        <!-- Timeline Section -->
+        <section id="timeline" class="content-section bg-[#08040c]">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-5xl font-bold text-[#efccff] mb-4">Project Timeline</h2>
+                    <p class="text-lg text-[#b07fdc]">A chronological overview of projects I have worked on.</p>
+                </div>
+                <div id="timeline-container" class="relative pl-8">
+                    <div class="timeline-line"></div>
+                </div>
             </div>
         </section>
 
@@ -702,6 +737,50 @@
             }
         }
 
+        // --- TIMELINE ---
+        async function loadTimeline() {
+            const container = document.getElementById('timeline-container');
+            if (!container) return;
+            try {
+                const res = await fetch('timeline.md');
+                if (!res.ok) throw new Error('Could not load timeline.');
+                const md = await res.text();
+                const tokens = marked.lexer(md);
+                const entries = [];
+                let current = null;
+                for (const token of tokens) {
+                    if (token.type === 'heading' && token.depth === 2) {
+                        if (current) entries.push(current);
+                        const match = token.text.match(/^(\d{4}(?:-\d{2})?(?:-\d{2})?)\s*[\u2014\u2013-]+\s*(.+)$/);
+                        current = match
+                            ? { date: match[1], name: match[2], description: '' }
+                            : { date: '', name: token.text, description: '' };
+                    } else if (current && token.type === 'paragraph') {
+                        current.description = DOMPurify.sanitize(marked.parseInline(token.text));
+                    }
+                }
+                if (current) entries.push(current);
+                // Keep the line div, append entries after it
+                entries.forEach(entry => {
+                    const item = document.createElement('div');
+                    item.className = 'relative pl-8 pb-10 last:pb-0';
+                    item.innerHTML = `
+                        <div class="timeline-dot"></div>
+                        <time class="text-sm font-mono text-[#6d4d80]">${entry.date}</time>
+                        <h3 class="text-xl font-bold text-[#efccff] mt-0.5">${entry.name}</h3>
+                        ${entry.description ? `<p class="text-[#b07fdc] mt-1 leading-relaxed">${entry.description}</p>` : ''}
+                    `;
+                    container.appendChild(item);
+                });
+                if (entries.length === 0) {
+                    container.insertAdjacentHTML('beforeend', '<p class="text-[#6d4d80]">No entries yet.</p>');
+                }
+            } catch (e) {
+                container.insertAdjacentHTML('beforeend', `<p class="text-red-400">${e.message}</p>`);
+                console.error('Timeline load error:', e);
+            }
+        }
+
         // --- BLOG ---
         async function loadBlog() {
             const container = document.getElementById('blog-container');
@@ -761,6 +840,7 @@
             fetchGitHubRepos();
             createMcLegendsGallery();
             loadBlog();
+            loadTimeline();
             animate();
         }
     </script>
