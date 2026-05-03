@@ -10,7 +10,7 @@
 |----------|----------|----------|----------|
 | Alpha | Emissive | AO | Depth |
 
-![Alt text](images/blog/T_FX_Glow_AEO.png)
+![An AEOD packed Glow texture.](images/blog/T_FX_Glow_AEO.png)
 
 
 
@@ -36,12 +36,12 @@ struct AEODResult
 // Unpack the four channels from the packed texture.
 AEODChannels aeod_sample(sampler2D tex, vec2 uv)
 {
-	vec4 s = texture(tex, uv);
+	vec4 sample = texture(tex, uv);
 	AEODChannels ch;
-	ch.alpha    = s.r;
-	ch.emissive = s.g;
-	ch.ao       = s.b;
-	ch.depth    = s.a;
+	ch.alpha    = sample.r;
+	ch.emissive = sample.g;
+	ch.ao       = sample.b;
+	ch.depth    = sample.a;
 	return ch;
 }
 
