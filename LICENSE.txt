@@ -1,6 +1,16 @@
-The MIT License (MIT)
+DUAL LICENSE
+============
 
-Copyright (c) 2023 Zed Dash (https://codepen.io/z-/pen/eJNgWO)
+This repository uses two separate licenses depending on the type of asset.
+
+------------------------------------------------------------------------------
+1. SOURCE CODE — MIT License
+------------------------------------------------------------------------------
+
+Applies to: all HTML, CSS, and JavaScript files (e.g. *.html, *.css, *.js,
+            *.json) in this repository.
+
+Copyright (c) 2026 Erik Lindahl
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +29,24 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Third-party attribution:
+  Spotlight.js carousel — Copyright (c) 2023 Zed Dash
+  (https://codepen.io/z-/pen/eJNgWO), used under MIT License.
+
+------------------------------------------------------------------------------
+2. IMAGES, ARTWORK & LOGO — All Rights Reserved
+------------------------------------------------------------------------------
+
+Applies to: all image and media files (e.g. *.png, *.jpg, *.jpeg, *.gif,
+            *.webp, *.svg, *.aseprite, *.kra) in this repository.
+
+Copyright (c) 2026 Erik Lindahl. All rights reserved.
+
+These assets are the exclusive property of Erik Lindahl. No permission is
+granted to copy, reproduce, distribute, modify, create derivative works of,
+or use these assets — in whole or in part — for any commercial or
+non-commercial purpose without explicit prior written permission from the
+copyright holder.
+
+Contact: see https://deaddonut.se for enquiries.
