@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked@13/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -44,6 +46,58 @@
         #lightbox.flex img {
             transform: scale(1);
         }
+        /* Blog post markdown content styles */
+        .blog-content h1, .blog-content h2, .blog-content h3,
+        .blog-content h4, .blog-content h5, .blog-content h6 {
+            color: #efccff;
+            font-weight: 700;
+            margin-top: 1.25em;
+            margin-bottom: 0.5em;
+        }
+        .blog-content h1 { font-size: 1.5rem; }
+        .blog-content h2 { font-size: 1.25rem; }
+        .blog-content h3 { font-size: 1.1rem; }
+        .blog-content p { margin-bottom: 0.75em; line-height: 1.7; }
+        .blog-content ul, .blog-content ol {
+            padding-left: 1.5em;
+            margin-bottom: 0.75em;
+        }
+        .blog-content li { margin-bottom: 0.25em; }
+        .blog-content ul { list-style-type: disc; }
+        .blog-content ol { list-style-type: decimal; }
+        .blog-content a { color: #b07fdc; text-decoration: underline; }
+        .blog-content a:hover { color: #efccff; }
+        .blog-content code {
+            background: #08040c;
+            color: #efccff;
+            padding: 0.1em 0.4em;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .blog-content pre {
+            background: #08040c;
+            color: #efccff;
+            padding: 1em;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin-bottom: 0.75em;
+        }
+        .blog-content pre code {
+            background: none;
+            padding: 0;
+        }
+        .blog-content blockquote {
+            border-left: 3px solid #8357a2;
+            padding-left: 1em;
+            color: #6d4d80;
+            margin: 0.5em 0;
+        }
+        .blog-content hr {
+            border-color: #311e3a;
+            margin: 1em 0;
+        }
+        .blog-content strong { color: #efccff; font-weight: 700; }
+        .blog-chevron { transition: transform 0.25s ease; }
     </style>
 </head>
 <body class="bg-[#08040c] text-[#efccff]">
@@ -62,6 +116,7 @@
                         <a href="#github" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] px-3 py-2 rounded-md text-sm font-medium">GitHub</a>
                         <a href="#itchio" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] px-3 py-2 rounded-md text-sm font-medium">Itch.io</a>
                         <a href="#shaders" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] px-3 py-2 rounded-md text-sm font-medium">GLSL Shaders</a>
+                        <a href="#blog" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] px-3 py-2 rounded-md text-sm font-medium">Blog</a>
                     </div>
                 </div>
                 <div class="md:hidden">
@@ -81,6 +136,7 @@
                 <a href="#github" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] block px-3 py-2 rounded-md text-base font-medium">GitHub</a>
                 <a href="#itchio" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] block px-3 py-2 rounded-md text-base font-medium">Itch.io</a>
                 <a href="#shaders" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] block px-3 py-2 rounded-md text-base font-medium">GLSL Shaders</a>
+                <a href="#blog" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] block px-3 py-2 rounded-md text-base font-medium">Blog</a>
             </div>
         </div>
     </nav>
@@ -180,6 +236,16 @@
             <div id="shader-controls" class="mt-6 flex items-center justify-center space-x-4 w-full max-w-5xl px-4">
                 <select id="shader-select" class="flex-grow bg-[#311e3a] text-[#efccff] border border-[#4d305d] rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8357a2] w-full max-w-xs"></select>
                 <button id="apply-shader-btn" class="bg-[#8357a2] text-[#efccff] font-semibold px-6 py-2 rounded-md hover:bg-[#b07fdc] transition-colors duration-200">Apply</button>
+            </div>
+        </section>
+        <!-- Blog Section -->
+        <section id="blog" class="content-section bg-[#08040c]">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-5xl font-bold text-[#efccff] mb-4">Blog</h2>
+                    <p class="text-lg text-[#b07fdc]">Dev notes, project updates, and post-mortems.</p>
+                </div>
+                <div id="blog-container" class="space-y-4"></div>
             </div>
         </section>
     </main>
@@ -636,6 +702,57 @@
             }
         }
 
+        // --- BLOG ---
+        async function loadBlog() {
+            const container = document.getElementById('blog-container');
+            if (!container) return;
+            try {
+                container.innerHTML = '<p class="text-center text-[#6d4d80]">Loading posts...</p>';
+                const res = await fetch('blog/index.json');
+                if (!res.ok) throw new Error('Could not load blog index.');
+                const posts = await res.json();
+                posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+                const recent = posts.slice(0, 10);
+                container.innerHTML = '';
+                for (const post of recent) {
+                    const mdRes = await fetch('blog/' + post.filename);
+                    if (!mdRes.ok) continue;
+                    const md = await mdRes.text();
+                    const html = DOMPurify.sanitize(marked.parse(md));
+                    const article = document.createElement('article');
+                    article.className = 'bg-[#311e3a]/50 rounded-lg overflow-hidden';
+                    const dateStr = new Date(post.date + 'T12:00:00').toLocaleDateString('en-SE', { year: 'numeric', month: 'long', day: 'numeric' });
+                    article.innerHTML = `
+                        <button class="blog-toggle w-full text-left px-6 py-5 flex items-center justify-between hover:bg-[#311e3a] transition-colors duration-200" aria-expanded="false">
+                            <div>
+                                <h3 class="text-xl font-bold text-[#efccff]">${post.title}</h3>
+                                <time class="text-sm text-[#6d4d80]">${dateStr}</time>
+                            </div>
+                            <svg class="blog-chevron w-5 h-5 text-[#b07fdc] flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div class="blog-content hidden px-6 pb-6 text-[#b07fdc]">${html}</div>
+                    `;
+                    container.appendChild(article);
+                    article.querySelector('.blog-toggle').addEventListener('click', function () {
+                        const content = article.querySelector('.blog-content');
+                        const chevron = article.querySelector('.blog-chevron');
+                        const expanded = this.getAttribute('aria-expanded') === 'true';
+                        this.setAttribute('aria-expanded', String(!expanded));
+                        content.classList.toggle('hidden');
+                        chevron.style.transform = expanded ? '' : 'rotate(180deg)';
+                    });
+                }
+                if (container.children.length === 0) {
+                    container.innerHTML = '<p class="text-center text-[#6d4d80]">No posts yet.</p>';
+                }
+            } catch (e) {
+                container.innerHTML = `<p class="text-center text-red-400">${e.message}</p>`;
+                console.error('Blog load error:', e);
+            }
+        }
+
         // --- INITIALIZATION ---
         window.onload = function() {
             createGallery();
@@ -643,6 +760,7 @@
             initCubeScene();
             fetchGitHubRepos();
             createMcLegendsGallery();
+            loadBlog();
             animate();
         }
     </script>
