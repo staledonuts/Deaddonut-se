@@ -136,7 +136,6 @@
                         <a href="#timeline" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] px-3 py-2 rounded-md text-sm font-medium">Timeline</a>
                         <a href="#github" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] px-3 py-2 rounded-md text-sm font-medium">GitHub</a>
                         <a href="#itchio" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] px-3 py-2 rounded-md text-sm font-medium">Itch.io</a>
-                        <a href="#shaders" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] px-3 py-2 rounded-md text-sm font-medium">GLSL Shaders</a>
                         <a href="#blog" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] px-3 py-2 rounded-md text-sm font-medium">Blog</a>
                     </div>
                 </div>
@@ -157,7 +156,6 @@
                 <a href="#timeline" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] block px-3 py-2 rounded-md text-base font-medium">Timeline</a>
                 <a href="#github" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] block px-3 py-2 rounded-md text-base font-medium">GitHub</a>
                 <a href="#itchio" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] block px-3 py-2 rounded-md text-base font-medium">Itch.io</a>
-                <a href="#shaders" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] block px-3 py-2 rounded-md text-base font-medium">GLSL Shaders</a>
                 <a href="#blog" class="text-[#b07fdc] hover:bg-[#311e3a] hover:text-[#efccff] block px-3 py-2 rounded-md text-base font-medium">Blog</a>
             </div>
         </div>
@@ -261,18 +259,6 @@
             </div>
         </section>
 
-        <!-- Shaders Section -->
-        <section id="shaders" class="content-section flex flex-col items-center justify-center bg-[#1f1123]">
-            <div class="w-full max-w-5xl text-center mb-8 px-4">
-                 <h2 class="text-3xl md:text-5xl font-bold text-[#efccff] mb-2">GLSL Shader Showcase</h2>
-                 <p class="text-lg text-[#b07fdc]">Select a shader from the dropdown and apply it to the cube.</p>
-            </div>
-            <div id="shader-container" class="w-full h-[60vh] max-w-5xl rounded-lg shadow-2xl bg-[#08040c]"></div>
-            <div id="shader-controls" class="mt-6 flex items-center justify-center space-x-4 w-full max-w-5xl px-4">
-                <select id="shader-select" class="flex-grow bg-[#311e3a] text-[#efccff] border border-[#4d305d] rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8357a2] w-full max-w-xs"></select>
-                <button id="apply-shader-btn" class="bg-[#8357a2] text-[#efccff] font-semibold px-6 py-2 rounded-md hover:bg-[#b07fdc] transition-colors duration-200">Apply</button>
-            </div>
-        </section>
         <!-- Blog Section -->
         <section id="blog" class="content-section bg-[#08040c]">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -684,11 +670,6 @@
         }
         function onAboutResize() { if (!aboutContainer || !aboutRenderer) return; aboutRenderer.setSize(aboutContainer.clientWidth, aboutContainer.clientHeight); aboutMaterial.uniforms.u_resolution.value.set(aboutContainer.clientWidth, aboutContainer.clientHeight); }
 
-        // --- SHADER CUBE SCENE ---
-        let cubeScene, cubeCamera, cubeRenderer, cube; const cubeContainer = document.getElementById('shader-container'); const cubeVertexShader = `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`; const shaderLibrary = { 'Psychedelic Waves': ` varying vec2 vUv; uniform float u_time; void main() { vec3 colorA = vec3(0.427, 0.302, 0.502); vec3 colorB = vec3(0.937, 0.800, 1.000); float pattern = 0.5 + 0.5 * sin(vUv.x * 5.0 + u_time) * cos(vUv.y * 5.0 + u_time * 0.5); vec3 final_color = mix(colorA, colorB, pattern); gl_FragColor = vec4(final_color, 1.0); }`, 'Molten Metal': ` varying vec2 vUv; uniform float u_time; vec3 mod289(vec3 x){return x-floor(x*(1./289.))*289.;} vec4 mod289(vec4 x){return x-floor(x*(1./289.))*289.;} vec4 permute(vec4 x){return mod289(((x*34.)+1.)*x);} vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;} float snoise(vec3 v){const vec2 C=vec2(1./6.,1./3.);const vec4 D=vec4(0.,.5,1.,2.);vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;i=mod289(i);vec4 p=permute(permute(permute(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));float n_=.142857142857;vec3 ns=n_*D.wyz-D.xzx;vec4 j=p-49.*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.*x_);vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.-abs(x)-abs(y);vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);vec4 s0=floor(b0)*2.+1.;vec4 s1=floor(b1)*2.+1.;vec4 sh=-step(h,vec4(0.));vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);m=m*m;return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));} void main() { float noise = snoise(vec3(vUv * 3.0, u_time * 0.2)); noise = (noise + 1.0) * 0.5; float color_val = pow(noise, 2.5); vec3 color = mix(vec3(0.031, 0.016, 0.047), vec3(0.937, 0.800, 1.000), color_val); gl_FragColor = vec4(color, 1.0); }`, 'CRT Scanlines': ` varying vec2 vUv; uniform float u_time; void main() { vec2 uv = vUv; uv.y += sin(uv.x * 10.0 + u_time) * 0.01; float scanline = sin(uv.y * 300.0) * 0.1; float vignette = (1.0 - distance(uv, vec2(0.5)) * 1.2); vec3 color = vec3(0.690, 0.498, 0.863) * vignette; color -= scanline; gl_FragColor = vec4(color, 1.0); }` };
-        function initCubeScene() { if (!cubeContainer) return; cubeScene = new THREE.Scene(); cubeCamera = new THREE.PerspectiveCamera(75, cubeContainer.clientWidth / cubeContainer.clientHeight, 0.1, 1000); cubeCamera.position.z = 2; cubeRenderer = new THREE.WebGLRenderer({ antialias: true }); cubeRenderer.setSize(cubeContainer.clientWidth, cubeContainer.clientHeight); cubeRenderer.setPixelRatio(window.devicePixelRatio); cubeContainer.appendChild(cubeRenderer.domElement); const geometry = new THREE.BoxGeometry(1, 1, 1); const material = new THREE.ShaderMaterial({ uniforms: { u_time: { value: 0.0 } }, vertexShader: cubeVertexShader, fragmentShader: shaderLibrary['Psychedelic Waves'] }); cube = new THREE.Mesh(geometry, material); cubeScene.add(cube); const shaderSelect = document.getElementById('shader-select'); const applyBtn = document.getElementById('apply-shader-btn'); for (const name in shaderLibrary) { const option = document.createElement('option'); option.value = name; option.textContent = name; shaderSelect.appendChild(option); } applyBtn.addEventListener('click', () => { const selectedShaderName = shaderSelect.value; const newFragmentShader = shaderLibrary[selectedShaderName]; if (cube && newFragmentShader) { cube.material.fragmentShader = newFragmentShader; cube.material.needsUpdate = true; } }); window.addEventListener('resize', onCubeResize, false); }
-        function onCubeResize() {if (!cubeContainer || !cubeRenderer || !cubeCamera) return; cubeCamera.aspect = cubeContainer.clientWidth / cubeContainer.clientHeight; cubeCamera.updateProjectionMatrix(); cubeRenderer.setSize(cubeContainer.clientWidth, cubeContainer.clientHeight);}
-
         // --- MAIN ANIMATION LOOP ---
         function animate() {
             requestAnimationFrame(animate);
@@ -727,13 +708,6 @@
                 
                 aboutMaterial.uniforms.u_time.value = elapsedTime;
                 aboutRenderer.render(aboutScene, aboutCamera);
-            }
-            // Animate Cube Scene
-            if (cubeRenderer) {
-                cube.material.uniforms.u_time.value = elapsedTime;
-                cube.rotation.x += 0.005;
-                cube.rotation.y += 0.005;
-                cubeRenderer.render(cubeScene, cubeCamera);
             }
         }
 
@@ -852,7 +826,6 @@
         window.onload = function() {
             createGallery();
             initAboutScene();
-            initCubeScene();
             fetchGitHubRepos();
             createMcLegendsGallery();
             loadBlog();
