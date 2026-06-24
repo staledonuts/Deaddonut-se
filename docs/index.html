@@ -826,6 +826,22 @@
                 if (container.children.length === 0) {
                     container.innerHTML = '<p class="text-center text-[#6d4d80]">No posts yet.</p>';
                 }
+                const lightbox = document.getElementById('lightbox');
+                const lightboxImg = document.getElementById('lightbox-img');
+
+                // Find all images inside the generated blog content
+                document.querySelectorAll('.blog-content img').forEach(img => {
+                    // Add utility classes to make them look clickable (matching your gallery style)
+                    img.classList.add('cursor-pointer', 'hover:opacity-80', 'transition-opacity', 'duration-200', 'rounded-md', 'my-4');
+                    
+                    // Attach the click event to open the lightbox
+                    img.addEventListener('click', () => {
+                        lightbox.classList.remove('hidden');
+                        setTimeout(() => lightbox.classList.add('flex'), 10); // Slight delay for the fade-in transition
+                        lightboxImg.src = img.src;
+                        lightboxImg.alt = img.alt || 'Blog Image';
+                    });
+                });
             } catch (e) {
                 container.innerHTML = `<p class="text-center text-red-400">${e.message}</p>`;
                 console.error('Blog load error:', e);
