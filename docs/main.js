@@ -22,7 +22,7 @@ const CLAY_RENDER_COMMAND_TYPE_SCISSOR_END = 6;
 const CLAY_RENDER_COMMAND_TYPE_CUSTOM = 7;
 
 Module.onRuntimeInitialized = () => {
-    console.log("WASM Laddat och redo!");
+    //console.log("WASM Laddat och redo!");
 
     const init_ui = Module.cwrap('init_ui', 'void', ['number', 'number']);
     const process_frame = Module.cwrap('process_frame', 'void', ['number']);
@@ -30,13 +30,17 @@ Module.onRuntimeInitialized = () => {
     const send_mouse_move = Module.cwrap('send_mouse_move', 'void', ['number', 'number']);
     const send_mouse_down = Module.cwrap('send_mouse_down', 'void', ['number', 'number', 'number']);
     const send_mouse_up = Module.cwrap('send_mouse_up', 'void', ['number', 'number', 'number']);
+    const update_resolution = Module.cwrap('update_resolution', 'void', ['number', 'number']);
 
     const get_next_command = Module.cwrap('get_next_command', 'number', 
         ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
 
     init_ui(canvas.width, canvas.height);
 
-    // Lyssnare på webbläsarens mus-händelser
+    window.addEventListener('resize', () => {
+        update_resolution(canvas.width, canvas.height);
+    });
+
     canvas.addEventListener('mousemove', (e) => {
         const rect = canvas.getBoundingClientRect();
         send_mouse_move(e.clientX - rect.left, e.clientY - rect.top);
