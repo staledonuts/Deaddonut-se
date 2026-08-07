@@ -85,6 +85,16 @@ Module.onRuntimeInitialized = () =>
             send_mouse_move(mouseX, mouseY);
         });
 
+        window.addEventListener('deviceorientation', (e) => {
+            if (e.gamma === null || e.beta === null) return;
+
+            const maxTilt = 45; 
+            let xTilt = Math.max(-maxTilt, Math.min(maxTilt, e.gamma)) / maxTilt;
+            let yTilt = Math.max(-maxTilt, Math.min(maxTilt, e.beta - 45)) / maxTilt;
+            mouseX = (window.innerWidth / 2) + (xTilt * window.innerWidth / 2);
+            mouseY = (window.innerHeight / 2) + (yTilt * window.innerHeight / 2);
+        });
+
         canvas.addEventListener('mousedown', (e) => {
             const rect = canvas.getBoundingClientRect();
             send_mouse_down(e.clientX - rect.left, e.clientY - rect.top, 0);
