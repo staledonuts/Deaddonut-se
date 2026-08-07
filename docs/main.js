@@ -10,7 +10,7 @@ function loadImage(id, url) {
     images[id] = img;
 }
 loadImage(1, "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/logo.png");
-
+loadImage(99, "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/logo.png");
 const baseUrl = "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/images/";
 const portfolioFiles = ["mclegends-ich000.png", "mclegends-ich001.png"];
 
