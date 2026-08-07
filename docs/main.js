@@ -31,12 +31,17 @@ Module.onRuntimeInitialized = () => {
         const send_mouse_down = Module.cwrap('send_mouse_down', 'void', ['number', 'number', 'number']);
         const send_mouse_up = Module.cwrap('send_mouse_up', 'void', ['number', 'number', 'number']);
         const update_resolution = Module.cwrap('update_resolution', 'void', ['number', 'number']);
+        const send_mouse_wheel = Module.cwrap('send_mouse_wheel', 'void', ['number', 'number']);
 
         const get_next_command = Module.cwrap('get_next_command', 'number', 
             ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
 
         init_ui(canvas.width, canvas.height);
 
+        canvas.addEventListener('wheel', (e) => {
+            send_mouse_wheel(e.deltaX, e.deltaY);
+        }, { passive: true });
+        
         window.addEventListener('resize', () => {
             update_resolution(canvas.width, canvas.height);
         });
