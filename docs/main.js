@@ -5,6 +5,7 @@ const BG_COLOR = '#1a1a2e';
 const images = {};
 let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
+let isUsingGyro = false;
 
 function clamp(val) {
     return Math.max(0, Math.min(1, val));
@@ -74,23 +75,26 @@ Module.onRuntimeInitialized = () =>
 
         canvas.addEventListener('mousemove', (e) => {
             const rect = canvas.getBoundingClientRect();
-            send_mouse_move(e.clientX - rect.left, e.clientY - rect.top);
-        });
+            const localX = e.clientX - rect.left;
+            const localY = e.clientY - rect.top;
 
-        canvas.addEventListener('mousemove', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            mouseX = e.clientX - rect.left;
-            mouseY = e.clientY - rect.top; 
+            if (!isUsingGyro) {
+                mouseX = localX;
+                mouseY = localY;
+            }
             
-            send_mouse_move(mouseX, mouseY);
+            send_mouse_move(localX, localY);
         });
 
         window.addEventListener('deviceorientation', (e) => {
             if (e.gamma === null || e.beta === null) return;
 
+            isUsingGyro = true; // Lock out the mouse parallax!
+
             const maxTilt = 45; 
             let xTilt = Math.max(-maxTilt, Math.min(maxTilt, e.gamma)) / maxTilt;
             let yTilt = Math.max(-maxTilt, Math.min(maxTilt, e.beta - 45)) / maxTilt;
+
             mouseX = (window.innerWidth / 2) + (xTilt * window.innerWidth / 2);
             mouseY = (window.innerHeight / 2) + (yTilt * window.innerHeight / 2);
         });
