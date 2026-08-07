@@ -3,6 +3,12 @@ const ctx = canvas.getContext('2d');
 
 const BG_COLOR = '#1a1a2e';
 const images = {};
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+
+function clamp(val) {
+    return Math.max(0, Math.min(1, val));
+}
 
 function loadImage(id, url) {
     const img = new Image();
@@ -10,7 +16,7 @@ function loadImage(id, url) {
     images[id] = img;
 }
 loadImage(1, "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/logo.png");
-loadImage(99, "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/logo.png");
+loadImage(99, "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/profilepic.jpg");
 const baseUrl = "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/images/";
 const portfolioFiles = ["mclegends-ich000.png", "mclegends-ich001.png"];
 
@@ -40,9 +46,10 @@ const CLAY_RENDER_COMMAND_TYPE_SCISSOR_START = 5;
 const CLAY_RENDER_COMMAND_TYPE_SCISSOR_END = 6;
 const CLAY_RENDER_COMMAND_TYPE_CUSTOM = 7;
 
-Module.onRuntimeInitialized = () => {
-    //console.log("WASM Laddat och redo!");
-    document.fonts.ready.then(() => {
+Module.onRuntimeInitialized = () => 
+{
+    document.fonts.ready.then(() => 
+    {
         const init_ui = Module.cwrap('init_ui', 'void', ['number', 'number']);
         const process_frame = Module.cwrap('process_frame', 'void', ['number']);
         const reset_command_iterator = Module.cwrap('reset_command_iterator', 'void', []);
@@ -68,6 +75,14 @@ Module.onRuntimeInitialized = () => {
         canvas.addEventListener('mousemove', (e) => {
             const rect = canvas.getBoundingClientRect();
             send_mouse_move(e.clientX - rect.left, e.clientY - rect.top);
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouseX = e.clientX - rect.left;
+            mouseY = e.clientY - rect.top; 
+            
+            send_mouse_move(mouseX, mouseY);
         });
 
         canvas.addEventListener('mousedown', (e) => {
@@ -102,9 +117,49 @@ Module.onRuntimeInitialized = () => {
             const deltaTime = (timestamp - lastTime) / 1000.0;
             lastTime = timestamp;
 
-            ctx.fillStyle = BG_COLOR;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const offsetX = (mouseX - centerX) * 0.15; 
+            const offsetY = (mouseY - centerY) * 0.15;
+
+            const startX = canvas.width + offsetX;
+            const startY = canvas.height + offsetY;
+            const endX = 0 + offsetX;
+            const endY = 0 + offsetY;
+
+            const grad = ctx.createLinearGradient(startX, startY, endX, endY);
+
+            const time = timestamp * 0.0004;
             
+            const step1 = clamp(0.20 + Math.sin(time * 0.9) * 0.05);
+            const step2 = clamp(0.40 + Math.cos(time * 0.7) * 0.05);
+            const step3 = clamp(0.60 + Math.sin(time * 1.1) * 0.05);
+            const step4 = clamp(0.80 + Math.cos(time * 1.3) * 0.05);
+
+            const c1 = 'rgb(37, 21, 63)';
+            const c2 = 'rgb(79, 54, 118)';
+            const c3 = 'rgb(134, 96, 175)';
+            const c4 = 'rgb(198, 148, 217)';
+            const c5 = 'rgb(239, 221, 238)';
+
+            grad.addColorStop(0, c1);
+            grad.addColorStop(step1, c1);
+
+            grad.addColorStop(step1, c2);
+            grad.addColorStop(step2, c2);
+
+            grad.addColorStop(step2, c3);
+            grad.addColorStop(step3, c3);
+
+            grad.addColorStop(step3, c4);
+            grad.addColorStop(step4, c4);
+
+            grad.addColorStop(step4, c5);
+            grad.addColorStop(1, c5);
+
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
             process_frame(deltaTime);
             reset_command_iterator();
 
@@ -135,10 +190,20 @@ Module.onRuntimeInitialized = () => {
                     const a = memoryView.getFloat32(ptr_a, true);
                     const cr = memoryView.getFloat32(ptr_cr, true);
                     
+                    ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+                    ctx.shadowBlur = 15;
+                    ctx.shadowOffsetX = 0;
+                    ctx.shadowOffsetY = 8;
+                    
                     ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a / 255})`;
                     ctx.beginPath();
                     ctx.roundRect(x, y, w, h, cr);
                     ctx.fill();
+                    
+                    ctx.shadowColor = 'transparent';
+                    ctx.shadowBlur = 0;
+                    ctx.shadowOffsetX = 0;
+                    ctx.shadowOffsetY = 0;
                 } 
                 else if (type === CLAY_RENDER_COMMAND_TYPE_TEXT) {
                     const x = memoryView.getFloat32(ptr_x, true);
