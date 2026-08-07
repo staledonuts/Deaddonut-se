@@ -174,7 +174,6 @@ Module.onRuntimeInitialized = () => {
                     
                     const img = images[imageId];
                     
-                    // Add the naturalWidth check to ensure the image is NOT broken!
                     if (img && img.complete && img.naturalWidth > 0) 
                     {
                         ctx.save();
