@@ -3,40 +3,40 @@ const ctx = canvas.getContext('2d');
 
 const BG_COLOR = '#1a1a2e';
 const images = {};
+const baseUrl = "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/images/";
+const portfolioFiles = ["mclegends-ich000.png", "mclegends-ich001.png"];
 let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
 let isUsingGyro = false;
 
-function clamp(val) {
+function clamp(val)
+{
     return Math.max(0, Math.min(1, val));
 }
 
-function loadImage(id, url) {
+function loadImage(id, url)
+{
     const img = new Image();
     img.src = url;
     images[id] = img;
 }
-loadImage(1, "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/logo.png");
-loadImage(99, "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/profilepic.jpg");
-const baseUrl = "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/images/";
-const portfolioFiles = ["mclegends-ich000.png", "mclegends-ich001.png"];
 
 portfolioFiles.forEach((filename, index) => {
     loadImage(index + 2, baseUrl + filename); // IDs start at 2
 });
 
 
-
-
-function resizeCanvas() {
+function resizeCanvas()
+{
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
 resizeCanvas();
+
 window.addEventListener('resize', resizeCanvas);
 
-
-
+loadImage(1, "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/logo.png");
+loadImage(99, "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/profilepic.jpg");
 
 const CLAY_RENDER_COMMAND_TYPE_NONE = 0;
 const CLAY_RENDER_COMMAND_TYPE_RECTANGLE = 1;
@@ -59,18 +59,50 @@ Module.onRuntimeInitialized = () =>
         const send_mouse_up = Module.cwrap('send_mouse_up', 'void', ['number', 'number', 'number']);
         const update_resolution = Module.cwrap('update_resolution', 'void', ['number', 'number']);
         const send_mouse_wheel = Module.cwrap('send_mouse_wheel', 'void', ['number', 'number']);
+        const set_mobile_mode = Module.cwrap('set_mobile_mode', 'void', ['number']);
 
         const get_next_command = Module.cwrap('get_next_command', 'number', 
             ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
 
         init_ui(canvas.width, canvas.height);
 
-        canvas.addEventListener('wheel', (e) => {
-            send_mouse_wheel(e.deltaX, e.deltaY);
-        }, { passive: true });
+        function updateMobileState() 
+        {
+            const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            set_mobile_mode(isMobile ? 1 : 0);
+        }
+        
+        updateMobileState();
         
         window.addEventListener('resize', () => {
             update_resolution(canvas.width, canvas.height);
+        });
+        
+        window.addEventListener('resize', () => {
+            update_resolution(canvas.width, canvas.height);
+            updateMobileState();
+        });
+        
+        window.addEventListener('deviceorientation', (e) => {
+            if (e.gamma === null || e.beta === null) return;
+            
+            isUsingGyro = true; // Lock out the mouse parallax!
+            
+            const maxTilt = 45; 
+            let xTilt = Math.max(-maxTilt, Math.min(maxTilt, e.gamma)) / maxTilt;
+            let yTilt = Math.max(-maxTilt, Math.min(maxTilt, e.beta - 45)) / maxTilt;
+            
+            mouseX = (window.innerWidth / 2) + (xTilt * window.innerWidth / 2);
+            mouseY = (window.innerHeight / 2) + (yTilt * window.innerHeight / 2);
+        });
+
+        canvas.addEventListener('wheel', (e) => {
+            send_mouse_wheel(e.deltaX, e.deltaY);
+        }, { passive: true });
+
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            send_mouse_down(e.clientX - rect.left, e.clientY - rect.top, 0);
         });
 
         canvas.addEventListener('mousemove', (e) => {
@@ -84,24 +116,6 @@ Module.onRuntimeInitialized = () =>
             }
             
             send_mouse_move(localX, localY);
-        });
-
-        window.addEventListener('deviceorientation', (e) => {
-            if (e.gamma === null || e.beta === null) return;
-
-            isUsingGyro = true; // Lock out the mouse parallax!
-
-            const maxTilt = 45; 
-            let xTilt = Math.max(-maxTilt, Math.min(maxTilt, e.gamma)) / maxTilt;
-            let yTilt = Math.max(-maxTilt, Math.min(maxTilt, e.beta - 45)) / maxTilt;
-
-            mouseX = (window.innerWidth / 2) + (xTilt * window.innerWidth / 2);
-            mouseY = (window.innerHeight / 2) + (yTilt * window.innerHeight / 2);
-        });
-
-        canvas.addEventListener('mousedown', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            send_mouse_down(e.clientX - rect.left, e.clientY - rect.top, 0);
         });
 
         canvas.addEventListener('mouseup', (e) => {
@@ -204,8 +218,8 @@ Module.onRuntimeInitialized = () =>
                     const a = memoryView.getFloat32(ptr_a, true);
                     const cr = memoryView.getFloat32(ptr_cr, true);
                     
-                    ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
-                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = 'rgba(0.145098039216, 0.0823529411765, 0.247058823529, 0.5)';
+                    ctx.shadowBlur = 16;
                     ctx.shadowOffsetX = 0;
                     ctx.shadowOffsetY = 8;
                     
