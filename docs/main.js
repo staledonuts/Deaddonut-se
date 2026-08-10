@@ -252,7 +252,7 @@ Module.onRuntimeInitialized = () =>
                     const str = new TextDecoder('utf-8').decode(textArray);
                     
                     ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a / 255})`;
-                    ctx.font = `${fontSize}px "Nunito", sans-serif`;
+                    ctx.font = `${fontSize}px "IBMVGA8", monospace`;
                     ctx.textBaseline = "middle";
                     ctx.fillText(str, x, y + (h / 2));
                 }
