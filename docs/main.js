@@ -8,6 +8,7 @@ const portfolioFiles = ["mclegends-ich000.png", "mclegends-ich001.png"];
 let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
 let isUsingGyro = false;
+let isTouchDevice = false;
 
 function clamp(val)
 {
@@ -82,11 +83,36 @@ Module.onRuntimeInitialized = () =>
             update_resolution(canvas.width, canvas.height);
             updateMobileState();
         });
+
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            isTouchDevice = true;
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            send_mouse_down(touch.clientX - rect.left, touch.clientY - rect.top, 0);
+        }, { passive: false });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const localX = touch.clientX - rect.left;
+            const localY = touch.clientY - rect.top;
+            
+            send_mouse_move(localX, localY);
+        }, { passive: false });
+
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.changedTouches[0]; 
+            send_mouse_up(touch.clientX - rect.left, touch.clientY - rect.top, 0);
+        }, { passive: false });
         
         window.addEventListener('deviceorientation', (e) => {
             if (e.gamma === null || e.beta === null) return;
             
-            isUsingGyro = true; // Lock out the mouse parallax!
+            isUsingGyro = true;
             
             const maxTilt = 45; 
             let xTilt = Math.max(-maxTilt, Math.min(maxTilt, e.gamma)) / maxTilt;
@@ -110,7 +136,7 @@ Module.onRuntimeInitialized = () =>
             const localX = e.clientX - rect.left;
             const localY = e.clientY - rect.top;
 
-            if (!isUsingGyro) {
+            if (!isUsingGyro && !isTouchDevice) {
                 mouseX = localX;
                 mouseY = localY;
             }
