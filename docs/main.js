@@ -5,6 +5,8 @@ const BG_COLOR = '#1a1a2e';
 const images = {};
 const baseUrl = "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/images/";
 const portfolioFiles = ["mclegends-ich000.png", "mclegends-ich001.png"];
+let targetMouseX = window.innerWidth / 2;
+let targetMouseY = window.innerHeight / 2;
 let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
 let isUsingGyro = false;
@@ -14,12 +16,19 @@ function clamp(val)
 {
     return Math.max(0, Math.min(1, val));
 }
-
 function loadImage(id, url)
 {
     const img = new Image();
     img.src = url;
-    images[id] = img;
+    
+    img.decode()
+        .then(() => {
+            console.log(`Image ID ${id} decoded successfully in the background.`);
+        })
+        .catch((encodingError) => {
+            console.error(`Failed to decode image ID ${id}:`, encodingError);
+        });
+    images[id] = img; 
 }
 
 portfolioFiles.forEach((filename, index) => {
@@ -118,8 +127,8 @@ Module.onRuntimeInitialized = () =>
             let xTilt = Math.max(-maxTilt, Math.min(maxTilt, e.gamma)) / maxTilt;
             let yTilt = Math.max(-maxTilt, Math.min(maxTilt, e.beta - 45)) / maxTilt;
             
-            mouseX = (window.innerWidth / 2) + (xTilt * window.innerWidth / 2);
-            mouseY = (window.innerHeight / 2) + (yTilt * window.innerHeight / 2);
+            targetMouseX = (window.innerWidth / 2) + (xTilt * window.innerWidth / 2);
+            targetMouseY = (window.innerHeight / 2) + (yTilt * window.innerHeight / 2);
         });
 
         canvas.addEventListener('wheel', (e) => {
@@ -137,8 +146,8 @@ Module.onRuntimeInitialized = () =>
             const localY = e.clientY - rect.top;
 
             if (!isUsingGyro && !isTouchDevice) {
-                mouseX = localX;
-                mouseY = localY;
+                targetMouseX = localX;
+                targetMouseY = localY;
             }
             
             send_mouse_move(localX, localY);
@@ -170,6 +179,10 @@ Module.onRuntimeInitialized = () =>
 
             const deltaTime = (timestamp - lastTime) / 1000.0;
             lastTime = timestamp;
+
+            const lerpSpeed = 5.0; 
+            mouseX += (targetMouseX - mouseX) * lerpSpeed * deltaTime;
+            mouseY += (targetMouseY - mouseY) * lerpSpeed * deltaTime;
 
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
