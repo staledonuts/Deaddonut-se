@@ -3,8 +3,6 @@ const ctx = canvas.getContext('2d');
 
 const BG_COLOR = '#1a1a2e';
 const images = {};
-const baseUrl = "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/images/";
-const portfolioFiles = ["mclegends-ich000.png", "mclegends-ich001.png", "LightningVoid-Gameplay.png", "Invincible.png", "staledonut-crumbs-affisch.png"];
 let targetMouseX = window.innerWidth / 2;
 let targetMouseY = window.innerHeight / 2;
 let mouseX = window.innerWidth / 2;
@@ -16,25 +14,6 @@ function clamp(val)
 {
     return Math.max(0, Math.min(1, val));
 }
-function loadImage(id, url)
-{
-    const img = new Image();
-    img.src = url;
-    
-    img.decode()
-        .then(() => {
-            console.log(`Image ID ${id} decoded successfully in the background.`);
-        })
-        .catch((encodingError) => {
-            console.error(`Failed to decode image ID ${id}:`, encodingError);
-        });
-    images[id] = img; 
-}
-
-portfolioFiles.forEach((filename, index) => {
-    loadImage(index + 2, baseUrl + filename); // IDs start at 2
-});
-
 
 function resizeCanvas()
 {
@@ -44,9 +23,6 @@ function resizeCanvas()
 resizeCanvas();
 
 window.addEventListener('resize', resizeCanvas);
-
-loadImage(1, "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/logo.png");
-loadImage(99, "https://raw.githubusercontent.com/staledonuts/Deaddonut-se/main/docs/images/profilepic.jpg");
 
 const CLAY_RENDER_COMMAND_TYPE_NONE = 0;
 const CLAY_RENDER_COMMAND_TYPE_RECTANGLE = 1;
@@ -302,6 +278,7 @@ Module.onRuntimeInitialized = () =>
                     const w = memoryView.getFloat32(ptr_w, true);
                     const h = memoryView.getFloat32(ptr_h, true);
                     const imageId = memoryView.getFloat32(ptr_r, true);
+                    const a = memoryView.getFloat32(ptr_a, true);
                     const cr = memoryView.getFloat32(ptr_cr, true); 
                     
                     const img = images[imageId];
@@ -309,6 +286,8 @@ Module.onRuntimeInitialized = () =>
                     if (img && img.complete && img.naturalWidth > 0) 
                     {
                         ctx.save();
+                        
+                        ctx.globalAlpha = a / 255.0;
                         
                         ctx.beginPath();
                         ctx.roundRect(x, y, w, h, cr);

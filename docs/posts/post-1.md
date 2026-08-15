@@ -39,7 +39,7 @@ _You **can** combine them_
 
 ## Images
 
-![This is an alt text.](/image/Markdown-mark.svg "This is a sample image.")
+![This is an alt text.](/images/images/Catface.png "This is a sample image.")
 
 ## Links
 
@@ -65,13 +65,3 @@ You may be using [Markdown Live Preview](https://markdownlivepreview.com/).
 let message = 'Hello world';
 alert(message);
 ```
-
-## Mermaid diagrams
-```mermaid
-graph TD
-  A[Start] --> B{Decision}
-  B -->|Yes| C[Finish]
-  B -->|No| D[Alternate]
-```
-
-## Inline code
