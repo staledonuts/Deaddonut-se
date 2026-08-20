@@ -2,7 +2,7 @@
 __This is where i post new things I am working on, new things I have learned, and things that are on my mind.__
 
 ## What i am currently doing.
-Currently i am learning C and WASM because of building this webpage. I tried working in pure Javascript and Html before and i was not enjoying myself. Working in those languages is a messy process that i do not enjoy and my __ADD__ is not helping on that front.
+Currently i am learning C and WASM because of building this webpage. I tried working in pure Javascript and Html before and i was not enjoying myself. Working in those languages is a messy process that i do not enjoy, but the C Wasm experience is a bit more in my style of programming.
 
 The webpage is built with [Clay](https://github.com/nicbarker/clay), [cJson](https://github.com/DaveGamble/cJSON) and [md4c](https://github.com/mity/md4c).
 
