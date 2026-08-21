@@ -316,18 +316,28 @@ Module.onRuntimeInitialized = () =>
                     const cr = memoryView.getFloat32(ptr_cr, true); 
                     
                     const img = images[imageId];
-                    
-                    if (img && img.complete && img.naturalWidth > 0) 
-                    {
+    
+                    if (img && img.complete && img.naturalWidth > 0) {
                         ctx.save();
-                        
                         ctx.globalAlpha = a / 255.0;
                         
                         ctx.beginPath();
                         ctx.roundRect(x, y, w, h, cr);
                         ctx.clip();
                         
-                        ctx.drawImage(img, x, y, w, h);
+                        if (img.frames > 1)
+                        {
+                            const timeInSeconds = timestamp / 1000;
+                            const currentFrame = Math.floor(timeInSeconds * img.fps) % img.frames;
+                            const frameWidth = img.naturalWidth / img.frames;
+                            const sx = currentFrame * frameWidth;
+                            
+                            ctx.drawImage(img, sx, 0, frameWidth, img.naturalHeight, x, y, w, h);
+                        }
+                        else
+                        {
+                            ctx.drawImage(img, x, y, w, h);
+                        }
                         
                         ctx.restore();
                     }
