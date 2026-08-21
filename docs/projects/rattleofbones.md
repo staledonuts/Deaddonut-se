@@ -6,6 +6,11 @@ this is a project i started 5+ years ago and it is still around in some capacity
 
 Now it is in Godot with a much better code base and uses a global shader variable to pick the games palette!
 
-![Screenshot1.](images/images/rob-godot.png "")
+i am using a specific set of grayscale colors as a lookup for the shader and it uses the global variable to return the correct colors.
 
-![Screenshot1.](images/images/rob-palettepick.png "")
+![RobScreenshot1.](images/images/rob-godot.png "godot")
+
+Global Palette!
+
+![RobScreenshot2.](images/images/rob_palettepick.png "global palette")
+
