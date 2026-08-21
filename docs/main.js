@@ -61,12 +61,8 @@ Module.onRuntimeInitialized = () =>
         updateMobileState();
         
         window.addEventListener('resize', () => {
-            update_resolution(canvas.width, canvas.height);
-        });
-        
-        window.addEventListener('resize', () => {
-            update_resolution(canvas.width, canvas.height);
             updateMobileState();
+            update_resolution(canvas.width, canvas.height);
         });
 
         canvas.addEventListener('touchstart', (e) => {
