@@ -12,3 +12,6 @@ Currently re-writing the game in Odin and SDL3. Here you can download it.
 
 
 - [Linux_Download](downloads/LightningVoid-Linux.zip)
+
+
+![LVScreenShot2.](images/images/LightningVoid-Gameplay_02.png "Gameplay 02")
