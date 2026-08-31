@@ -1,6 +1,5 @@
 const canvas = document.getElementById('app');
 const ctx = canvas.getContext('2d');
-const particles = [];
 const BG_COLOR = '#1a1a2e';
 const images = {};
 let targetMouseX = window.innerWidth / 2;
@@ -17,17 +16,6 @@ function clamp(val) {
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-}
-
-function spawnParticle(x, y) {
-    particles.push({
-        x: x,
-        y: y,
-        vx: (Math.random() - 0.5) * 2,
-        vy: (Math.random() - 0.5) * 2,
-        life: 1.0,
-        size: Math.random() * 3 + 1
-    });
 }
 resizeCanvas();
 
@@ -203,28 +191,7 @@ Module.onRuntimeInitialized = () => {
 
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            if (!isTouchDevice) {
-                spawnParticle(mouseX, mouseY);
-            }
 
-            for (let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-
-                p.x += p.vx;
-                p.y += p.vy;
-
-                p.life -= deltaTime * 1.5;
-
-                if (p.life <= 0) {
-                    particles.splice(i, 1);
-                }
-                else {
-                    ctx.fillStyle = `rgba(198, 148, 217, ${p.life})`;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
             process_frame(deltaTime);
             reset_command_iterator();
 
