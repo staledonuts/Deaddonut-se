@@ -43,7 +43,6 @@ TestResults/
 *.roslyncodeanalysis.sarif.json
 
 # Misc
-*.zip
 *.rar
 *.7z
 
