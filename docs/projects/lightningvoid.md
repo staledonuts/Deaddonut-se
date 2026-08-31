@@ -6,5 +6,9 @@ I also learned a LOT about particle systems, ECS systems and project complexity.
 
 
 Currently re-writing the game in Odin and SDL3. Here you can download it.
-[Windows Download](downloads/LightningVoid-Windows.zip)
-[Linux Download](downloads/LightningVoid-Linux.zip)
+
+
+- [Windows_Download](downloads/LightningVoid-Windows.zip)
+
+
+- [Linux_Download](downloads/LightningVoid-Linux.zip)
