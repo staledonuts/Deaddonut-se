@@ -21,12 +21,17 @@ Sent applications to multiple Game Studios:
 - BDX Green
 - Tullverket
 
----
-
 ## Side Projects:
+
 
 Currently i am working on MageSlayer SDL and LightningVoid. both of them is being written in Odin lang.
 
+- [Windows_Download](downloads/LightningVoid-Windows.zip)
+- [Linux_Download](downloads/LightningVoid-Linux.zip)
+
 I think i have come to really like the language, it has a lot of nice features and forces you to go back to simpler structure.
 
+Here is a LightningVoid screenshot
+
+![LVScreenShot2.](images/images/LightningVoid-Gameplay_02.png "Gameplay 02")
 
