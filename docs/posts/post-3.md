@@ -100,8 +100,13 @@ You may be using [Markdown Live Preview](https://markdownlivepreview.com/).
 ## Blocks of code
 
 ```
-let message = 'Hello world';
-alert(message);
+typedef struct 
+{
+    const char* title;
+    const char* markdown_file;
+    const char* image_url;
+    const char* video_url;
+} ProjectData;
 ```
 
 ## Mermaid diagrams
