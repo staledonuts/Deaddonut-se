@@ -30,18 +30,34 @@ const CLAY_RENDER_COMMAND_TYPE_SCISSOR_START = 5;
 const CLAY_RENDER_COMMAND_TYPE_SCISSOR_END = 6;
 const CLAY_RENDER_COMMAND_TYPE_CUSTOM = 7;
 
-Module.onRuntimeInitialized = () => {
-    document.fonts.ready.then(() => {
-        const init_ui = Module.cwrap('init_ui', 'void', ['number', 'number']);
-        const process_frame = Module.cwrap('process_frame', 'void', ['number']);
-        const reset_command_iterator = Module.cwrap('reset_command_iterator', 'void', []);
-        const send_mouse_move = Module.cwrap('send_mouse_move', 'void', ['number', 'number']);
-        const send_mouse_down = Module.cwrap('send_mouse_down', 'void', ['number', 'number', 'number']);
-        const send_mouse_up = Module.cwrap('send_mouse_up', 'void', ['number', 'number', 'number']);
-        const update_resolution = Module.cwrap('update_resolution', 'void', ['number', 'number']);
-        const send_mouse_wheel = Module.cwrap('send_mouse_wheel', 'void', ['number', 'number']);
-        const set_mobile_mode = Module.cwrap('set_mobile_mode', 'void', ['number']);
-        const open_window_by_tag = Module.cwrap('open_window_by_tag', 'void', ['string']);
+Module.onRuntimeInitialized = async () => {
+    try {
+        if (document.fonts) {
+            await document.fonts.load('24px "Lexend-Regular"');
+            await document.fonts.load('28px "Lexend-Regular"');
+            await document.fonts.load('32px "Lexend-Regular"');
+            await document.fonts.ready;
+        }
+    } catch (e) {
+        console.warn("Font load error:", e);
+    }
+
+    if (document.fonts) {
+        document.fonts.ready.then(() => {
+            Module._textWidthCache = {};
+        });
+    }
+
+    const init_ui = Module.cwrap('init_ui', 'void', ['number', 'number']);
+    const process_frame = Module.cwrap('process_frame', 'void', ['number']);
+    const reset_command_iterator = Module.cwrap('reset_command_iterator', 'void', []);
+    const send_mouse_move = Module.cwrap('send_mouse_move', 'void', ['number', 'number']);
+    const send_mouse_down = Module.cwrap('send_mouse_down', 'void', ['number', 'number', 'number']);
+    const send_mouse_up = Module.cwrap('send_mouse_up', 'void', ['number', 'number', 'number']);
+    const update_resolution = Module.cwrap('update_resolution', 'void', ['number', 'number']);
+    const send_mouse_wheel = Module.cwrap('send_mouse_wheel', 'void', ['number', 'number']);
+    const set_mobile_mode = Module.cwrap('set_mobile_mode', 'void', ['number']);
+    const open_window_by_tag = Module.cwrap('open_window_by_tag', 'void', ['string']);
 
         const get_next_command = Module.cwrap('get_next_command', 'number',
             ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
@@ -270,7 +286,7 @@ Module.onRuntimeInitialized = () => {
                     const str = new TextDecoder('utf-8').decode(textArray);
 
                     ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a / 255})`;
-                    ctx.font = `${fontSize}px "Lexend-Regular", Truetype`;
+                    ctx.font = `${fontSize}px "Lexend-Regular", sans-serif`;
                     ctx.textBaseline = "middle";
                     ctx.fillText(str, x, y + (h / 2));
                 }

@@ -9,10 +9,10 @@ Currently re-writing the game in Odin and SDL3. Here you can download it.
 I highly recommend watching the Youtube video below or downloading the game.
 
 
-- [Windows_Download](downloads/LightningVoid-Windows.zip)
+- [Windows Download](downloads/LightningVoid-Windows.zip)
 
 
-- [Linux_Download](downloads/LightningVoid-Linux.zip)
+- [Linux Download](downloads/LightningVoid-Linux.zip)
 
 
 ![LVScreenShot2.](images/images/LightningVoid-Gameplay_02.png "Gameplay 02")
