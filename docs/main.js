@@ -41,11 +41,29 @@ Module.onRuntimeInitialized = () => {
         const update_resolution = Module.cwrap('update_resolution', 'void', ['number', 'number']);
         const send_mouse_wheel = Module.cwrap('send_mouse_wheel', 'void', ['number', 'number']);
         const set_mobile_mode = Module.cwrap('set_mobile_mode', 'void', ['number']);
+        const open_window_by_tag = Module.cwrap('open_window_by_tag', 'void', ['string']);
 
         const get_next_command = Module.cwrap('get_next_command', 'number',
             ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
 
         init_ui(canvas.width, canvas.height);
+
+        function handleHashRoute() {
+            let tag = window.location.hash.replace(/^#\/?/, '').trim().toLowerCase();
+            if (!tag && window.location.search) {
+                const params = new URLSearchParams(window.location.search);
+                tag = params.get('page') || params.get('window') || params.get('tab') || '';
+                if (!tag && window.location.search.startsWith('?')) {
+                    tag = window.location.search.substring(1).split('&')[0].split('=')[0].toLowerCase();
+                }
+            }
+            if (tag) {
+                open_window_by_tag(tag);
+            }
+        }
+
+        handleHashRoute();
+        window.addEventListener('hashchange', handleHashRoute);
 
         function updateMobileState() {
             const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
