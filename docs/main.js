@@ -344,5 +344,4 @@ Module.onRuntimeInitialized = async () => {
         }
 
         renderLoop(lastTime);
-    });
 };
