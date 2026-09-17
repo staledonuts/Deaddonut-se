@@ -209,6 +209,120 @@ Module.onRuntimeInitialized = async () => {
         const text_buf = Module._malloc(256);
         let lastTime = 0;
 
+        function renderCyberpunkButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp) {
+            const alpha = a / 255;
+            if (alpha <= 0.001) return;
+
+            ctx.save();
+
+            // 1. Warm ambient halo / glow behind the right side when hovered
+            if (hoverBlend > 0.02) {
+                const glowAlpha = 0.45 * hoverBlend * alpha;
+                const glowRadius = Math.max(h * 1.2, 50);
+                const glowGrad = ctx.createRadialGradient(
+                    x + w - 2, y + h * 0.5, 6,
+                    x + w + 16, y + h * 0.5, glowRadius
+                );
+                glowGrad.addColorStop(0, `rgba(${Math.min(255, r + 20)}, ${g}, ${b}, ${glowAlpha})`);
+                glowGrad.addColorStop(0.4, `rgba(${r}, ${Math.max(0, g - 25)}, ${b}, ${glowAlpha * 0.45})`);
+                glowGrad.addColorStop(1, `rgba(${r}, ${Math.max(0, g - 40)}, ${b}, 0)`);
+
+                ctx.fillStyle = glowGrad;
+                ctx.fillRect(x + w - 25, y - 25, glowRadius + 30, h + 50);
+            }
+
+            // 2. Base rounded button body
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            ctx.beginPath();
+            ctx.roundRect(x, y, w, h, cr);
+            ctx.fill();
+
+            // Subtle border outline when unhovered / transitioning
+            if (cr > 0 && hoverBlend < 0.95) {
+                const borderAlpha = alpha * 0.45 * (1.0 - hoverBlend);
+                if (borderAlpha > 0.01) {
+                    ctx.strokeStyle = `rgba(${r * 0.5}, ${g * 0.5}, ${b * 0.5}, ${borderAlpha})`;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+            }
+
+            // 3. Pixelated disintegration effect on the right edge
+            if (hoverBlend > 0.05) {
+                const timeSec = timestamp * 0.001;
+                const seed = (Math.floor(y * 11) + Math.floor(x * 7)) % 1000;
+
+                // Step 3A: Edge silhouette blocks attached directly to the right border
+                const stepBlocks = [
+                    { dy: 0.10, out: 4, size: 9 },
+                    { dy: 0.25, out: 7, size: 12 },
+                    { dy: 0.44, out: 5, size: 10 },
+                    { dy: 0.62, out: 8, size: 13 },
+                    { dy: 0.80, out: 4, size: 8 }
+                ];
+
+                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                for (let i = 0; i < stepBlocks.length; i++) {
+                    const sb = stepBlocks[i];
+                    const bx = x + w - (sb.size * 0.5) + (sb.out * hoverBlend);
+                    const by = y + (h - sb.size) * sb.dy;
+                    ctx.fillRect(bx, by, sb.size, sb.size);
+                }
+
+                // Step 3B: Detached floating square particles
+                const particles = [
+                    // Layer 1: Close dense cluster (large pixels ~9-13px)
+                    { ry: 0.16, dist: 13, size: 10, tone: 1.0, seed: 1.3 },
+                    { ry: 0.30, dist: 19, size: 12, tone: 0.95, seed: 2.8 },
+                    { ry: 0.46, dist: 16, size: 11, tone: 1.0, seed: 4.4 },
+                    { ry: 0.64, dist: 22, size: 13, tone: 0.95, seed: 5.7 },
+                    { ry: 0.76, dist: 15, size: 9, tone: 0.9, seed: 3.5 },
+
+                    // Layer 2: Mid-distance scatter (~6-9px)
+                    { ry: 0.08, dist: 26, size: 7, tone: 0.85, seed: 0.8 },
+                    { ry: 0.24, dist: 31, size: 8, tone: 0.9, seed: 6.4 },
+                    { ry: 0.38, dist: 36, size: 9, tone: 0.95, seed: 7.6 },
+                    { ry: 0.54, dist: 29, size: 8, tone: 0.85, seed: 1.9 },
+                    { ry: 0.70, dist: 34, size: 7, tone: 0.8, seed: 8.5 },
+                    { ry: 0.86, dist: 24, size: 6, tone: 0.75, seed: 2.2 },
+
+                    // Layer 3: Far trailing embers (~3-6px)
+                    { ry: 0.18, dist: 43, size: 5, tone: 0.7, seed: 9.3 },
+                    { ry: 0.34, dist: 50, size: 6, tone: 0.75, seed: 3.9 },
+                    { ry: 0.48, dist: 46, size: 5, tone: 0.65, seed: 6.1 },
+                    { ry: 0.66, dist: 42, size: 4, tone: 0.6, seed: 8.9 },
+                    { ry: 0.82, dist: 48, size: 4, tone: 0.55, seed: 4.7 }
+                ];
+
+                // Soft particle glow
+                ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${0.7 * hoverBlend})`;
+                ctx.shadowBlur = 8 * hoverBlend;
+
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    // Gentle wave float
+                    const waveX = Math.sin(timeSec * 2.8 + p.seed + seed) * 2.2;
+                    const waveY = Math.cos(timeSec * 2.2 + p.seed * 1.7) * 1.6;
+
+                    const px = x + w + (p.dist * hoverBlend) + waveX - 4;
+                    const py = y + (h - p.size) * p.ry + waveY;
+
+                    const particleAlpha = Math.min(1.0, hoverBlend * 1.25) * p.tone * alpha;
+                    if (particleAlpha <= 0.01) continue;
+
+                    // Subtle tone variations (amber gold, warm orange, highlight yellow)
+                    const redTone = Math.min(255, Math.floor(r * (0.96 + 0.08 * Math.sin(p.seed))));
+                    const greenTone = Math.min(255, Math.floor(g * (0.92 + 0.12 * Math.cos(p.seed))));
+                    const blueTone = Math.floor(b * 0.75);
+
+                    ctx.fillStyle = `rgba(${redTone}, ${greenTone}, ${blueTone}, ${particleAlpha})`;
+                    ctx.fillRect(px, py, p.size, p.size);
+                }
+            }
+
+            ctx.restore();
+        }
+
         function renderLoop(timestamp) {
             if (lastTime === 0) {
                 lastTime = timestamp;
@@ -402,6 +516,27 @@ Module.onRuntimeInitialized = async () => {
                 }
                 else if (type === CLAY_RENDER_COMMAND_TYPE_SCISSOR_END) {
                     ctx.restore();
+                }
+                else if (type === CLAY_RENDER_COMMAND_TYPE_CUSTOM) {
+                    const x = memoryView.getFloat32(ptr_x, true);
+                    const y = memoryView.getFloat32(ptr_y, true);
+                    const w = memoryView.getFloat32(ptr_w, true);
+                    const h = memoryView.getFloat32(ptr_h, true);
+                    const r = memoryView.getFloat32(ptr_r, true);
+                    const g = memoryView.getFloat32(ptr_g, true);
+                    const b = memoryView.getFloat32(ptr_b, true);
+                    const a = memoryView.getFloat32(ptr_a, true);
+                    const cr = memoryView.getFloat32(ptr_cr, true);
+
+                    let len = 0;
+                    while (memoryView.getUint8(text_buf + len) !== 0) {
+                        len++;
+                    }
+                    const textArray = new Uint8Array(HEAPU8.buffer, text_buf, len);
+                    const hoverStr = new TextDecoder('utf-8').decode(textArray);
+                    const hoverBlend = parseFloat(hoverStr) || 0.0;
+
+                    renderCyberpunkButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp);
                 }
             }
 
