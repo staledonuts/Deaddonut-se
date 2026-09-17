@@ -209,6 +209,11 @@ Module.onRuntimeInitialized = async () => {
         const text_buf = Module._malloc(256);
         let lastTime = 0;
 
+        // Button styles matching C enum
+        const BUTTON_STYLE_STANDARD = 0;
+        const BUTTON_STYLE_PIXEL_RIGHT = 1;
+        const BUTTON_STYLE_PIXEL_UP = 2;
+
         // Pre-computed particle properties for zero-allocation flowing fire stream
         const CYBER_PARTICLES_COUNT = 32;
         const cyberParticles = [];
@@ -216,43 +221,90 @@ Module.onRuntimeInitialized = async () => {
             cyberParticles.push({
                 phase: ((i * 1.618) % 1.0),                  // golden ratio distribution so spawning is perfectly staggered
                 speed: 0.7 + ((i * 17) % 7) * 0.12,          // varying speeds
-                relY: ((i * 37 + 11) % 100) / 100,           // 0.0 to 1.0 along button height
+                relPos: ((i * 37 + 11) % 100) / 100,         // 0.0 to 1.0 along the dissolving edge
                 baseSize: 6.0 + ((i * 23) % 4) * 2.5,        // 6px to 13.5px initial size
                 maxDist: 45 + ((i * 29) % 6) * 12,           // 45px to 105px travel distance
-                driftY: -2.0 - ((i * 19) % 5) * 2.5,         // -2px to -12px thermal rise
+                drift: -2.0 - ((i * 19) % 5) * 2.5,          // perpendicular drift
                 seed: i * 4.31
             });
         }
 
-        function renderCyberpunkButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp) {
+        function renderCyberpunkButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, style) {
             const alpha = a / 255;
             if (alpha <= 0.001) return;
 
             ctx.save();
 
-            // 1. Warm ambient halo / glow behind the right side when hovered
+            // Style 0: Standard clean button (no particles/disintegration)
+            if (style === BUTTON_STYLE_STANDARD) {
+                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                ctx.beginPath();
+                ctx.roundRect(x, y, w, h, cr);
+                ctx.fill();
+
+                if (cr > 0) {
+                    const borderAlpha = alpha * 0.45;
+                    if (borderAlpha > 0.01) {
+                        ctx.strokeStyle = `rgba(${r * 0.5}, ${g * 0.5}, ${b * 0.5}, ${borderAlpha})`;
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.roundRect(x, y, w, h, cr);
+                        ctx.stroke();
+                    }
+                }
+                ctx.restore();
+                return;
+            }
+
+            // 1. Warm ambient halo / glow behind the burning side when hovered
             if (hoverBlend > 0.02) {
                 const glowAlpha = 0.45 * hoverBlend * alpha;
-                const glowRadius = Math.max(h * 1.3, 55);
-                const glowGrad = ctx.createRadialGradient(
-                    x + w - 2, y + h * 0.5, 6,
-                    x + w + 20, y + h * 0.5, glowRadius
-                );
-                glowGrad.addColorStop(0, `rgba(${Math.min(255, r + 25)}, ${Math.min(255, g + 10)}, ${b}, ${glowAlpha})`);
-                glowGrad.addColorStop(0.4, `rgba(${r}, ${Math.max(0, g - 25)}, ${b}, ${glowAlpha * 0.45})`);
-                glowGrad.addColorStop(1, `rgba(${r}, ${Math.max(0, g - 40)}, ${b}, 0)`);
+                if (style === BUTTON_STYLE_PIXEL_UP) {
+                    const glowRadius = Math.max(w * 0.85, 50);
+                    const glowGrad = ctx.createRadialGradient(
+                        x + w * 0.5, y + 4, 6,
+                        x + w * 0.5, y - 10, glowRadius
+                    );
+                    glowGrad.addColorStop(0, `rgba(${Math.min(255, r + 25)}, ${Math.min(255, g + 10)}, ${b}, ${glowAlpha})`);
+                    glowGrad.addColorStop(0.4, `rgba(${r}, ${Math.max(0, g - 25)}, ${b}, ${glowAlpha * 0.45})`);
+                    glowGrad.addColorStop(1, `rgba(${r}, ${Math.max(0, g - 40)}, ${b}, 0)`);
 
-                ctx.fillStyle = glowGrad;
-                ctx.fillRect(x + w - 25, y - 30, glowRadius + 40, h + 60);
+                    ctx.fillStyle = glowGrad;
+                    ctx.fillRect(x - 20, y - glowRadius - 15, w + 40, glowRadius + 25);
+                } else {
+                    // PIXEL_RIGHT
+                    const glowRadius = Math.max(h * 1.3, 55);
+                    const glowGrad = ctx.createRadialGradient(
+                        x + w - 2, y + h * 0.5, 6,
+                        x + w + 20, y + h * 0.5, glowRadius
+                    );
+                    glowGrad.addColorStop(0, `rgba(${Math.min(255, r + 25)}, ${Math.min(255, g + 10)}, ${b}, ${glowAlpha})`);
+                    glowGrad.addColorStop(0.4, `rgba(${r}, ${Math.max(0, g - 25)}, ${b}, ${glowAlpha * 0.45})`);
+                    glowGrad.addColorStop(1, `rgba(${r}, ${Math.max(0, g - 40)}, ${b}, 0)`);
+
+                    ctx.fillStyle = glowGrad;
+                    ctx.fillRect(x + w - 25, y - 30, glowRadius + 40, h + 60);
+                }
             }
 
             // 2. Base rounded button body
-            // When hovered, square off the right corners smoothly so the pixel dissolve edge connects cleanly
-            const rightCr = cr * Math.max(0, 1.0 - hoverBlend * 1.5);
+            // When hovered, flatten the edge corners where pixels dissolve:
+            // PIXEL_RIGHT flattens right corners [cr, flatCr, flatCr, cr]
+            // PIXEL_UP flattens top corners [flatCr, flatCr, cr, cr]
+            const flatCr = cr * Math.max(0, 1.0 - hoverBlend * 1.5);
+            let cornerRadii = cr;
+            if (ctx.roundRect) {
+                if (style === BUTTON_STYLE_PIXEL_UP) {
+                    cornerRadii = [flatCr, flatCr, cr, cr];
+                } else {
+                    cornerRadii = [cr, flatCr, flatCr, cr];
+                }
+            }
+
             ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
             ctx.beginPath();
             if (ctx.roundRect) {
-                ctx.roundRect(x, y, w, h, [cr, rightCr, rightCr, cr]);
+                ctx.roundRect(x, y, w, h, cornerRadii);
             } else {
                 ctx.roundRect(x, y, w, h, cr);
             }
@@ -266,7 +318,7 @@ Module.onRuntimeInitialized = async () => {
                     ctx.lineWidth = 2;
                     ctx.beginPath();
                     if (ctx.roundRect) {
-                        ctx.roundRect(x, y, w, h, [cr, rightCr, rightCr, cr]);
+                        ctx.roundRect(x, y, w, h, cornerRadii);
                     } else {
                         ctx.roundRect(x, y, w, h, cr);
                     }
@@ -274,26 +326,37 @@ Module.onRuntimeInitialized = async () => {
                 }
             }
 
-            // 3. Pixelated disintegration & continuous flowing fire stream on the right edge
+            // 3. Pixelated disintegration & continuous flowing fire stream
             if (hoverBlend > 0.02) {
                 const timeSec = timestamp * 0.001;
                 const seed = (Math.floor(y * 11) + Math.floor(x * 7)) % 1000;
 
-                // Step 3A: Animated flickering edge teeth attached to the right border
-                // Deep overlap inside the button so there is never a visible seam
+                // Step 3A: Animated flickering edge teeth attached to the dissolving border
                 const numEdgeBlocks = 6;
                 ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
-                for (let i = 0; i < numEdgeBlocks; i++) {
-                    const blockSeed = seed + i * 13.7;
-                    const flicker = Math.sin(timeSec * 8.0 + blockSeed);
-                    const blockSize = 8 + Math.floor(Math.abs(flicker) * 6);
-                    const yPos = y + (h - blockSize) * (i / (numEdgeBlocks - 1));
-                    const xOverlap = blockSize * 0.65 + 4;
-                    const xOut = (Math.abs(flicker) * 3.5 + 2.0) * hoverBlend;
-                    ctx.fillRect(x + w - xOverlap + xOut, yPos, blockSize, blockSize);
+
+                if (style === BUTTON_STYLE_PIXEL_UP) {
+                    for (let i = 0; i < numEdgeBlocks; i++) {
+                        const blockSeed = seed + i * 13.7;
+                        const flicker = Math.sin(timeSec * 8.0 + blockSeed);
+                        const blockSize = 8 + Math.floor(Math.abs(flicker) * 6);
+                        const xPos = x + (w - blockSize) * (i / (numEdgeBlocks - 1));
+                        const yOut = (Math.abs(flicker) * 3.5 + 2.0) * hoverBlend;
+                        ctx.fillRect(xPos, y - yOut, blockSize, blockSize + 6);
+                    }
+                } else {
+                    for (let i = 0; i < numEdgeBlocks; i++) {
+                        const blockSeed = seed + i * 13.7;
+                        const flicker = Math.sin(timeSec * 8.0 + blockSeed);
+                        const blockSize = 8 + Math.floor(Math.abs(flicker) * 6);
+                        const yPos = y + (h - blockSize) * (i / (numEdgeBlocks - 1));
+                        const xOverlap = blockSize * 0.65 + 4;
+                        const xOut = (Math.abs(flicker) * 3.5 + 2.0) * hoverBlend;
+                        ctx.fillRect(x + w - xOverlap + xOut, yPos, blockSize, blockSize);
+                    }
                 }
 
-                // Step 3B: Continuous stream of pixel embers flying right and burning out
+                // Step 3B: Continuous stream of pixel embers flying right/up and burning out
                 ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${0.85 * hoverBlend})`;
                 ctx.shadowBlur = 9 * hoverBlend;
 
@@ -317,11 +380,18 @@ Module.onRuntimeInitialized = async () => {
                     // Size shrinks as the ember burns away
                     const size = Math.max(2.5, p.baseSize * (1.0 - t * 0.65));
 
-                    // Movement: fly rightwards + gentle thermal turbulence
-                    // Spawn starting position nudged 10px to the left inside the button so particles emerge seamlessly
-                    const waveY = Math.sin(timeSec * 6.0 + p.seed) * (t * 5.0);
-                    const px = x + w - 10 + (t * (p.maxDist + 10) * hoverBlend);
-                    const py = y + p.relY * (h - size) + (p.driftY * t * hoverBlend) + waveY;
+                    // Wave oscillation
+                    const wave = Math.sin(timeSec * 6.0 + p.seed) * (t * 5.0);
+
+                    let px, py;
+                    if (style === BUTTON_STYLE_PIXEL_UP) {
+                        const driftX = ((i % 2 === 0 ? 1 : -1) * (Math.abs(p.drift) * 0.6));
+                        px = x + p.relPos * (w - size) + (driftX * t * hoverBlend) + wave;
+                        py = y + 10 - (t * (p.maxDist + 10) * hoverBlend);
+                    } else {
+                        px = x + w - 10 + (t * (p.maxDist + 10) * hoverBlend);
+                        py = y + p.relPos * (h - size) + (p.drift * t * hoverBlend) + wave;
+                    }
 
                     // Color transitions from white-gold hot core -> amber -> deep red/orange ember
                     let pR = r;
@@ -560,10 +630,19 @@ Module.onRuntimeInitialized = async () => {
                         len++;
                     }
                     const textArray = new Uint8Array(HEAPU8.buffer, text_buf, len);
-                    const hoverStr = new TextDecoder('utf-8').decode(textArray);
-                    const hoverBlend = parseFloat(hoverStr) || 0.0;
+                    const customStr = new TextDecoder('utf-8').decode(textArray);
+                    let style = 0;
+                    let hoverBlend = 0.0;
+                    if (customStr.includes(';')) {
+                        const parts = customStr.split(';');
+                        style = parseInt(parts[0], 10) || 0;
+                        hoverBlend = parseFloat(parts[1]) || 0.0;
+                    } else {
+                        hoverBlend = parseFloat(customStr) || 0.0;
+                        style = 1;
+                    }
 
-                    renderCyberpunkButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp);
+                    renderCyberpunkButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, style);
                 }
             }
 
