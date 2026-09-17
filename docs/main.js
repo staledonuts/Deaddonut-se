@@ -270,12 +270,15 @@ Module.onRuntimeInitialized = async () => {
                 else if (type === CLAY_RENDER_COMMAND_TYPE_TEXT) {
                     const x = memoryView.getFloat32(ptr_x, true);
                     const y = memoryView.getFloat32(ptr_y, true);
+                    const w = memoryView.getFloat32(ptr_w, true);
                     const h = memoryView.getFloat32(ptr_h, true);
                     const r = memoryView.getFloat32(ptr_r, true);
                     const g = memoryView.getFloat32(ptr_g, true);
                     const b = memoryView.getFloat32(ptr_b, true);
                     const a = memoryView.getFloat32(ptr_a, true);
-                    const fontSize = memoryView.getFloat32(ptr_cr, true);
+                    const fontInfo = memoryView.getFloat32(ptr_cr, true);
+                    const fontStyle = Math.floor(fontInfo / 1000);
+                    const fontSize = fontInfo % 1000;
 
                     let len = 0;
                     while (memoryView.getUint8(text_buf + len) !== 0) {
@@ -286,9 +289,33 @@ Module.onRuntimeInitialized = async () => {
                     const str = new TextDecoder('utf-8').decode(textArray);
 
                     ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a / 255})`;
-                    ctx.font = `${fontSize}px "Lexend-Regular", sans-serif`;
+                    let fontPrefix = "";
+                    if (fontStyle & 2) fontPrefix += "italic ";
+                    if (fontStyle & 1) fontPrefix += "bold ";
+                    ctx.font = `${fontPrefix}${fontSize}px "Lexend-Regular", sans-serif`;
                     ctx.textBaseline = "middle";
                     ctx.fillText(str, x, y + (h / 2));
+
+                    const actualWidth = w > 0 ? w : ctx.measureText(str).width;
+
+                    if (fontStyle & 4) { // Underline
+                        ctx.beginPath();
+                        ctx.strokeStyle = ctx.fillStyle;
+                        ctx.lineWidth = Math.max(1, fontSize / 16);
+                        const lineY = y + h - 2;
+                        ctx.moveTo(x, lineY);
+                        ctx.lineTo(x + actualWidth, lineY);
+                        ctx.stroke();
+                    }
+                    if (fontStyle & 8) { // Strikethrough
+                        ctx.beginPath();
+                        ctx.strokeStyle = ctx.fillStyle;
+                        ctx.lineWidth = Math.max(1, fontSize / 16);
+                        const lineY = y + (h / 2);
+                        ctx.moveTo(x, lineY);
+                        ctx.lineTo(x + actualWidth, lineY);
+                        ctx.stroke();
+                    }
                 }
                 else if (type === CLAY_RENDER_COMMAND_TYPE_IMAGE) {
                     const x = memoryView.getFloat32(ptr_x, true);
