@@ -93,29 +93,62 @@ Module.onRuntimeInitialized = async () => {
             update_resolution(canvas.width, canvas.height);
         });
 
+        let lastPinchDistance = null;
+
         canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
             isTouchDevice = true;
             const rect = canvas.getBoundingClientRect();
-            const touch = e.touches[0];
-            send_mouse_down(touch.clientX - rect.left, touch.clientY - rect.top, 0);
+            if (e.touches.length === 2) {
+                lastPinchDistance = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+            } else if (e.touches.length === 1) {
+                lastPinchDistance = null;
+                const touch = e.touches[0];
+                send_mouse_down(touch.clientX - rect.left, touch.clientY - rect.top, 0);
+            }
         }, { passive: false });
 
         canvas.addEventListener('touchmove', (e) => {
             e.preventDefault();
             const rect = canvas.getBoundingClientRect();
-            const touch = e.touches[0];
-            const localX = touch.clientX - rect.left;
-            const localY = touch.clientY - rect.top;
+            if (e.touches.length === 2) {
+                const currentDist = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                if (lastPinchDistance !== null && lastPinchDistance > 0) {
+                    const deltaDist = currentDist - lastPinchDistance;
+                    // deltaDist > 0 (spreading) = zoom in (send negative dy)
+                    send_mouse_wheel(0, -deltaDist * 6.0);
+                }
+                lastPinchDistance = currentDist;
 
-            send_mouse_move(localX, localY);
+                const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left;
+                const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top;
+                send_mouse_move(midX, midY);
+            } else if (e.touches.length === 1) {
+                lastPinchDistance = null;
+                const touch = e.touches[0];
+                const localX = touch.clientX - rect.left;
+                const localY = touch.clientY - rect.top;
+
+                send_mouse_move(localX, localY);
+            }
         }, { passive: false });
 
         canvas.addEventListener('touchend', (e) => {
             e.preventDefault();
             const rect = canvas.getBoundingClientRect();
-            const touch = e.changedTouches[0];
-            send_mouse_up(touch.clientX - rect.left, touch.clientY - rect.top, 0);
+            if (e.touches.length < 2) {
+                lastPinchDistance = null;
+            }
+            if (e.changedTouches.length > 0) {
+                const touch = e.changedTouches[0];
+                send_mouse_up(touch.clientX - rect.left, touch.clientY - rect.top, 0);
+            }
         }, { passive: false });
 
         window.addEventListener('deviceorientation', (e) => {
@@ -132,8 +165,13 @@ Module.onRuntimeInitialized = async () => {
         });
 
         canvas.addEventListener('wheel', (e) => {
-            send_mouse_wheel(e.deltaX, e.deltaY);
-        }, { passive: true });
+            if (e.ctrlKey) {
+                e.preventDefault();
+                send_mouse_wheel(0, e.deltaY * 5.0);
+            } else {
+                send_mouse_wheel(e.deltaX, e.deltaY);
+            }
+        }, { passive: false });
 
         canvas.addEventListener('mousedown', (e) => {
             const rect = canvas.getBoundingClientRect();
