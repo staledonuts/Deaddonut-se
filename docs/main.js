@@ -265,9 +265,9 @@ Module.onRuntimeInitialized = async () => {
                         x + w * 0.5, y + 4, 6,
                         x + w * 0.5, y - 10, glowRadius
                     );
-                    glowGrad.addColorStop(0, `rgba(${Math.min(255, r + 25)}, ${Math.min(255, g + 10)}, ${b}, ${glowAlpha})`);
-                    glowGrad.addColorStop(0.4, `rgba(${r}, ${Math.max(0, g - 25)}, ${b}, ${glowAlpha * 0.45})`);
-                    glowGrad.addColorStop(1, `rgba(${r}, ${Math.max(0, g - 40)}, ${b}, 0)`);
+                    glowGrad.addColorStop(0, `rgba(${Math.min(255, r + 40)}, ${Math.min(255, g + 40)}, ${Math.min(255, b + 40)}, ${glowAlpha})`);
+                    glowGrad.addColorStop(0.4, `rgba(${r}, ${g}, ${b}, ${glowAlpha * 0.45})`);
+                    glowGrad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
 
                     ctx.fillStyle = glowGrad;
                     ctx.fillRect(x - 20, y - glowRadius - 15, w + 40, glowRadius + 25);
@@ -278,9 +278,9 @@ Module.onRuntimeInitialized = async () => {
                         x + w - 2, y + h * 0.5, 6,
                         x + w + 20, y + h * 0.5, glowRadius
                     );
-                    glowGrad.addColorStop(0, `rgba(${Math.min(255, r + 25)}, ${Math.min(255, g + 10)}, ${b}, ${glowAlpha})`);
-                    glowGrad.addColorStop(0.4, `rgba(${r}, ${Math.max(0, g - 25)}, ${b}, ${glowAlpha * 0.45})`);
-                    glowGrad.addColorStop(1, `rgba(${r}, ${Math.max(0, g - 40)}, ${b}, 0)`);
+                    glowGrad.addColorStop(0, `rgba(${Math.min(255, r + 40)}, ${Math.min(255, g + 40)}, ${Math.min(255, b + 40)}, ${glowAlpha})`);
+                    glowGrad.addColorStop(0.4, `rgba(${r}, ${g}, ${b}, ${glowAlpha * 0.45})`);
+                    glowGrad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
 
                     ctx.fillStyle = glowGrad;
                     ctx.fillRect(x + w - 25, y - 30, glowRadius + 40, h + 60);
@@ -393,23 +393,23 @@ Module.onRuntimeInitialized = async () => {
                         py = y + p.relPos * (h - size) + (p.drift * t * hoverBlend) + wave;
                     }
 
-                    // Color transitions from white-gold hot core -> amber -> deep red/orange ember
+                    // Color transitions based on base button color
                     let pR = r;
                     let pG = g;
                     let pB = b;
 
                     if (t < 0.22) {
-                        // Hot core: brighter, whiter gold
+                        // Hot core: bright whiter tint of the base color
                         const coreBoost = (1.0 - t / 0.22);
-                        pR = Math.min(255, r + 40 * coreBoost);
-                        pG = Math.min(255, g + 50 * coreBoost);
-                        pB = Math.min(255, b + 90 * coreBoost);
+                        pR = Math.min(255, r + (255 - r) * 0.65 * coreBoost);
+                        pG = Math.min(255, g + (255 - g) * 0.65 * coreBoost);
+                        pB = Math.min(255, b + (255 - b) * 0.65 * coreBoost);
                     } else if (t > 0.55) {
-                        // Dying ember: shifts towards fiery deep orange / dark amber
+                        // Dying ember: deep rich variant
                         const emberShift = (t - 0.55) / 0.45;
-                        pR = Math.min(255, r * (1.0 - emberShift * 0.15));
-                        pG = Math.max(30, g * (1.0 - emberShift * 0.65));
-                        pB = Math.max(0, b * (1.0 - emberShift * 0.9));
+                        pR = Math.max(10, r * (1.0 - emberShift * 0.35));
+                        pG = Math.max(10, g * (1.0 - emberShift * 0.35));
+                        pB = Math.max(10, b * (1.0 - emberShift * 0.35));
                     }
 
                     ctx.fillStyle = `rgba(${Math.floor(pR)}, ${Math.floor(pG)}, ${Math.floor(pB)}, ${particleAlpha})`;
@@ -451,11 +451,11 @@ Module.onRuntimeInitialized = async () => {
             const step3 = clamp(0.60 + Math.sin(time * 1.1) * 0.05);
             const step4 = clamp(0.80 + Math.cos(time * 1.3) * 0.05);
 
-            const c1 = 'rgb(37, 21, 63)';
-            const c2 = 'rgb(79, 54, 118)';
-            const c3 = 'rgb(134, 96, 175)';
-            const c4 = 'rgb(198, 148, 217)';
-            const c5 = 'rgb(239, 221, 238)';
+            const c1 = 'rgb(14, 9, 26)';
+            const c2 = 'rgb(32, 20, 58)';
+            const c3 = 'rgb(68, 30, 102)';
+            const c4 = 'rgb(138, 52, 132)';
+            const c5 = 'rgb(212, 108, 150)';
 
             grad.addColorStop(0, c1);
             grad.addColorStop(step1, c1);
