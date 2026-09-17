@@ -247,9 +247,15 @@ Module.onRuntimeInitialized = async () => {
             }
 
             // 2. Base rounded button body
+            // When hovered, square off the right corners smoothly so the pixel dissolve edge connects cleanly
+            const rightCr = cr * Math.max(0, 1.0 - hoverBlend * 1.5);
             ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
             ctx.beginPath();
-            ctx.roundRect(x, y, w, h, cr);
+            if (ctx.roundRect) {
+                ctx.roundRect(x, y, w, h, [cr, rightCr, rightCr, cr]);
+            } else {
+                ctx.roundRect(x, y, w, h, cr);
+            }
             ctx.fill();
 
             // Subtle border outline when unhovered / transitioning
@@ -258,6 +264,12 @@ Module.onRuntimeInitialized = async () => {
                 if (borderAlpha > 0.01) {
                     ctx.strokeStyle = `rgba(${r * 0.5}, ${g * 0.5}, ${b * 0.5}, ${borderAlpha})`;
                     ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    if (ctx.roundRect) {
+                        ctx.roundRect(x, y, w, h, [cr, rightCr, rightCr, cr]);
+                    } else {
+                        ctx.roundRect(x, y, w, h, cr);
+                    }
                     ctx.stroke();
                 }
             }
@@ -268,6 +280,7 @@ Module.onRuntimeInitialized = async () => {
                 const seed = (Math.floor(y * 11) + Math.floor(x * 7)) % 1000;
 
                 // Step 3A: Animated flickering edge teeth attached to the right border
+                // Deep overlap inside the button so there is never a visible seam
                 const numEdgeBlocks = 6;
                 ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
                 for (let i = 0; i < numEdgeBlocks; i++) {
@@ -275,8 +288,9 @@ Module.onRuntimeInitialized = async () => {
                     const flicker = Math.sin(timeSec * 8.0 + blockSeed);
                     const blockSize = 8 + Math.floor(Math.abs(flicker) * 6);
                     const yPos = y + (h - blockSize) * (i / (numEdgeBlocks - 1));
-                    const xOut = (Math.abs(flicker) * 4.0 + 3.0) * hoverBlend;
-                    ctx.fillRect(x + w - blockSize * 0.4 + xOut, yPos, blockSize, blockSize);
+                    const xOverlap = blockSize * 0.65 + 4;
+                    const xOut = (Math.abs(flicker) * 3.5 + 2.0) * hoverBlend;
+                    ctx.fillRect(x + w - xOverlap + xOut, yPos, blockSize, blockSize);
                 }
 
                 // Step 3B: Continuous stream of pixel embers flying right and burning out
@@ -289,10 +303,10 @@ Module.onRuntimeInitialized = async () => {
                     // Particle cycle: progress t goes from 0.0 (birth at edge) to 1.0 (disappearance)
                     const t = ((timeSec * p.speed + p.phase) % 1.0);
 
-                    // Fade in quickly at spawn (0 -> 0.15), fade out as it travels and burns out (0.15 -> 1.0)
+                    // Fade in quickly at spawn (0 -> 0.12), fade out as it travels and burns out (0.12 -> 1.0)
                     let lifeAlpha = 1.0;
-                    if (t < 0.15) {
-                        lifeAlpha = t / 0.15;
+                    if (t < 0.12) {
+                        lifeAlpha = t / 0.12;
                     } else {
                         lifeAlpha = Math.pow(1.0 - t, 1.4);
                     }
@@ -304,8 +318,9 @@ Module.onRuntimeInitialized = async () => {
                     const size = Math.max(2.5, p.baseSize * (1.0 - t * 0.65));
 
                     // Movement: fly rightwards + gentle thermal turbulence
+                    // Spawn starting position nudged 10px to the left inside the button so particles emerge seamlessly
                     const waveY = Math.sin(timeSec * 6.0 + p.seed) * (t * 5.0);
-                    const px = x + w + (t * p.maxDist * hoverBlend) - 4;
+                    const px = x + w - 10 + (t * (p.maxDist + 10) * hoverBlend);
                     const py = y + p.relY * (h - size) + (p.driftY * t * hoverBlend) + waveY;
 
                     // Color transitions from white-gold hot core -> amber -> deep red/orange ember
