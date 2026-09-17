@@ -261,7 +261,7 @@ Module.onRuntimeInitialized = async () => {
                     ctx.roundRect(x, y, w, h, cr);
                     ctx.fill();
 
-                    if (alpha > 0.01) {
+                    if (alpha > 0.01 && cr > 0) {
                         ctx.strokeStyle = `rgba(${r * 0.5}, ${g * 0.5}, ${b * 0.5}, ${alpha * 0.6})`;
                         ctx.lineWidth = 2;
                         ctx.stroke();
