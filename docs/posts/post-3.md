@@ -1,10 +1,8 @@
-# __Job hunting: Part 1 and side projects.__
+# __Job Hunting: Part 1 and Side Projects__
 
-As i am currently out of work i am hunting around for places to work.
+As I am currently looking for work, I am actively job hunting.
 
-Sent applications to multiple Game Studios:
-
-### Applications sent to:
+### Applications sent to game studios:
 - [Zen Studios](https://zenstudios.com/)
 - [Spinoff Games](https://spinoffgames.se/)
 - [Crg Studios](https://crg.studio/)
@@ -13,7 +11,7 @@ Sent applications to multiple Game Studios:
 - [EA Games / Dice Studios](https://jobs.ea.com/en_US/careers/SearchJobs/?8171=%5B10612%5D&8171_format=5683&listFilterMode=1&jobRecordsPerPage=20&)
 
 
-### Also sent some Applications to other Jobs:
+### Applications sent for other jobs:
 - [First Camp](https://firstcamp.se/destinationer/arcus-lulea/stugor)
 - [Genesis IT](https://www.genesis.se/)
 - Ica Kvantum
@@ -21,18 +19,17 @@ Sent applications to multiple Game Studios:
 - BDX Green
 - Tullverket
 
-## Side Projects:
+## Side Projects
 
-
-Currently I am working on MageSlayer SDL and LightningVoid. Both of them is being written in Odin lang and SDL3.
+Currently, I am working on MageSlayer SDL and LightningVoid. Both of them are being written in Odin and SDL3.
 
 - [Windows Download](downloads/LightningVoid-Windows.zip)
 - [Linux Download](downloads/LightningVoid-Linux.zip)
 - [MacOS Download](downloads/LightningVoid-macOS-universal.zip)
 
-I think i have come to really like the language, it has a lot of nice features and forces you to go back to simpler structure.
+I think I have come to really like the language; it has a lot of great features and encourages a simpler structure.
 
-Here is a LightningVoid screenshot
+Here is a LightningVoid screenshot:
 
 ![LVScreenShot2.](images/images/LightningVoid-Gameplay_02.png "Gameplay 02")
 

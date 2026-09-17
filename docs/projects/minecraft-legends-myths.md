@@ -8,10 +8,10 @@
 - Endless Hordes
 - Chess Legends
 
-These DLC packs was my first commercial project in the games industry. 'Ichorous Grove' being our flagship creation with unique enemies and a completely new set of enemies and a boss.
+These DLC packs were my first commercial project in the games industry. "Ichorous Grove" was our flagship creation, featuring unique mechanics, a completely new set of enemies, and a custom boss.
 
-I worked on all the VFX for the dlcs with over 200 emitter variants using the modified Minecraft bedrock driven JSON particle system.
+I worked on all the VFX for the DLCs, creating over 200 emitter variants using Minecraft Bedrock's JSON-driven particle system.
 
-Here below is the first trailer.
+Watch the first trailer below:
 
 ::youtube[Watch Trailer](https://www.youtube.com/watch?v=Bpt6ALcrWJs)

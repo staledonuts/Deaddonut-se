@@ -1,12 +1,12 @@
 This game is from an early attempt to create a 2D game engine with Raylib_cs.
 
-I got pretty far but the codebase turned into a horrendous mess to work with and taught me the importance of the chain of responsibility.
+I got pretty far, but the codebase turned into a horrendous mess to work with, teaching me the importance of the chain of responsibility pattern.
 
-I also learned a LOT about particle systems, ECS systems and project complexity. Mistakes were made but knowledge were gained.
+I also learned a LOT about particle systems, ECS architecture, and managing project complexity. Mistakes were made, but knowledge was gained.
 
-Currently re-writing the game in Odin and SDL3. Here you can download it.
+I am currently rewriting the game in Odin and SDL3. You can download the original version below:
 
-I highly recommend watching the Youtube video below or downloading the game.
+I highly recommend watching the YouTube video below or downloading the game.
 
 ::youtube(https://youtu.be/ggxBnS5H-Eo)
 
