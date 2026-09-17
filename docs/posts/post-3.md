@@ -24,10 +24,11 @@ Sent applications to multiple Game Studios:
 ## Side Projects:
 
 
-Currently i am working on MageSlayer SDL and LightningVoid. both of them is being written in Odin lang.
+Currently I am working on MageSlayer SDL and LightningVoid. Both of them is being written in Odin lang and SDL3.
 
-- [Windows_Download](downloads/LightningVoid-Windows.zip)
-- [Linux_Download](downloads/LightningVoid-Linux.zip)
+- [Windows Download](downloads/LightningVoid-Windows.zip)
+- [Linux Download](downloads/LightningVoid-Linux.zip)
+- [MacOS Download](downloads/LightningVoid-macOS-universal.zip)
 
 I think i have come to really like the language, it has a lot of nice features and forces you to go back to simpler structure.
 
