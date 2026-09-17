@@ -175,3 +175,10 @@ function handleUserAction(event) {
 }
 ```
 
+## Custom Buttons
+
+::youtube(https://youtu.be/ggxBnS5H-Eo)
+
+::button[GitHub Repository](https://github.com/staledonuts/WasmPortfolio)
+
+
