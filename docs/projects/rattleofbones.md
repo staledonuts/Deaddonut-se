@@ -10,11 +10,5 @@ Now it is in Godot with a much better code base and uses a global shader variabl
 
 i am using a specific set of grayscale colors as a lookup for the shader and it uses the global variable to return the correct colors.
 
-![RobScreenshot1.](images/images/rob-godot.png "godot")
-
-Global Palette!
-
-![RobScreenshot2.](images/images/rob_palettepick.png "global palette")
-
 ::youtube(https://www.youtube.com/watch?v=fIje4NnTPAY)
 
