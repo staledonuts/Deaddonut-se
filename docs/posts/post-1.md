@@ -97,5 +97,81 @@ graph TD
 
 ## Inline code
 
+This is `inline code` inside a paragraph.
 
+## Inline HTML & Badges
+
+You can use <u>underlined text</u>, <s>strikethrough text</s>, keyboard keys like <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>, and <mark>highlighted text</mark>!
+
+## HTML Entities & Unicode
+
+Entity tests: &copy; 2026, em&mdash;dash, price in &euro;, hearts &hearts;, checkmarks &check;, star &#9733;, emoji &#x1F600;.
+
+## Line Breaks (CommonMark)
+
+This line has a soft break
+and continues flowing smoothly in the same paragraph.
+
+This line ends with two spaces  
+and creates a hard line break!
+
+## Interactive Task Lists
+
+Klicka på rutorna för att bocka av eller aktivera uppgifterna:
+
+- [x] Implementera rendering av textstilar (kursiv, understrykning, genomstrykning)
+- [x] Bygga stöd för CommonMark-entiteter och HTML-taggar
+- [ ] Testa interaktiva kryssrutor direkt i webbläsaren
+- [ ] Utforska syntax highlighting i kodblock för C och Odin
+
+## Code Blocks with Syntax Highlighting
+
+### C Language
+```c
+#include <stdio.h>
+#include <stdbool.h>
+
+// Initialize engine and configure layout
+void process_frame(float delta_time) {
+    int total_elements = 42;
+    float scale = 1.25f;
+    const char* title = "Wasm Portfolio";
+
+    if (total_elements > 0) {
+        printf("Running frame with delta: %f\n", delta_time);
+    }
+}
+```
+
+### Odin Language
+```odin
+package main
+
+import "core:fmt"
+
+Vector2 :: struct {
+    x: f32,
+    y: f32,
+}
+
+// Main update procedure
+update_entities :: proc(dt: f32) {
+    pos := Vector2{ 10.5, 20.0 }
+    is_active: bool = true
+    
+    if is_active {
+        fmt.printf("Position: (%f, %f)\n", pos.x, pos.y)
+    }
+}
+```
+
+### JavaScript
+```js
+// Interactive client handler
+function handleUserAction(event) {
+    const isMobile = window.innerWidth < 768;
+    console.log("User action detected:", event.type, isMobile);
+    return true;
+}
+```
 
