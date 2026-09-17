@@ -13,3 +13,5 @@ These DLC packs was my first commercial project in the games industry. 'Ichorous
 I worked on all the VFX for the dlcs with over 200 emitter variants using the modified Minecraft bedrock driven JSON particle system.
 
 Here below is the first trailer.
+
+::youtube[Watch Trailer](https://www.youtube.com/watch?v=Bpt6ALcrWJs)

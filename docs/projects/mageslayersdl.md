@@ -19,3 +19,5 @@ What i am missing:
 - The scripting language seems to be a bytecode VM which needs a lot of learning to figure out how to actually do.
 - Implement the actual gameplay loop.
 - Data mine the game extensively to find all the information i need.
+
+::youtube(https://youtu.be/4_3CL51V-g4)

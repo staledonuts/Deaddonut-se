@@ -21,3 +21,5 @@ Made the store boat and the store owner character "Sleazy Oskar".
 ![Sleazy Oskar.](images/images/erik-staledonut-lindahl-spr-storeboat-export.png?frames=4&fps=2)
 
 ![Screenshot1.](images/images/jof-5mljxr.jpg)
+
+::youtube(https://youtu.be/nMqHUpJsgMc)

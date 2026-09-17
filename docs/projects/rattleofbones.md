@@ -16,3 +16,5 @@ Global Palette!
 
 ![RobScreenshot2.](images/images/rob_palettepick.png "global palette")
 
+::youtube(https://www.youtube.com/watch?v=fIje4NnTPAY)
+

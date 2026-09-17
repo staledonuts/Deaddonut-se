@@ -8,3 +8,5 @@ This engine has been a fun way of learning about Virtual File Systems, BSP parsi
 the rendering pipeline that I created is questionable and needs to be re-written. it uses a RenderCommand queue but i realized that it is fighting the Raylib batching and breaking it. performance acts funky.
 
 One thing i realized that i am not the biggest fan of is actually Object-oriented programming languages for writing a game engine. you run in to a lot of chicken and egg issues with constructors and need to create a secondary initialization for the different classes and systems you set up. It is frustrating but i will figure something out eventually!
+
+::youtube(https://youtu.be/SP530n8n1O0)
