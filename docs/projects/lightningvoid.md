@@ -12,5 +12,5 @@ I highly recommend watching the YouTube video below or downloading the game.
 
 
 - [Windows Download](downloads/LightningVoid-Windows.zip)
-
 - [Linux Download](downloads/LightningVoid-Linux.zip)
+- [MacOS Download](downloads/LightningVoid-macOS-universal.zip)
