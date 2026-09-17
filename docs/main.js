@@ -209,6 +209,21 @@ Module.onRuntimeInitialized = async () => {
         const text_buf = Module._malloc(256);
         let lastTime = 0;
 
+        // Pre-computed particle properties for zero-allocation flowing fire stream
+        const CYBER_PARTICLES_COUNT = 32;
+        const cyberParticles = [];
+        for (let i = 0; i < CYBER_PARTICLES_COUNT; i++) {
+            cyberParticles.push({
+                phase: ((i * 1.618) % 1.0),                  // golden ratio distribution so spawning is perfectly staggered
+                speed: 0.7 + ((i * 17) % 7) * 0.12,          // varying speeds
+                relY: ((i * 37 + 11) % 100) / 100,           // 0.0 to 1.0 along button height
+                baseSize: 6.0 + ((i * 23) % 4) * 2.5,        // 6px to 13.5px initial size
+                maxDist: 45 + ((i * 29) % 6) * 12,           // 45px to 105px travel distance
+                driftY: -2.0 - ((i * 19) % 5) * 2.5,         // -2px to -12px thermal rise
+                seed: i * 4.31
+            });
+        }
+
         function renderCyberpunkButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp) {
             const alpha = a / 255;
             if (alpha <= 0.001) return;
@@ -218,17 +233,17 @@ Module.onRuntimeInitialized = async () => {
             // 1. Warm ambient halo / glow behind the right side when hovered
             if (hoverBlend > 0.02) {
                 const glowAlpha = 0.45 * hoverBlend * alpha;
-                const glowRadius = Math.max(h * 1.2, 50);
+                const glowRadius = Math.max(h * 1.3, 55);
                 const glowGrad = ctx.createRadialGradient(
                     x + w - 2, y + h * 0.5, 6,
-                    x + w + 16, y + h * 0.5, glowRadius
+                    x + w + 20, y + h * 0.5, glowRadius
                 );
-                glowGrad.addColorStop(0, `rgba(${Math.min(255, r + 20)}, ${g}, ${b}, ${glowAlpha})`);
+                glowGrad.addColorStop(0, `rgba(${Math.min(255, r + 25)}, ${Math.min(255, g + 10)}, ${b}, ${glowAlpha})`);
                 glowGrad.addColorStop(0.4, `rgba(${r}, ${Math.max(0, g - 25)}, ${b}, ${glowAlpha * 0.45})`);
                 glowGrad.addColorStop(1, `rgba(${r}, ${Math.max(0, g - 40)}, ${b}, 0)`);
 
                 ctx.fillStyle = glowGrad;
-                ctx.fillRect(x + w - 25, y - 25, glowRadius + 30, h + 50);
+                ctx.fillRect(x + w - 25, y - 30, glowRadius + 40, h + 60);
             }
 
             // 2. Base rounded button body
@@ -247,76 +262,73 @@ Module.onRuntimeInitialized = async () => {
                 }
             }
 
-            // 3. Pixelated disintegration effect on the right edge
-            if (hoverBlend > 0.05) {
+            // 3. Pixelated disintegration & continuous flowing fire stream on the right edge
+            if (hoverBlend > 0.02) {
                 const timeSec = timestamp * 0.001;
                 const seed = (Math.floor(y * 11) + Math.floor(x * 7)) % 1000;
 
-                // Step 3A: Edge silhouette blocks attached directly to the right border
-                const stepBlocks = [
-                    { dy: 0.10, out: 4, size: 9 },
-                    { dy: 0.25, out: 7, size: 12 },
-                    { dy: 0.44, out: 5, size: 10 },
-                    { dy: 0.62, out: 8, size: 13 },
-                    { dy: 0.80, out: 4, size: 8 }
-                ];
-
+                // Step 3A: Animated flickering edge teeth attached to the right border
+                const numEdgeBlocks = 6;
                 ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
-                for (let i = 0; i < stepBlocks.length; i++) {
-                    const sb = stepBlocks[i];
-                    const bx = x + w - (sb.size * 0.5) + (sb.out * hoverBlend);
-                    const by = y + (h - sb.size) * sb.dy;
-                    ctx.fillRect(bx, by, sb.size, sb.size);
+                for (let i = 0; i < numEdgeBlocks; i++) {
+                    const blockSeed = seed + i * 13.7;
+                    const flicker = Math.sin(timeSec * 8.0 + blockSeed);
+                    const blockSize = 8 + Math.floor(Math.abs(flicker) * 6);
+                    const yPos = y + (h - blockSize) * (i / (numEdgeBlocks - 1));
+                    const xOut = (Math.abs(flicker) * 4.0 + 3.0) * hoverBlend;
+                    ctx.fillRect(x + w - blockSize * 0.4 + xOut, yPos, blockSize, blockSize);
                 }
 
-                // Step 3B: Detached floating square particles
-                const particles = [
-                    // Layer 1: Close dense cluster (large pixels ~9-13px)
-                    { ry: 0.16, dist: 13, size: 10, tone: 1.0, seed: 1.3 },
-                    { ry: 0.30, dist: 19, size: 12, tone: 0.95, seed: 2.8 },
-                    { ry: 0.46, dist: 16, size: 11, tone: 1.0, seed: 4.4 },
-                    { ry: 0.64, dist: 22, size: 13, tone: 0.95, seed: 5.7 },
-                    { ry: 0.76, dist: 15, size: 9, tone: 0.9, seed: 3.5 },
+                // Step 3B: Continuous stream of pixel embers flying right and burning out
+                ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${0.85 * hoverBlend})`;
+                ctx.shadowBlur = 9 * hoverBlend;
 
-                    // Layer 2: Mid-distance scatter (~6-9px)
-                    { ry: 0.08, dist: 26, size: 7, tone: 0.85, seed: 0.8 },
-                    { ry: 0.24, dist: 31, size: 8, tone: 0.9, seed: 6.4 },
-                    { ry: 0.38, dist: 36, size: 9, tone: 0.95, seed: 7.6 },
-                    { ry: 0.54, dist: 29, size: 8, tone: 0.85, seed: 1.9 },
-                    { ry: 0.70, dist: 34, size: 7, tone: 0.8, seed: 8.5 },
-                    { ry: 0.86, dist: 24, size: 6, tone: 0.75, seed: 2.2 },
+                for (let i = 0; i < CYBER_PARTICLES_COUNT; i++) {
+                    const p = cyberParticles[i];
 
-                    // Layer 3: Far trailing embers (~3-6px)
-                    { ry: 0.18, dist: 43, size: 5, tone: 0.7, seed: 9.3 },
-                    { ry: 0.34, dist: 50, size: 6, tone: 0.75, seed: 3.9 },
-                    { ry: 0.48, dist: 46, size: 5, tone: 0.65, seed: 6.1 },
-                    { ry: 0.66, dist: 42, size: 4, tone: 0.6, seed: 8.9 },
-                    { ry: 0.82, dist: 48, size: 4, tone: 0.55, seed: 4.7 }
-                ];
+                    // Particle cycle: progress t goes from 0.0 (birth at edge) to 1.0 (disappearance)
+                    const t = ((timeSec * p.speed + p.phase) % 1.0);
 
-                // Soft particle glow
-                ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${0.7 * hoverBlend})`;
-                ctx.shadowBlur = 8 * hoverBlend;
+                    // Fade in quickly at spawn (0 -> 0.15), fade out as it travels and burns out (0.15 -> 1.0)
+                    let lifeAlpha = 1.0;
+                    if (t < 0.15) {
+                        lifeAlpha = t / 0.15;
+                    } else {
+                        lifeAlpha = Math.pow(1.0 - t, 1.4);
+                    }
 
-                for (let i = 0; i < particles.length; i++) {
-                    const p = particles[i];
-                    // Gentle wave float
-                    const waveX = Math.sin(timeSec * 2.8 + p.seed + seed) * 2.2;
-                    const waveY = Math.cos(timeSec * 2.2 + p.seed * 1.7) * 1.6;
-
-                    const px = x + w + (p.dist * hoverBlend) + waveX - 4;
-                    const py = y + (h - p.size) * p.ry + waveY;
-
-                    const particleAlpha = Math.min(1.0, hoverBlend * 1.25) * p.tone * alpha;
+                    const particleAlpha = lifeAlpha * hoverBlend * alpha;
                     if (particleAlpha <= 0.01) continue;
 
-                    // Subtle tone variations (amber gold, warm orange, highlight yellow)
-                    const redTone = Math.min(255, Math.floor(r * (0.96 + 0.08 * Math.sin(p.seed))));
-                    const greenTone = Math.min(255, Math.floor(g * (0.92 + 0.12 * Math.cos(p.seed))));
-                    const blueTone = Math.floor(b * 0.75);
+                    // Size shrinks as the ember burns away
+                    const size = Math.max(2.5, p.baseSize * (1.0 - t * 0.65));
 
-                    ctx.fillStyle = `rgba(${redTone}, ${greenTone}, ${blueTone}, ${particleAlpha})`;
-                    ctx.fillRect(px, py, p.size, p.size);
+                    // Movement: fly rightwards + gentle thermal turbulence
+                    const waveY = Math.sin(timeSec * 6.0 + p.seed) * (t * 5.0);
+                    const px = x + w + (t * p.maxDist * hoverBlend) - 4;
+                    const py = y + p.relY * (h - size) + (p.driftY * t * hoverBlend) + waveY;
+
+                    // Color transitions from white-gold hot core -> amber -> deep red/orange ember
+                    let pR = r;
+                    let pG = g;
+                    let pB = b;
+
+                    if (t < 0.22) {
+                        // Hot core: brighter, whiter gold
+                        const coreBoost = (1.0 - t / 0.22);
+                        pR = Math.min(255, r + 40 * coreBoost);
+                        pG = Math.min(255, g + 50 * coreBoost);
+                        pB = Math.min(255, b + 90 * coreBoost);
+                    } else if (t > 0.55) {
+                        // Dying ember: shifts towards fiery deep orange / dark amber
+                        const emberShift = (t - 0.55) / 0.45;
+                        pR = Math.min(255, r * (1.0 - emberShift * 0.15));
+                        pG = Math.max(30, g * (1.0 - emberShift * 0.65));
+                        pB = Math.max(0, b * (1.0 - emberShift * 0.9));
+                    }
+
+                    ctx.fillStyle = `rgba(${Math.floor(pR)}, ${Math.floor(pG)}, ${Math.floor(pB)}, ${particleAlpha})`;
+                    ctx.fillRect(px, py, size, size);
                 }
             }
 
