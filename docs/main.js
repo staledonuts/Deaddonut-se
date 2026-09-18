@@ -756,8 +756,9 @@ Module.onRuntimeInitialized = async () => {
                     ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a / 255})`;
                     let fontPrefix = "";
                     if (fontStyle & 2) fontPrefix += "italic ";
-                    if (fontStyle & 1) fontPrefix += "bold ";
-                    ctx.font = `${fontPrefix}${fontSize}px "Lexend-Regular", sans-serif`;
+                    if (fontStyle & 1 || fontStyle & 16) fontPrefix += "bold ";
+                    const fontFamily = (fontStyle & 16) ? '"Kaushan Script", "Caveat", "Permanent Marker", cursive, sans-serif' : '"Lexend-Regular", sans-serif';
+                    ctx.font = `${fontPrefix}${fontSize}px ${fontFamily}`;
                     ctx.textBaseline = "middle";
                     ctx.fillText(str, x, y + (h / 2));
 
@@ -766,7 +767,7 @@ Module.onRuntimeInitialized = async () => {
                     if (fontStyle & 4) { // Underline
                         ctx.beginPath();
                         ctx.strokeStyle = ctx.fillStyle;
-                        ctx.lineWidth = Math.max(1, fontSize / 16);
+                        ctx.lineWidth = Math.max(1.5, fontSize / 14);
                         const lineY = y + h - 2;
                         ctx.moveTo(x, lineY);
                         ctx.lineTo(x + actualWidth, lineY);
@@ -793,7 +794,7 @@ Module.onRuntimeInitialized = async () => {
 
                     const img = images[imageId];
 
-                    if (img && img.complete && img.naturalWidth > 0) {
+                    if (img && (img.complete || img instanceof HTMLCanvasElement) && (img.naturalWidth > 0 || img.width > 0)) {
                         ctx.save();
                         ctx.globalAlpha = a / 255.0;
 
@@ -801,13 +802,16 @@ Module.onRuntimeInitialized = async () => {
                         ctx.roundRect(x, y, w, h, cr);
                         ctx.clip();
 
+                        const natW = img.naturalWidth || img.width;
+                        const natH = img.naturalHeight || img.height;
+
                         if (img.frames > 1) {
                             const timeInSeconds = timestamp / 1000;
                             const currentFrame = Math.floor(timeInSeconds * img.fps) % img.frames;
-                            const frameWidth = img.naturalWidth / img.frames;
+                            const frameWidth = natW / img.frames;
                             const sx = currentFrame * frameWidth;
 
-                            ctx.drawImage(img, sx, 0, frameWidth, img.naturalHeight, x, y, w, h);
+                            ctx.drawImage(img, sx, 0, frameWidth, natH, x, y, w, h);
                         }
                         else {
                             ctx.drawImage(img, x, y, w, h);
