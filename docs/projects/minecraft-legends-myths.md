@@ -15,3 +15,4 @@ I worked on all the VFX for the DLCs, creating over 200 emitter variants using M
 Watch the first trailer below:
 
 ::youtube[Watch Trailer](https://www.youtube.com/watch?v=Bpt6ALcrWJs)
+::youtube[Watch Trailer 2](https://youtu.be/It6iQSHQt0o)

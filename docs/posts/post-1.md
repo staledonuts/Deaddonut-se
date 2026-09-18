@@ -1,5 +1,5 @@
 # Welcome to my Blog
-__This is where I post new things I am working on, new things I have learned, and thoughts on my mind.__
+__This is where I post new things I am working on, new things I have learned, and thoughts my chaotic mind conjures up.__
 
 ## What I am currently doing
 Currently, I am learning C and WASM while building this webpage. I tried working in pure JavaScript and HTML before, and I was not enjoying myself. Working in those languages was a messy process that I didn't enjoy, but the C and WASM experience is much more my style of programming.
