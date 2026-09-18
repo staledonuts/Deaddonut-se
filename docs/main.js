@@ -1,7 +1,8 @@
 const canvas = document.getElementById('app');
 const ctx = canvas.getContext('2d');
 const BG_COLOR = '#1a1a2e';
-const images = {};
+window.images = window.images || {};
+const images = window.images;
 const brushTextureImg = new Image();
 brushTextureImg.src = 'images/messy-white-paint-stains.jpg';
 let brushTextureLoaded = false;
@@ -792,11 +793,12 @@ Module.onRuntimeInitialized = async () => {
                     const a = memoryView.getFloat32(ptr_a, true);
                     const cr = memoryView.getFloat32(ptr_cr, true);
 
-                    const img = images[imageId];
+                    const img = images[imageId] || (window.images && window.images[imageId]);
 
                     if (img && (img.complete || img instanceof HTMLCanvasElement) && (img.naturalWidth > 0 || img.width > 0)) {
                         ctx.save();
-                        ctx.globalAlpha = a / 255.0;
+                        const alpha = (a > 0) ? (a / 255.0) : 1.0;
+                        ctx.globalAlpha = alpha;
 
                         ctx.beginPath();
                         ctx.roundRect(x, y, w, h, cr);
