@@ -1,6 +1,6 @@
 const canvas = document.getElementById('app');
 const ctx = canvas.getContext('2d');
-const BG_COLOR = '#1a1a2e';
+const BG_COLOR = '#0c0817';
 window.images = window.images || {};
 const images = window.images;
 const brushTextureImg = new Image();
