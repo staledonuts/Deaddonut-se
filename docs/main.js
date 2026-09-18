@@ -40,6 +40,114 @@ const CLAY_RENDER_COMMAND_TYPE_SCISSOR_START = 5;
 const CLAY_RENDER_COMMAND_TYPE_SCISSOR_END = 6;
 const CLAY_RENDER_COMMAND_TYPE_CUSTOM = 7;
 
+function extractYouTubeId(url) {
+    if (!url) return null;
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/i);
+    return match ? match[1] : null;
+}
+
+let activeYouTubePlayer = null;
+
+function mount_youtube_player(x, y, w, h, url) {
+    const container = document.getElementById('dom-overlay-container');
+    if (!container) return;
+
+    const videoId = extractYouTubeId(url);
+    if (!videoId) return;
+
+    if (!activeYouTubePlayer) {
+        const wrapper = document.createElement('div');
+        wrapper.id = 'yt-embed-wrapper';
+        wrapper.style.position = 'absolute';
+        wrapper.style.pointerEvents = 'auto';
+        wrapper.style.borderRadius = '8px';
+        wrapper.style.overflow = 'hidden';
+        wrapper.style.background = '#000';
+        wrapper.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.85)';
+        wrapper.style.border = '1px solid #3a2666';
+        wrapper.style.zIndex = '15';
+
+        const iframe = document.createElement('iframe');
+        iframe.id = 'yt-embed-iframe';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+        iframe.setAttribute('allowfullscreen', 'true');
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1&rel=0`;
+
+        const closeBtn = document.createElement('button');
+        closeBtn.innerHTML = '&#x2715; Close Video';
+        closeBtn.title = 'Close video and return to gallery preview';
+        closeBtn.style.position = 'absolute';
+        closeBtn.style.top = '8px';
+        closeBtn.style.right = '8px';
+        closeBtn.style.background = 'rgba(20, 16, 28, 0.88)';
+        closeBtn.style.color = '#ffffff';
+        closeBtn.style.border = '1px solid #673ea4';
+        closeBtn.style.borderRadius = '4px';
+        closeBtn.style.padding = '4px 10px';
+        closeBtn.style.fontSize = '12px';
+        closeBtn.style.fontFamily = 'Lexend-Regular, sans-serif';
+        closeBtn.style.cursor = 'pointer';
+        closeBtn.style.zIndex = '20';
+        closeBtn.style.backdropFilter = 'blur(6px)';
+        closeBtn.style.transition = 'background 0.2s, border-color 0.2s';
+        closeBtn.onmouseenter = () => {
+            closeBtn.style.background = 'rgba(103, 62, 164, 0.95)';
+            closeBtn.style.borderColor = '#8552d4';
+        };
+        closeBtn.onmouseleave = () => {
+            closeBtn.style.background = 'rgba(20, 16, 28, 0.88)';
+            closeBtn.style.borderColor = '#673ea4';
+        };
+        closeBtn.onclick = (e) => {
+            e.stopPropagation();
+            if (window.Module && window.Module._stop_video_player) {
+                window.Module._stop_video_player();
+            } else {
+                unmount_youtube_player();
+            }
+        };
+
+        wrapper.appendChild(iframe);
+        wrapper.appendChild(closeBtn);
+        container.appendChild(wrapper);
+
+        activeYouTubePlayer = { wrapper, iframe, videoId };
+    } else {
+        if (activeYouTubePlayer.videoId !== videoId) {
+            activeYouTubePlayer.videoId = videoId;
+            activeYouTubePlayer.iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1&rel=0`;
+        }
+        activeYouTubePlayer.wrapper.style.display = 'block';
+    }
+
+    update_youtube_player_rect(x, y, w, h);
+}
+
+function update_youtube_player_rect(x, y, w, h) {
+    if (!activeYouTubePlayer || !activeYouTubePlayer.wrapper) return;
+    activeYouTubePlayer.wrapper.style.left = Math.round(x) + 'px';
+    activeYouTubePlayer.wrapper.style.top = Math.round(y) + 'px';
+    activeYouTubePlayer.wrapper.style.width = Math.round(w) + 'px';
+    activeYouTubePlayer.wrapper.style.height = Math.round(h) + 'px';
+}
+
+function unmount_youtube_player() {
+    if (activeYouTubePlayer) {
+        if (activeYouTubePlayer.wrapper) {
+            activeYouTubePlayer.wrapper.remove();
+        }
+        activeYouTubePlayer = null;
+    }
+}
+
+window.mount_youtube_player = mount_youtube_player;
+window.update_youtube_player_rect = update_youtube_player_rect;
+window.unmount_youtube_player = unmount_youtube_player;
+window.extractYouTubeId = extractYouTubeId;
+
 Module.onRuntimeInitialized = async () => {
     try {
         if (document.fonts) {
