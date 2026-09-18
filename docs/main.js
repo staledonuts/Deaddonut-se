@@ -2,6 +2,15 @@ const canvas = document.getElementById('app');
 const ctx = canvas.getContext('2d');
 const BG_COLOR = '#1a1a2e';
 const images = {};
+const brushTextureImg = new Image();
+brushTextureImg.src = 'images/messy-white-paint-stains.jpg';
+let brushTextureLoaded = false;
+brushTextureImg.onload = () => {
+    brushTextureLoaded = true;
+};
+if (brushTextureImg.complete && brushTextureImg.naturalWidth > 0) {
+    brushTextureLoaded = true;
+}
 let targetMouseX = window.innerWidth / 2;
 let targetMouseY = window.innerHeight / 2;
 let mouseX = window.innerWidth / 2;
@@ -213,6 +222,7 @@ Module.onRuntimeInitialized = async () => {
         const BUTTON_STYLE_STANDARD = 0;
         const BUTTON_STYLE_PIXEL_RIGHT = 1;
         const BUTTON_STYLE_PIXEL_UP = 2;
+        const BUTTON_STYLE_BRUSH_STROKE = 3;
 
         // Pre-computed particle properties for zero-allocation flowing fire stream
         const CYBER_PARTICLES_COUNT = 32;
@@ -229,9 +239,215 @@ Module.onRuntimeInitialized = async () => {
             });
         }
 
-        function renderCyberpunkButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, style) {
+        function renderBrushStrokeButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, labelText) {
             const alpha = a / 255;
             if (alpha <= 0.001) return;
+
+            // 1. Draw base unhovered button body with text (visible when unhovered or during sweep wipe)
+            ctx.save();
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            ctx.beginPath();
+            ctx.roundRect(x, y, w, h, cr || 8);
+            ctx.fill();
+
+            // Subtle border outline derived from button's base color
+            const borderAlpha = alpha * 0.45;
+            if (borderAlpha > 0.01) {
+                const borderR = Math.min(255, Math.round(r * 1.5));
+                const borderG = Math.min(255, Math.round(g * 1.4));
+                const borderB = Math.min(255, Math.round(b * 1.4));
+                ctx.strokeStyle = `rgba(${borderR}, ${borderG}, ${borderB}, ${borderAlpha})`;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.roundRect(x, y, w, h, cr || 8);
+                ctx.stroke();
+            }
+
+            // Base unhovered text: white for close buttons (r > 60), soft lilac for menu buttons
+            if (labelText) {
+                const baseFontSize = Math.max(13, Math.min(20, Math.round(h * 0.40)));
+                ctx.font = `600 ${baseFontSize}px 'Lexend-Regular', sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = (r > 60) ? `rgba(255, 255, 255, ${alpha})` : `rgba(195, 182, 232, ${alpha})`;
+                ctx.fillText(labelText, x + w * 0.5, y + h * 0.5 + 1);
+            }
+            ctx.restore();
+
+            // 2. If hoverBlend > 0.001, paint in the golden yellow brush stroke banner from left to right!
+            if (hoverBlend > 0.001) {
+                const progress = Math.min(1.0, Math.max(0.0, hoverBlend));
+
+                // Bounding dimensions of the brush banner contained comfortably within the button area
+                const padX = Math.min(6, Math.max(3, w * 0.03));
+                const padY = Math.min(3, Math.max(2, h * 0.06));
+                const strokeLeft = x - padX;
+                const strokeRight = x + w + padX;
+                const strokeTop = y - padY;
+                const strokeBottom = y + h + padY;
+                const strokeW = strokeRight - strokeLeft;
+                const strokeH = strokeBottom - strokeTop;
+
+                // sweepX: leading front of the wipe across the button
+                // Extra margin at the end ensures complete reveal of frayed tips at progress = 1.0
+                const sweepX = strokeLeft + (strokeW + 28) * progress;
+
+                // Dynamic clipping mask with jagged bristle leading edge
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(strokeLeft - 25, strokeTop - 15);
+                ctx.lineTo(sweepX, strokeTop - 15);
+
+                // Trace down the front of the brush wipe with multi-frequency bristle teeth
+                const steps = 16;
+                for (let i = 0; i <= steps; i++) {
+                    const t = i / steps;
+                    const cy = (strokeTop - 15) + (strokeH + 30) * t;
+                    const bristle = Math.sin(t * Math.PI * 4.8 + y * 0.08) * 7.5 +
+                                    Math.cos(t * Math.PI * 8.6) * 4.2 +
+                                    (((i * 19 + 7) % 7) - 3) * 1.5;
+                    ctx.lineTo(sweepX + bristle, cy);
+                }
+
+                ctx.lineTo(strokeLeft - 25, strokeBottom + 15);
+                ctx.closePath();
+                ctx.clip();
+
+                // Helper to trace the organic brush banner silhouette
+                function drawBrushSilhouette() {
+                    const x0 = strokeLeft;
+                    const x1 = strokeRight;
+                    const y0 = strokeTop;
+                    const y1 = strokeBottom;
+                    const bw = strokeW;
+                    const bh = strokeH;
+
+                    ctx.beginPath();
+                    // Left start with slight organic curve
+                    ctx.moveTo(x0 + 4, y0 + 3);
+
+                    // Top undulating edge with organic curves
+                    ctx.bezierCurveTo(x0 + bw * 0.22, y0 - 1.2, x0 + bw * 0.38, y0 + 2.0, x0 + bw * 0.55, y0);
+                    ctx.bezierCurveTo(x0 + bw * 0.72, y0 - 2.0, x0 + bw * 0.88, y0 + 1.0, x1 - 3, y0 + 2);
+
+                    // Right dry-brush bristle cutoff (organically textured, stays within button area)
+                    ctx.bezierCurveTo(x1 + 1, y0 + bh * 0.22, x1 + 2, y0 + bh * 0.40, x1, y0 + bh * 0.50);
+                    ctx.bezierCurveTo(x1 + 2, y0 + bh * 0.65, x1 + 1, y0 + bh * 0.82, x1 - 3, y1 - 3);
+
+                    // Bottom undulating edge
+                    ctx.bezierCurveTo(x0 + bw * 0.85, y1 + 2.0, x0 + bw * 0.68, y1 - 1.5, x0 + bw * 0.48, y1 + 1.0);
+                    ctx.bezierCurveTo(x0 + bw * 0.32, y1 + 2.0, x0 + bw * 0.15, y1 - 1.0, x0 + 3, y1 - 3);
+
+                    // Left start cutoff
+                    ctx.bezierCurveTo(x0 - 1, y1 - bh * 0.30, x0 - 1, y0 + bh * 0.60, x0 + 1, y0 + bh * 0.30);
+                    ctx.lineTo(x0 + 4, y0 + 3);
+                    ctx.closePath();
+                }
+
+                // Layer 1: Warm amber undertone / shadow for paint depth
+                ctx.save();
+                ctx.fillStyle = `rgba(215, 135, 15, ${0.9 * alpha})`;
+                ctx.translate(0.8, 1.2);
+                drawBrushSilhouette();
+                ctx.fill();
+                ctx.restore();
+
+                // Layer 2: Main golden yellow brush stroke body with subtle gradient
+                const bodyGrad = ctx.createLinearGradient(strokeLeft, strokeTop, strokeLeft, strokeBottom);
+                bodyGrad.addColorStop(0, `rgba(255, 195, 55, ${alpha})`);   // Bright warm gold top
+                bodyGrad.addColorStop(0.45, `rgba(249, 180, 45, ${alpha})`); // Core reference golden yellow (#f9b42d)
+                bodyGrad.addColorStop(1, `rgba(238, 158, 22, ${alpha})`);   // Deep rich gold bottom
+                ctx.fillStyle = bodyGrad;
+                drawBrushSilhouette();
+                ctx.fill();
+
+                // Layer 2.5: Real Acrylic Paint Texture (messy-white-paint-stains.jpg)
+                if (brushTextureLoaded && brushTextureImg.naturalWidth > 0) {
+                    ctx.save();
+                    // Clip strictly inside the organic brush silhouette
+                    drawBrushSilhouette();
+                    ctx.clip();
+
+                    const texH = brushTextureImg.naturalHeight;
+                    const texW = brushTextureImg.naturalWidth;
+                    // Slightly offset vertical crop by button y-coordinate for natural variety between buttons
+                    const sliceY = (Math.abs(Math.floor(y * 11)) % Math.floor(texH * 0.35));
+                    const sliceH = Math.floor(texH * 0.50);
+
+                    // Fully cover and exceed silhouette bounds so 100% of the brush stroke has texture
+                    const texDrawX = strokeLeft - 10;
+                    const texDrawY = strokeTop - 10;
+                    const texDrawW = strokeW + 20;
+                    const texDrawH = strokeH + 20;
+
+                    // Pass 1: 'overlay' to sculpt rich impasto highlights and tactile bristle volume
+                    ctx.globalCompositeOperation = 'overlay';
+                    ctx.globalAlpha = 0.65 * alpha;
+                    ctx.drawImage(brushTextureImg, 0, sliceY, texW, sliceH, texDrawX, texDrawY, texDrawW, texDrawH);
+
+                    // Pass 2: 'multiply' to deepen fine grooves and dry-brush scratches into warm amber
+                    ctx.globalCompositeOperation = 'multiply';
+                    ctx.globalAlpha = 0.40 * alpha;
+                    ctx.drawImage(brushTextureImg, 0, sliceY, texW, sliceH, texDrawX, texDrawY, texDrawW, texDrawH);
+
+                    ctx.restore();
+                }
+
+                // Layer 4: Dark cursive brush script typography
+                if (labelText) {
+                    ctx.save();
+                    const textFontSize = Math.max(14, Math.min(25, Math.round(h * 0.50)));
+                    ctx.font = `bold ${textFontSize}px 'Kaushan Script', 'Caveat', 'Permanent Marker', cursive, sans-serif`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+
+                    // Center & apply subtle calligraphic tilt (~ -1.25 degrees)
+                    const centerX = x + w * 0.5;
+                    const centerY = y + h * 0.5;
+                    ctx.translate(centerX, centerY);
+                    ctx.rotate(-0.022);
+
+                    // Subtle ink bleed shadow
+                    ctx.fillStyle = `rgba(20, 16, 28, ${0.35 * alpha})`;
+                    ctx.fillText(labelText, 0.6, 1.2);
+
+                    // Crisp dark ink text (#14101c)
+                    ctx.fillStyle = `rgba(20, 16, 28, ${0.96 * alpha})`;
+                    ctx.fillText(labelText, 0, 0);
+                    ctx.restore();
+                }
+
+                // Restore from clipping mask
+                ctx.restore();
+
+                // 3. Dynamic wet paint flecks / splatter at the leading brush front while wiping
+                if (progress > 0.05 && progress < 0.94) {
+                    ctx.save();
+                    const fleckCount = 4;
+                    for (let f = 0; f < fleckCount; f++) {
+                        const ft = (f + 0.5) / fleckCount;
+                        const fy = strokeTop + strokeH * ft + Math.sin(f * 2.3 + timestamp * 0.01) * 3;
+                        const fx = sweepX + 3 + ((f * 11) % 8);
+                        const rSize = 1.2 + (f % 2) * 1.0;
+                        ctx.fillStyle = (f % 2 === 0) ? `rgba(249, 180, 45, ${0.85 * alpha})` : `rgba(255, 215, 90, ${0.85 * alpha})`;
+                        ctx.beginPath();
+                        ctx.arc(fx, fy, rSize, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.restore();
+                }
+            }
+        }
+
+        function renderCyberpunkButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, style, labelText) {
+            const alpha = a / 255;
+            if (alpha <= 0.001) return;
+
+            // Style 3: Golden Brush Stroke with dynamic paint-in wipe
+            if (style === BUTTON_STYLE_BRUSH_STROKE) {
+                renderBrushStrokeButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, labelText);
+                return;
+            }
 
             ctx.save();
 
@@ -633,16 +849,18 @@ Module.onRuntimeInitialized = async () => {
                     const customStr = new TextDecoder('utf-8').decode(textArray);
                     let style = 0;
                     let hoverBlend = 0.0;
+                    let labelText = '';
                     if (customStr.includes(';')) {
                         const parts = customStr.split(';');
                         style = parseInt(parts[0], 10) || 0;
                         hoverBlend = parseFloat(parts[1]) || 0.0;
+                        labelText = parts.slice(2).join(';');
                     } else {
                         hoverBlend = parseFloat(customStr) || 0.0;
                         style = 1;
                     }
 
-                    renderCyberpunkButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, style);
+                    renderCyberpunkButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, style, labelText);
                 }
             }
 
