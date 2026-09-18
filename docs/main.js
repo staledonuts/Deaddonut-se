@@ -264,14 +264,15 @@ Module.onRuntimeInitialized = async () => {
                 ctx.stroke();
             }
 
-            // Base unhovered text: white for close buttons (r > 60), soft lilac for menu buttons
+            // Base unhovered text: white for close buttons and red youtube buttons (r > 60), soft lilac for menu buttons
             if (labelText) {
+                const cleanLabel = labelText.trim();
                 const baseFontSize = Math.max(13, Math.min(20, Math.round(h * 0.40)));
                 ctx.font = `600 ${baseFontSize}px 'Lexend-Regular', sans-serif`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillStyle = (r > 60) ? `rgba(255, 255, 255, ${alpha})` : `rgba(195, 182, 232, ${alpha})`;
-                ctx.fillText(labelText, x + w * 0.5, y + h * 0.5 + 1);
+                ctx.fillText(cleanLabel, x + w * 0.5, y + h * 0.5 + 1);
             }
             ctx.restore();
 
@@ -396,6 +397,7 @@ Module.onRuntimeInitialized = async () => {
 
                 // Layer 4: Dark cursive brush script typography
                 if (labelText) {
+                    const cleanLabel = labelText.trim();
                     ctx.save();
                     const textFontSize = Math.max(14, Math.min(25, Math.round(h * 0.50)));
                     ctx.font = `bold ${textFontSize}px 'Kaushan Script', 'Caveat', 'Permanent Marker', cursive, sans-serif`;
@@ -410,11 +412,11 @@ Module.onRuntimeInitialized = async () => {
 
                     // Subtle ink bleed shadow
                     ctx.fillStyle = `rgba(20, 16, 28, ${0.35 * alpha})`;
-                    ctx.fillText(labelText, 0.6, 1.2);
+                    ctx.fillText(cleanLabel, 0.6, 1.2);
 
                     // Crisp dark ink text (#14101c)
                     ctx.fillStyle = `rgba(20, 16, 28, ${0.96 * alpha})`;
-                    ctx.fillText(labelText, 0, 0);
+                    ctx.fillText(cleanLabel, 0, 0);
                     ctx.restore();
                 }
 
