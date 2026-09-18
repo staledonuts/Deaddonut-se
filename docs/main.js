@@ -240,7 +240,7 @@ Module.onRuntimeInitialized = async () => {
             });
         }
 
-        function renderBrushStrokeButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, labelText) {
+        function renderBrushStrokeButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, labelText, hr = 254, hg = 195, hb = 60) {
             const alpha = a / 255;
             if (alpha <= 0.001) return;
 
@@ -276,7 +276,7 @@ Module.onRuntimeInitialized = async () => {
             }
             ctx.restore();
 
-            // 2. If hoverBlend > 0.001, paint in the golden yellow brush stroke banner from left to right!
+            // 2. If hoverBlend > 0.001, paint in the dynamic brush stroke banner from left to right!
             if (hoverBlend > 0.001) {
                 const progress = Math.min(1.0, Math.max(0.0, hoverBlend));
 
@@ -346,19 +346,31 @@ Module.onRuntimeInitialized = async () => {
                     ctx.closePath();
                 }
 
-                // Layer 1: Warm amber undertone / shadow for paint depth
+                // Layer 1: Undertone / shadow for paint depth in matching dark hue
+                const darkR = Math.max(0, Math.floor(hr * 0.72));
+                const darkG = Math.max(0, Math.floor(hg * 0.72));
+                const darkB = Math.max(0, Math.floor(hb * 0.72));
+
                 ctx.save();
-                ctx.fillStyle = `rgba(215, 135, 15, ${0.9 * alpha})`;
+                ctx.fillStyle = `rgba(${darkR}, ${darkG}, ${darkB}, ${0.9 * alpha})`;
                 ctx.translate(0.8, 1.2);
                 drawBrushSilhouette();
                 ctx.fill();
                 ctx.restore();
 
-                // Layer 2: Main golden yellow brush stroke body with subtle gradient
+                // Layer 2: Main brush stroke body with subtle organic tint gradient
+                const topR = Math.min(255, Math.floor(hr + (255 - hr) * 0.22));
+                const topG = Math.min(255, Math.floor(hg + (255 - hg) * 0.22));
+                const topB = Math.min(255, Math.floor(hb + (255 - hb) * 0.22));
+
+                const botR = Math.max(0, Math.floor(hr * 0.85));
+                const botG = Math.max(0, Math.floor(hg * 0.85));
+                const botB = Math.max(0, Math.floor(hb * 0.85));
+
                 const bodyGrad = ctx.createLinearGradient(strokeLeft, strokeTop, strokeLeft, strokeBottom);
-                bodyGrad.addColorStop(0, `rgba(255, 195, 55, ${alpha})`);   // Bright warm gold top
-                bodyGrad.addColorStop(0.45, `rgba(249, 180, 45, ${alpha})`); // Core reference golden yellow (#f9b42d)
-                bodyGrad.addColorStop(1, `rgba(238, 158, 22, ${alpha})`);   // Deep rich gold bottom
+                bodyGrad.addColorStop(0, `rgba(${topR}, ${topG}, ${topB}, ${alpha})`);
+                bodyGrad.addColorStop(0.45, `rgba(${hr}, ${hg}, ${hb}, ${alpha})`);
+                bodyGrad.addColorStop(1, `rgba(${botR}, ${botG}, ${botB}, ${alpha})`);
                 ctx.fillStyle = bodyGrad;
                 drawBrushSilhouette();
                 ctx.fill();
@@ -387,7 +399,7 @@ Module.onRuntimeInitialized = async () => {
                     ctx.globalAlpha = 0.65 * alpha;
                     ctx.drawImage(brushTextureImg, 0, sliceY, texW, sliceH, texDrawX, texDrawY, texDrawW, texDrawH);
 
-                    // Pass 2: 'multiply' to deepen fine grooves and dry-brush scratches into warm amber
+                    // Pass 2: 'multiply' to deepen fine grooves and dry-brush scratches
                     ctx.globalCompositeOperation = 'multiply';
                     ctx.globalAlpha = 0.40 * alpha;
                     ctx.drawImage(brushTextureImg, 0, sliceY, texW, sliceH, texDrawX, texDrawY, texDrawW, texDrawH);
@@ -395,7 +407,7 @@ Module.onRuntimeInitialized = async () => {
                     ctx.restore();
                 }
 
-                // Layer 4: Dark cursive brush script typography
+                // Layer 4: Cursive brush script typography with luminance-adaptive contrast
                 if (labelText) {
                     const cleanLabel = labelText.trim();
                     ctx.save();
@@ -410,13 +422,22 @@ Module.onRuntimeInitialized = async () => {
                     ctx.translate(centerX, centerY);
                     ctx.rotate(-0.022);
 
-                    // Subtle ink bleed shadow
-                    ctx.fillStyle = `rgba(20, 16, 28, ${0.35 * alpha})`;
-                    ctx.fillText(cleanLabel, 0.6, 1.2);
+                    const lum = 0.299 * hr + 0.587 * hg + 0.114 * hb;
+                    if (lum > 160) {
+                        // Light background (e.g. golden yellow #fec33c) -> crisp dark ink
+                        ctx.fillStyle = `rgba(20, 16, 28, ${0.35 * alpha})`;
+                        ctx.fillText(cleanLabel, 0.6, 1.2);
 
-                    // Crisp dark ink text (#14101c)
-                    ctx.fillStyle = `rgba(20, 16, 28, ${0.96 * alpha})`;
-                    ctx.fillText(cleanLabel, 0, 0);
+                        ctx.fillStyle = `rgba(20, 16, 28, ${0.96 * alpha})`;
+                        ctx.fillText(cleanLabel, 0, 0);
+                    } else {
+                        // Deep or saturated background (e.g. LinkedIn blue, ArtStation cyan, Itch red, GitHub dark) -> crisp pure white with shadow
+                        ctx.fillStyle = `rgba(0, 0, 0, ${0.65 * alpha})`;
+                        ctx.fillText(cleanLabel, 0.8, 1.4);
+
+                        ctx.fillStyle = `rgba(255, 255, 255, ${0.98 * alpha})`;
+                        ctx.fillText(cleanLabel, 0, 0);
+                    }
                     ctx.restore();
                 }
 
@@ -432,7 +453,7 @@ Module.onRuntimeInitialized = async () => {
                         const fy = strokeTop + strokeH * ft + Math.sin(f * 2.3 + timestamp * 0.01) * 3;
                         const fx = sweepX + 3 + ((f * 11) % 8);
                         const rSize = 1.2 + (f % 2) * 1.0;
-                        ctx.fillStyle = (f % 2 === 0) ? `rgba(249, 180, 45, ${0.85 * alpha})` : `rgba(255, 215, 90, ${0.85 * alpha})`;
+                        ctx.fillStyle = (f % 2 === 0) ? `rgba(${hr}, ${hg}, ${hb}, ${0.85 * alpha})` : `rgba(${topR}, ${topG}, ${topB}, ${0.85 * alpha})`;
                         ctx.beginPath();
                         ctx.arc(fx, fy, rSize, 0, Math.PI * 2);
                         ctx.fill();
@@ -442,13 +463,13 @@ Module.onRuntimeInitialized = async () => {
             }
         }
 
-        function renderCyberpunkButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, style, labelText) {
+        function renderCyberpunkButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, style, labelText, hr = 254, hg = 195, hb = 60) {
             const alpha = a / 255;
             if (alpha <= 0.001) return;
 
-            // Style 3: Golden Brush Stroke with dynamic paint-in wipe
+            // Style 3: Brush Stroke with dynamic brand color & paint-in wipe
             if (style === BUTTON_STYLE_BRUSH_STROKE) {
-                renderBrushStrokeButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, labelText);
+                renderBrushStrokeButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, labelText, hr, hg, hb);
                 return;
             }
 
@@ -857,18 +878,29 @@ Module.onRuntimeInitialized = async () => {
                     const customStr = new TextDecoder('utf-8').decode(textArray);
                     let style = 0;
                     let hoverBlend = 0.0;
+                    let hoverR = 254, hoverG = 195, hoverB = 60;
                     let labelText = '';
                     if (customStr.includes(';')) {
                         const parts = customStr.split(';');
                         style = parseInt(parts[0], 10) || 0;
                         hoverBlend = parseFloat(parts[1]) || 0.0;
-                        labelText = parts.slice(2).join(';');
+                        if (parts.length >= 4) {
+                            const rgb = parts[2].split(',');
+                            if (rgb.length === 3) {
+                                hoverR = parseInt(rgb[0], 10) || 254;
+                                hoverG = parseInt(rgb[1], 10) || 195;
+                                hoverB = parseInt(rgb[2], 10) || 60;
+                            }
+                            labelText = parts.slice(3).join(';');
+                        } else {
+                            labelText = parts.slice(2).join(';');
+                        }
                     } else {
                         hoverBlend = parseFloat(customStr) || 0.0;
                         style = 1;
                     }
 
-                    renderCyberpunkButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, style, labelText);
+                    renderCyberpunkButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, style, labelText, hoverR, hoverG, hoverB);
                 }
             }
 
