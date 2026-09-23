@@ -32,11 +32,11 @@ resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
 const BG_STEP_CONFIG = [
-    { color: 'rgb(14, 9, 26)',   imageSrc: 'images/images/background/bkg-01.png' },
-    { color: 'rgb(32, 20, 58)',   imageSrc: 'images/images/Tribulation.png' },
-    { color: 'rgb(68, 30, 102)',  imageSrc: 'images/images/mageslayer_01.jpg' },
-    { color: 'rgb(138, 52, 132)', imageSrc: 'images/images/mclegends-ich000.png' },
-    { color: 'rgb(212, 108, 150)',imageSrc: 'images/images/Invincible.png' }
+    { color: 'rgb(14, 9, 26)',   imageSrc: 'images/images/background/bkg-02.png' },
+    { color: 'rgb(32, 20, 58)',   imageSrc: 'images/images/background/bkg-01.png' },
+    { color: 'rgb(68, 30, 102)',  imageSrc: 'images/images/background/bkg-02.png' },
+    { color: 'rgb(138, 52, 132)', imageSrc: 'images/images/background/bkg-01.png' },
+    { color: 'rgb(212, 108, 150)',imageSrc: 'images/images/background/bkg-02.png' }
 ];
 
 const bgImages = BG_STEP_CONFIG.map(cfg => {
