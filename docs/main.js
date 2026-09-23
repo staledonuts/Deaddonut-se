@@ -31,6 +31,44 @@ resizeCanvas();
 
 window.addEventListener('resize', resizeCanvas);
 
+const BG_STEP_CONFIG = [
+    { color: 'rgb(14, 9, 26)',   imageSrc: 'images/images/LightningVoid-Gameplay.png' },
+    { color: 'rgb(32, 20, 58)',   imageSrc: 'images/images/Tribulation.png' },
+    { color: 'rgb(68, 30, 102)',  imageSrc: 'images/images/mageslayer_01.jpg' },
+    { color: 'rgb(138, 52, 132)', imageSrc: 'images/images/mclegends-ich000.png' },
+    { color: 'rgb(212, 108, 150)',imageSrc: 'images/images/Invincible.png' }
+];
+
+const bgImages = BG_STEP_CONFIG.map(cfg => {
+    const img = new Image();
+    img.src = cfg.imageSrc;
+    return img;
+});
+
+function drawBgCoverImage(ctx, img, canvasW, canvasH, pX, pY) {
+    if (!img || !img.complete || !img.naturalWidth) return;
+    const imgW = img.naturalWidth;
+    const imgH = img.naturalHeight;
+    const imgRatio = imgW / imgH;
+    const canvasRatio = canvasW / canvasH;
+
+    const scaleFactor = 1.08;
+    let renderW, renderH;
+
+    if (canvasRatio > imgRatio) {
+        renderW = canvasW * scaleFactor;
+        renderH = renderW / imgRatio;
+    } else {
+        renderH = canvasH * scaleFactor;
+        renderW = renderH * imgRatio;
+    }
+
+    const renderX = (canvasW - renderW) / 2 + pX * 0.05;
+    const renderY = (canvasH - renderH) / 2 + pY * 0.05;
+
+    ctx.drawImage(img, renderX, renderY, renderW, renderH);
+}
+
 const CLAY_RENDER_COMMAND_TYPE_NONE = 0;
 const CLAY_RENDER_COMMAND_TYPE_RECTANGLE = 1;
 const CLAY_RENDER_COMMAND_TYPE_BORDER = 2;
@@ -327,13 +365,12 @@ Module.onRuntimeInitialized = async () => {
         const text_buf = Module._malloc(256);
         let lastTime = 0;
 
-        // Button styles matching C enum
         const BUTTON_STYLE_STANDARD = 0;
         const BUTTON_STYLE_PIXEL_RIGHT = 1;
         const BUTTON_STYLE_PIXEL_UP = 2;
         const BUTTON_STYLE_BRUSH_STROKE = 3;
 
-        // Pre-computed particle properties for zero-allocation flowing fire stream
+
         const CYBER_PARTICLES_COUNT = 32;
         const cyberParticles = [];
         for (let i = 0; i < CYBER_PARTICLES_COUNT; i++) {
@@ -790,8 +827,6 @@ Module.onRuntimeInitialized = async () => {
             const endX = 0 + offsetX;
             const endY = 0 + offsetY;
 
-            const grad = ctx.createLinearGradient(startX, startY, endX, endY);
-
             const time = timestamp * 0.0004;
 
             const step1 = clamp(0.20 + Math.sin(time * 0.9) * 0.05);
@@ -799,29 +834,83 @@ Module.onRuntimeInitialized = async () => {
             const step3 = clamp(0.60 + Math.sin(time * 1.1) * 0.05);
             const step4 = clamp(0.80 + Math.cos(time * 1.3) * 0.05);
 
-            const c1 = 'rgb(14, 9, 26)';
-            const c2 = 'rgb(32, 20, 58)';
-            const c3 = 'rgb(68, 30, 102)';
-            const c4 = 'rgb(138, 52, 132)';
-            const c5 = 'rgb(212, 108, 150)';
+            const c1 = BG_STEP_CONFIG[0].color;
+            const c2 = BG_STEP_CONFIG[1].color;
+            const c3 = BG_STEP_CONFIG[2].color;
+            const c4 = BG_STEP_CONFIG[3].color;
+            const c5 = BG_STEP_CONFIG[4].color;
 
+            // 1. Draw solid stepped gradient backdrop as base
+            const grad = ctx.createLinearGradient(startX, startY, endX, endY);
             grad.addColorStop(0, c1);
             grad.addColorStop(step1, c1);
-
             grad.addColorStop(step1, c2);
             grad.addColorStop(step2, c2);
-
             grad.addColorStop(step2, c3);
             grad.addColorStop(step3, c3);
-
             grad.addColorStop(step3, c4);
             grad.addColorStop(step4, c4);
-
             grad.addColorStop(step4, c5);
             grad.addColorStop(1, c5);
 
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 2. Draw per-band greyscale screenshots multiplied with each band's color
+            const dx = endX - startX;
+            const dy = endY - startY;
+            const len = Math.hypot(dx, dy) || 1;
+            const ux = dx / len;
+            const uy = dy / len;
+            const nx = -uy;
+            const ny = ux;
+            const R = Math.max(canvas.width, canvas.height) * 4;
+
+            const thresholds = [-2.0, step1, step2, step3, step4, 3.0];
+
+            for (let i = 0; i < BG_STEP_CONFIG.length; i++) {
+                const img = bgImages[i];
+                if (!img || !img.complete || !img.naturalWidth) continue;
+
+                const tA = thresholds[i];
+                const tB = thresholds[i + 1] + 0.003; // Overlap slightly to prevent subpixel seams
+
+                const cxA = startX + tA * dx;
+                const cyA = startY + tA * dy;
+                const pA1x = cxA + nx * R;
+                const pA1y = cyA + ny * R;
+                const pB1x = cxA - nx * R;
+                const pB1y = cyA - ny * R;
+
+                const cxB = startX + tB * dx;
+                const cyB = startY + tB * dy;
+                const pA2x = cxB + nx * R;
+                const pA2y = cyB + ny * R;
+                const pB2x = cxB - nx * R;
+                const pB2y = cyB - ny * R;
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(pA1x, pA1y);
+                ctx.lineTo(pB1x, pB1y);
+                ctx.lineTo(pB2x, pB2y);
+                ctx.lineTo(pA2x, pA2y);
+                ctx.closePath();
+                ctx.clip();
+
+                // Draw screenshot in grayscale
+                ctx.save();
+                ctx.filter = 'grayscale(100%) contrast(1.15) brightness(1.1)';
+                drawBgCoverImage(ctx, img, canvas.width, canvas.height, offsetX, offsetY);
+                ctx.restore();
+
+                // Multiply with the step's gradient color
+                ctx.globalCompositeOperation = 'multiply';
+                ctx.fillStyle = BG_STEP_CONFIG[i].color;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.restore();
+            }
 
             process_frame(deltaTime);
             reset_command_iterator();
