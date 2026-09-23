@@ -375,12 +375,12 @@ Module.onRuntimeInitialized = async () => {
         const cyberParticles = [];
         for (let i = 0; i < CYBER_PARTICLES_COUNT; i++) {
             cyberParticles.push({
-                phase: ((i * 1.618) % 1.0),                  // golden ratio distribution so spawning is perfectly staggered
-                speed: 0.7 + ((i * 17) % 7) * 0.12,          // varying speeds
-                relPos: ((i * 37 + 11) % 100) / 100,         // 0.0 to 1.0 along the dissolving edge
-                baseSize: 6.0 + ((i * 23) % 4) * 2.5,        // 6px to 13.5px initial size
-                maxDist: 45 + ((i * 29) % 6) * 12,           // 45px to 105px travel distance
-                drift: -2.0 - ((i * 19) % 5) * 2.5,          // perpendicular drift
+                phase: ((i * 1.618) % 1.0),
+                speed: 0.7 + ((i * 17) % 7) * 0.12,
+                relPos: ((i * 37 + 11) % 100) / 100,
+                baseSize: 6.0 + ((i * 23) % 4) * 2.5,
+                maxDist: 45 + ((i * 29) % 6) * 12,
+                drift: -2.0 - ((i * 19) % 5) * 2.5,
                 seed: i * 4.31
             });
         }
@@ -389,14 +389,12 @@ Module.onRuntimeInitialized = async () => {
             const alpha = a / 255;
             if (alpha <= 0.001) return;
 
-            // 1. Draw base unhovered button body with text (visible when unhovered or during sweep wipe)
             ctx.save();
             ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
             ctx.beginPath();
             ctx.roundRect(x, y, w, h, cr || 8);
             ctx.fill();
 
-            // Subtle border outline derived from button's base color
             const borderAlpha = alpha * 0.45;
             if (borderAlpha > 0.01) {
                 const borderR = Math.min(255, Math.round(r * 1.5));
@@ -409,7 +407,6 @@ Module.onRuntimeInitialized = async () => {
                 ctx.stroke();
             }
 
-            // Base unhovered text: white for close buttons and red youtube buttons (r > 60), soft lilac for menu buttons
             if (labelText) {
                 const cleanLabel = labelText.trim();
                 const baseFontSize = Math.max(13, Math.min(20, Math.round(h * 0.40)));
@@ -421,11 +418,9 @@ Module.onRuntimeInitialized = async () => {
             }
             ctx.restore();
 
-            // 2. If hoverBlend > 0.001, paint in the dynamic brush stroke banner from left to right!
             if (hoverBlend > 0.001) {
                 const progress = Math.min(1.0, Math.max(0.0, hoverBlend));
 
-                // Bounding dimensions of the brush banner contained comfortably within the button area
                 const padX = Math.min(6, Math.max(3, w * 0.03));
                 const padY = Math.min(3, Math.max(2, h * 0.06));
                 const strokeLeft = x - padX;
@@ -435,17 +430,13 @@ Module.onRuntimeInitialized = async () => {
                 const strokeW = strokeRight - strokeLeft;
                 const strokeH = strokeBottom - strokeTop;
 
-                // sweepX: leading front of the wipe across the button
-                // Extra margin at the end ensures complete reveal of frayed tips at progress = 1.0
                 const sweepX = strokeLeft + (strokeW + 28) * progress;
 
-                // Dynamic clipping mask with jagged bristle leading edge
                 ctx.save();
                 ctx.beginPath();
                 ctx.moveTo(strokeLeft - 25, strokeTop - 15);
                 ctx.lineTo(sweepX, strokeTop - 15);
 
-                // Trace down the front of the brush wipe with multi-frequency bristle teeth
                 const steps = 16;
                 for (let i = 0; i <= steps; i++) {
                     const t = i / steps;
@@ -460,7 +451,6 @@ Module.onRuntimeInitialized = async () => {
                 ctx.closePath();
                 ctx.clip();
 
-                // Helper to trace the organic brush banner silhouette
                 function drawBrushSilhouette() {
                     const x0 = strokeLeft;
                     const x1 = strokeRight;
@@ -470,28 +460,20 @@ Module.onRuntimeInitialized = async () => {
                     const bh = strokeH;
 
                     ctx.beginPath();
-                    // Left start with slight organic curve
-                    ctx.moveTo(x0 + 4, y0 + 3);
 
-                    // Top undulating edge with organic curves
+                    ctx.moveTo(x0 + 4, y0 + 3);
                     ctx.bezierCurveTo(x0 + bw * 0.22, y0 - 1.2, x0 + bw * 0.38, y0 + 2.0, x0 + bw * 0.55, y0);
                     ctx.bezierCurveTo(x0 + bw * 0.72, y0 - 2.0, x0 + bw * 0.88, y0 + 1.0, x1 - 3, y0 + 2);
-
-                    // Right dry-brush bristle cutoff (organically textured, stays within button area)
                     ctx.bezierCurveTo(x1 + 1, y0 + bh * 0.22, x1 + 2, y0 + bh * 0.40, x1, y0 + bh * 0.50);
                     ctx.bezierCurveTo(x1 + 2, y0 + bh * 0.65, x1 + 1, y0 + bh * 0.82, x1 - 3, y1 - 3);
-
-                    // Bottom undulating edge
                     ctx.bezierCurveTo(x0 + bw * 0.85, y1 + 2.0, x0 + bw * 0.68, y1 - 1.5, x0 + bw * 0.48, y1 + 1.0);
                     ctx.bezierCurveTo(x0 + bw * 0.32, y1 + 2.0, x0 + bw * 0.15, y1 - 1.0, x0 + 3, y1 - 3);
 
-                    // Left start cutoff
                     ctx.bezierCurveTo(x0 - 1, y1 - bh * 0.30, x0 - 1, y0 + bh * 0.60, x0 + 1, y0 + bh * 0.30);
                     ctx.lineTo(x0 + 4, y0 + 3);
                     ctx.closePath();
                 }
 
-                // Layer 1: Undertone / shadow for paint depth in matching dark hue
                 const darkR = Math.max(0, Math.floor(hr * 0.72));
                 const darkG = Math.max(0, Math.floor(hg * 0.72));
                 const darkB = Math.max(0, Math.floor(hb * 0.72));
@@ -503,7 +485,6 @@ Module.onRuntimeInitialized = async () => {
                 ctx.fill();
                 ctx.restore();
 
-                // Layer 2: Main brush stroke body with subtle organic tint gradient
                 const topR = Math.min(255, Math.floor(hr + (255 - hr) * 0.22));
                 const topG = Math.min(255, Math.floor(hg + (255 - hg) * 0.22));
                 const topB = Math.min(255, Math.floor(hb + (255 - hb) * 0.22));
@@ -520,31 +501,24 @@ Module.onRuntimeInitialized = async () => {
                 drawBrushSilhouette();
                 ctx.fill();
 
-                // Layer 2.5: Real Acrylic Paint Texture (messy-white-paint-stains.jpg)
                 if (brushTextureLoaded && brushTextureImg.naturalWidth > 0) {
                     ctx.save();
-                    // Clip strictly inside the organic brush silhouette
                     drawBrushSilhouette();
                     ctx.clip();
 
                     const texH = brushTextureImg.naturalHeight;
                     const texW = brushTextureImg.naturalWidth;
-                    // Slightly offset vertical crop by button y-coordinate for natural variety between buttons
                     const sliceY = (Math.abs(Math.floor(y * 11)) % Math.floor(texH * 0.35));
                     const sliceH = Math.floor(texH * 0.50);
 
-                    // Fully cover and exceed silhouette bounds so 100% of the brush stroke has texture
                     const texDrawX = strokeLeft - 10;
                     const texDrawY = strokeTop - 10;
                     const texDrawW = strokeW + 20;
                     const texDrawH = strokeH + 20;
 
-                    // Pass 1: 'overlay' to sculpt rich impasto highlights and tactile bristle volume
                     ctx.globalCompositeOperation = 'overlay';
                     ctx.globalAlpha = 0.65 * alpha;
                     ctx.drawImage(brushTextureImg, 0, sliceY, texW, sliceH, texDrawX, texDrawY, texDrawW, texDrawH);
-
-                    // Pass 2: 'multiply' to deepen fine grooves and dry-brush scratches
                     ctx.globalCompositeOperation = 'multiply';
                     ctx.globalAlpha = 0.40 * alpha;
                     ctx.drawImage(brushTextureImg, 0, sliceY, texW, sliceH, texDrawX, texDrawY, texDrawW, texDrawH);
@@ -552,7 +526,6 @@ Module.onRuntimeInitialized = async () => {
                     ctx.restore();
                 }
 
-                // Layer 4: Cursive brush script typography with luminance-adaptive contrast
                 if (labelText) {
                     const cleanLabel = labelText.trim();
                     ctx.save();
@@ -569,14 +542,12 @@ Module.onRuntimeInitialized = async () => {
 
                     const lum = 0.299 * hr + 0.587 * hg + 0.114 * hb;
                     if (lum > 160) {
-                        // Light background (e.g. golden yellow #fec33c) -> crisp dark ink
                         ctx.fillStyle = `rgba(20, 16, 28, ${0.35 * alpha})`;
                         ctx.fillText(cleanLabel, 0.6, 1.2);
 
                         ctx.fillStyle = `rgba(20, 16, 28, ${0.96 * alpha})`;
                         ctx.fillText(cleanLabel, 0, 0);
                     } else {
-                        // Deep or saturated background (e.g. LinkedIn blue, ArtStation cyan, Itch red, GitHub dark) -> crisp pure white with shadow
                         ctx.fillStyle = `rgba(0, 0, 0, ${0.65 * alpha})`;
                         ctx.fillText(cleanLabel, 0.8, 1.4);
 
@@ -586,10 +557,8 @@ Module.onRuntimeInitialized = async () => {
                     ctx.restore();
                 }
 
-                // Restore from clipping mask
                 ctx.restore();
 
-                // 3. Dynamic wet paint flecks / splatter at the leading brush front while wiping
                 if (progress > 0.05 && progress < 0.94) {
                     ctx.save();
                     const fleckCount = 4;
@@ -612,7 +581,6 @@ Module.onRuntimeInitialized = async () => {
             const alpha = a / 255;
             if (alpha <= 0.001) return;
 
-            // Style 3: Brush Stroke with dynamic brand color & paint-in wipe
             if (style === BUTTON_STYLE_BRUSH_STROKE) {
                 renderBrushStrokeButton(ctx, x, y, w, h, r, g, b, a, cr, hoverBlend, timestamp, labelText, hr, hg, hb);
                 return;
@@ -620,7 +588,6 @@ Module.onRuntimeInitialized = async () => {
 
             ctx.save();
 
-            // Style 0: Standard clean button (no particles/disintegration)
             if (style === BUTTON_STYLE_STANDARD) {
                 ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
                 ctx.beginPath();
@@ -641,7 +608,6 @@ Module.onRuntimeInitialized = async () => {
                 return;
             }
 
-            // 1. Warm ambient halo / glow behind the burning side when hovered
             if (hoverBlend > 0.02) {
                 const glowAlpha = 0.45 * hoverBlend * alpha;
                 if (style === BUTTON_STYLE_PIXEL_UP) {
@@ -657,7 +623,6 @@ Module.onRuntimeInitialized = async () => {
                     ctx.fillStyle = glowGrad;
                     ctx.fillRect(x - 20, y - glowRadius - 15, w + 40, glowRadius + 25);
                 } else {
-                    // PIXEL_RIGHT
                     const glowRadius = Math.max(h * 1.3, 55);
                     const glowGrad = ctx.createRadialGradient(
                         x + w - 2, y + h * 0.5, 6,
@@ -672,10 +637,6 @@ Module.onRuntimeInitialized = async () => {
                 }
             }
 
-            // 2. Base rounded button body
-            // When hovered, flatten the edge corners where pixels dissolve:
-            // PIXEL_RIGHT flattens right corners [cr, flatCr, flatCr, cr]
-            // PIXEL_UP flattens top corners [flatCr, flatCr, cr, cr]
             const flatCr = cr * Math.max(0, 1.0 - hoverBlend * 1.5);
             let cornerRadii = cr;
             if (ctx.roundRect) {
@@ -711,12 +672,10 @@ Module.onRuntimeInitialized = async () => {
                 }
             }
 
-            // 3. Pixelated disintegration & continuous flowing fire stream
             if (hoverBlend > 0.02) {
                 const timeSec = timestamp * 0.001;
                 const seed = (Math.floor(y * 11) + Math.floor(x * 7)) % 1000;
 
-                // Step 3A: Animated flickering edge teeth attached to the dissolving border
                 const numEdgeBlocks = 6;
                 ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
 
@@ -741,17 +700,14 @@ Module.onRuntimeInitialized = async () => {
                     }
                 }
 
-                // Step 3B: Continuous stream of pixel embers flying right/up and burning out
                 ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${0.85 * hoverBlend})`;
                 ctx.shadowBlur = 9 * hoverBlend;
 
                 for (let i = 0; i < CYBER_PARTICLES_COUNT; i++) {
                     const p = cyberParticles[i];
 
-                    // Particle cycle: progress t goes from 0.0 (birth at edge) to 1.0 (disappearance)
                     const t = ((timeSec * p.speed + p.phase) % 1.0);
 
-                    // Fade in quickly at spawn (0 -> 0.12), fade out as it travels and burns out (0.12 -> 1.0)
                     let lifeAlpha = 1.0;
                     if (t < 0.12) {
                         lifeAlpha = t / 0.12;
@@ -762,10 +718,7 @@ Module.onRuntimeInitialized = async () => {
                     const particleAlpha = lifeAlpha * hoverBlend * alpha;
                     if (particleAlpha <= 0.01) continue;
 
-                    // Size shrinks as the ember burns away
                     const size = Math.max(2.5, p.baseSize * (1.0 - t * 0.65));
-
-                    // Wave oscillation
                     const wave = Math.sin(timeSec * 6.0 + p.seed) * (t * 5.0);
 
                     let px, py;
@@ -778,19 +731,16 @@ Module.onRuntimeInitialized = async () => {
                         py = y + p.relPos * (h - size) + (p.drift * t * hoverBlend) + wave;
                     }
 
-                    // Color transitions based on base button color
                     let pR = r;
                     let pG = g;
                     let pB = b;
 
                     if (t < 0.22) {
-                        // Hot core: bright whiter tint of the base color
                         const coreBoost = (1.0 - t / 0.22);
                         pR = Math.min(255, r + (255 - r) * 0.65 * coreBoost);
                         pG = Math.min(255, g + (255 - g) * 0.65 * coreBoost);
                         pB = Math.min(255, b + (255 - b) * 0.65 * coreBoost);
                     } else if (t > 0.55) {
-                        // Dying ember: deep rich variant
                         const emberShift = (t - 0.55) / 0.45;
                         pR = Math.max(10, r * (1.0 - emberShift * 0.35));
                         pG = Math.max(10, g * (1.0 - emberShift * 0.35));
@@ -840,7 +790,6 @@ Module.onRuntimeInitialized = async () => {
             const c4 = BG_STEP_CONFIG[3].color;
             const c5 = BG_STEP_CONFIG[4].color;
 
-            // 1. Draw solid stepped gradient backdrop as base
             const grad = ctx.createLinearGradient(startX, startY, endX, endY);
             grad.addColorStop(0, c1);
             grad.addColorStop(step1, c1);
@@ -856,7 +805,6 @@ Module.onRuntimeInitialized = async () => {
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // 2. Draw per-band greyscale screenshots multiplied with each band's color
             const dx = endX - startX;
             const dy = endY - startY;
             const len = Math.hypot(dx, dy) || 1;
@@ -873,7 +821,7 @@ Module.onRuntimeInitialized = async () => {
                 if (!img || !img.complete || !img.naturalWidth) continue;
 
                 const tA = thresholds[i];
-                const tB = thresholds[i + 1] + 0.003; // Overlap slightly to prevent subpixel seams
+                const tB = thresholds[i + 1] + 0.003;
 
                 const cxA = startX + tA * dx;
                 const cyA = startY + tA * dy;
@@ -898,13 +846,11 @@ Module.onRuntimeInitialized = async () => {
                 ctx.closePath();
                 ctx.clip();
 
-                // Draw screenshot in grayscale
                 ctx.save();
                 ctx.filter = 'grayscale(100%) contrast(1.15) brightness(1.1)';
                 drawBgCoverImage(ctx, img, canvas.width, canvas.height, offsetX, offsetY);
                 ctx.restore();
 
-                // Multiply with the step's gradient color
                 ctx.globalCompositeOperation = 'multiply';
                 ctx.fillStyle = BG_STEP_CONFIG[i].color;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
