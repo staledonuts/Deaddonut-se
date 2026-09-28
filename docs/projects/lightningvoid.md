@@ -1,3 +1,5 @@
+- [Download](https://www.deaddonut.se/#downloads)
+
 This game was a early attempt to create a 2D game engine in C# and Raylib_cs.
 I got pretty far, but the codebase turned into a horrendous mess to work in. Too many ordering of execution issues and taught me the importance of the chain of responsibility.
 In that version of the game I managed to set up a: 
@@ -21,8 +23,3 @@ This time the codebase is quite a bit easier to manage as I am not trying to be 
 
 
 ::youtube(https://youtu.be/ggxBnS5H-Eo)
-
-
-- [Windows Download](downloads/LightningVoid-Windows.zip)
-- [Linux Download](downloads/LightningVoid-Linux.zip)
-- [MacOS Download](downloads/LightningVoid-macOS-universal.zip)
